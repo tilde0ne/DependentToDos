@@ -33,12 +33,14 @@ public class ToDoItem {
         }
         if (!dependsOn.contains(toDoItem)) {
             dependsOn.add(toDoItem);
+            toDoItem.addDependedOnBy(this);
         }
     }
 
     public void removeDependsOn(ToDoItem toDoItem) {
         if (dependsOn != null) {
             dependsOn.remove(toDoItem);
+            toDoItem.removeDependedOnBy(this);
         }
     }
 
