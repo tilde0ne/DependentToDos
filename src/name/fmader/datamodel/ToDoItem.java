@@ -74,6 +74,13 @@ public class ToDoItem {
         }
     }
 
+    public boolean isDoable() {
+        if (!dependsOn.isEmpty()) {
+            return false;
+        }
+        return start == null || !start.isAfter(LocalDate.now());
+    }
+
     // Getters and Setters
     //////////////////////
 
