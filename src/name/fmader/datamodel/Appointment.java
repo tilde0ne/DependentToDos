@@ -7,7 +7,7 @@ import java.time.LocalTime;
 
 public class Appointment extends ToDoItem {
 
-    private static final long serialVersionUID = -5873691858014094083L;
+    private static final long serialVersionUID = 4313963647120775218L;
 
     private SimpleObjectProperty<LocalTime> time;
 
