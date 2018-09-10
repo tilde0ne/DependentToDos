@@ -11,8 +11,10 @@ public class Appointment extends ToDoItem {
 
     private SimpleObjectProperty<LocalTime> time;
 
-    public Appointment(String title) {
+    public Appointment(String title, LocalDate date, LocalTime time) {
         super(title);
+        this.deadline = new SimpleObjectProperty<>(date);
+        this.time = new SimpleObjectProperty<>(time);
     }
 
     @Override
@@ -49,8 +51,8 @@ public class Appointment extends ToDoItem {
                 ", description='" + description + '\'' +
                 ", deadline=" + deadline.get() +
                 ", start=" + start +
-                ", dependsOn=" + dependsOn.size() +
-                ", dependedOnBy=" + dependedOnBy.size() +
+                ", dependsOn=" + (dependsOn == null ? null : dependsOn.size()) +
+                ", dependedOnBy=" + (dependedOnBy == null ? null : dependedOnBy.size()) +
                 ", contexts=" + contexts +
                 ", isRecurrent=" + isRecurrent +
                 ", recurringPattern=" + recurringPattern +

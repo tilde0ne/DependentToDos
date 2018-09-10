@@ -13,10 +13,10 @@ public class External extends ToDoItem {
         return "External{" +
                 "title=" + title.get() +
                 ", description='" + description + '\'' +
-                ", deadline=" + deadline.get() +
+                ", deadline=" + (deadline == null ? null : deadline.get()) +
                 ", start=" + start +
-                ", dependsOn=" + dependsOn.size() +
-                ", dependedOnBy=" + dependedOnBy.size() +
+                ", dependsOn=" + (dependsOn == null ? null : dependsOn.size()) +
+                ", dependedOnBy=" + (dependedOnBy == null ? null : dependedOnBy.size()) +
                 ", contexts=" + contexts +
                 ", isRecurrent=" + isRecurrent +
                 ", recurringPattern=" + recurringPattern +
