@@ -47,12 +47,12 @@ public class Project extends ToDoItem{
     @Override
     public String toString() {
         return "Project{" +
-                "title=" + title +
+                "title=" + title.get() +
                 ", description='" + description + '\'' +
-                ", deadline=" + deadline +
+                ", deadline=" + deadline.get() +
                 ", start=" + start +
-                ", dependsOn=" + dependsOn +
-                ", dependedOnBy=" + dependedOnBy +
+                ", dependsOn=" + dependsOn.size() +
+                ", dependedOnBy=" + dependedOnBy.size() +
                 ", contexts=" + contexts +
                 ", isRecurrent=" + isRecurrent +
                 ", recurringPattern=" + recurringPattern +

@@ -89,7 +89,6 @@ public class ToDoItem implements Serializable {
         if (toDoItem.getClass().getSimpleName().equals("Appointment")) {
             return;
         }
-        System.out.println(toDoItem.getClass().getSimpleName());
         if (toDoItem.deadline == null || toDoItem.deadline.get().isAfter(deadline.get())) {
             toDoItem.deadline = deadline;
         }
@@ -194,12 +193,12 @@ public class ToDoItem implements Serializable {
     @Override
     public String toString() {
         return "ToDoItem{" +
-                "title=" + title +
+                "title=" + title.get() +
                 ", description='" + description + '\'' +
-                ", deadline=" + deadline +
+                ", deadline=" + deadline.get() +
                 ", start=" + start +
-                ", dependsOn=" + dependsOn +
-                ", dependedOnBy=" + dependedOnBy +
+                ", dependsOn=" + dependsOn.size() +
+                ", dependedOnBy=" + dependedOnBy.size() +
                 ", contexts=" + contexts +
                 ", isRecurrent=" + isRecurrent +
                 ", recurringPattern=" + recurringPattern +
