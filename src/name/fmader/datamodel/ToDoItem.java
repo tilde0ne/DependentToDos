@@ -75,10 +75,10 @@ public class ToDoItem {
     }
 
     public boolean isDoable() {
-        if (!dependsOn.isEmpty()) {
-            return false;
+        if (start == null || !start.isAfter(LocalDate.now())) {
+            return dependsOn.isEmpty();
         }
-        return start == null || !start.isAfter(LocalDate.now());
+        return false;
     }
 
 //    @Override
