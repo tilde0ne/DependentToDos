@@ -13,6 +13,7 @@ public class ToDoItem implements Serializable {
 
     private static final long serialVersionUID = -8301584110256953715L;
 
+    protected LocalDate created;
     protected SimpleStringProperty title;
     protected String description;
 
@@ -27,6 +28,7 @@ public class ToDoItem implements Serializable {
     protected RecurringPattern recurringPattern;
 
     public ToDoItem(String title) {
+        this.created = LocalDate.now();
         this.title = new SimpleStringProperty(title);
         this.dependsOn = new ArrayList<>();
         this.dependedOnBy = new ArrayList<>();
