@@ -148,4 +148,19 @@ public class ToDoItem {
     public void setRecurringPattern(RecurringPattern recurringPattern) {
         this.recurringPattern = recurringPattern;
     }
+
+    @Override
+    public String toString() {
+        return "ToDoItem{" +
+                "title=" + title +
+                ", description='" + description + '\'' +
+                ", deadline=" + deadline +
+                ", start=" + start +
+                ", dependsOn=" + dependsOn +
+                ", dependedOnBy=" + dependedOnBy +
+                ", contexts=" + contexts +
+                ", isRecurrent=" + isRecurrent +
+                ", recurringPattern=" + recurringPattern +
+                '}';
+    }
 }
