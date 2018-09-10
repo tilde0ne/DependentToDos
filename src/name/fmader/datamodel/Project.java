@@ -1,5 +1,7 @@
 package name.fmader.datamodel;
 
+import java.time.LocalDate;
+
 public class Project extends ToDoItem{
 
     public Project(String title) {
@@ -8,7 +10,18 @@ public class Project extends ToDoItem{
 
     @Override
     public boolean isDoable() {
-        return true;
+        if (start != null && start.isAfter(LocalDate.now())) {
+            return false;
+        }
+        if (dependsOn == null || dependsOn.isEmpty()) {
+            return true;
+        }
+        for (ToDoItem toDoItem : dependsOn) {
+            if (toDoItem.isDoable()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
