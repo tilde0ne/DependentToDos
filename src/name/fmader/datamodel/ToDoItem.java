@@ -105,6 +105,10 @@ public class ToDoItem implements Serializable {
         return created;
     }
 
+    public void setCreated(LocalDate created) {
+        this.created = created;
+    }
+
     public String getTitle() {
         return title.get();
     }
