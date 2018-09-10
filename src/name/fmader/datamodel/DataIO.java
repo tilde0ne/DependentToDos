@@ -21,6 +21,17 @@ public class DataIO {
         this.contexts = new ArrayList<>();
     }
 
+    public boolean load() {
+        return false;
+    }
+
+    public boolean save() {
+        return false;
+    }
+
+    // Getters
+    //////////
+
     public List<ToDoItem> getToDoItems() {
         return toDoItems;
     }
