@@ -10,18 +10,18 @@ import java.util.List;
 
 public class ToDoItem {
 
-    private SimpleStringProperty title;
-    private String description;
+    protected SimpleStringProperty title;
+    protected String description;
 
-    private SimpleObjectProperty<LocalDate> deadline;
-    private LocalDate start;
+    protected SimpleObjectProperty<LocalDate> deadline;
+    protected LocalDate start;
 
-    private List<ToDoItem> dependsOn;
-    private List<ToDoItem> dependedOnBy;
-    private List<String> contexts;
+    protected List<ToDoItem> dependsOn;
+    protected List<ToDoItem> dependedOnBy;
+    protected List<String> contexts;
 
-    private boolean isRecurrent;
-    private RecurringPattern recurringPattern;
+    protected boolean isRecurrent;
+    protected RecurringPattern recurringPattern;
 
     public ToDoItem(String title) {
         this.title = new SimpleStringProperty(title);
