@@ -101,6 +101,10 @@ public class ToDoItem implements Serializable {
     // Getters and Setters
     //////////////////////
 
+    public LocalDate getCreated() {
+        return created;
+    }
+
     public String getTitle() {
         return title.get();
     }
