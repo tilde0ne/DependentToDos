@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ToDoItem implements Serializable {
 
-    private static final long serialVersionUID = -8301584110256953715L;
+    private static final long serialVersionUID = 7891430649213853524L;
 
     protected LocalDate created;
     protected SimpleStringProperty title;
