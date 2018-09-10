@@ -146,6 +146,9 @@ public class ToDoItem implements Serializable {
             this.deadline = new SimpleObjectProperty<>(deadline);
         }
 
+        if (dependsOn == null || dependsOn.isEmpty()) {
+            return;
+        }
         for (ToDoItem toDoItem : dependsOn) {
             passOnDeadline(toDoItem);
         }
