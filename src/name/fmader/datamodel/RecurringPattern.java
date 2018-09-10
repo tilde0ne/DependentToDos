@@ -1,10 +1,11 @@
 package name.fmader.datamodel;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class RecurringPattern implements Serializable {
 
-    private static final long serialVersionUID = -4442714177536551237L;
+    private static final long serialVersionUID = -3319133604752388686L;
 
     /*fix:
 
@@ -23,6 +24,8 @@ public class RecurringPattern implements Serializable {
     private int everyNMonths;
     private int everyNYears;
 
+    private LocalDate recurrencyEnds;
+
     public RecurringPattern(boolean fix) {
         this.fix = fix;
     }
@@ -34,6 +37,7 @@ public class RecurringPattern implements Serializable {
                 ", everyNDays=" + everyNDays +
                 ", everyNMonths=" + everyNMonths +
                 ", everyNYears=" + everyNYears +
+                ", recurrencyEnds=" + recurrencyEnds +
                 '}';
     }
 }
