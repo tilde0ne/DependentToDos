@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class RecurringPattern implements Serializable {
 
-    private static final long serialVersionUID = -3319133604752388686L;
+    private static final long serialVersionUID = -7392251297239683590L;
 
     /*fix:
 
@@ -26,8 +26,20 @@ public class RecurringPattern implements Serializable {
 
     private LocalDate recurrencyEnds;
 
-    public RecurringPattern(boolean fix) {
+    public RecurringPattern(boolean fix, RecurringBase base, int baseUnits) {
         this.fix = fix;
+        if (base == RecurringBase.EVERYNDAYS) {
+            this.everyNDays = baseUnits;
+        }
+        if (base == RecurringBase.EVERYNWEEKS) {
+            this.everyNDays = 7 * baseUnits;
+        }
+        if (base == RecurringBase.EVERYNMONTHS) {
+            this.everyNMonths = baseUnits;
+        }
+        if (base == RecurringBase.EVERYNYEARS) {
+            this.everyNYears = baseUnits;
+        }
     }
 
     @Override
