@@ -86,6 +86,9 @@ public class ToDoItem implements Serializable {
     }
 
     private void passOnDeadline(ToDoItem toDoItem) {
+        if (toDoItem.getClass().getSimpleName() == "Appointment") {
+            return;
+        }
         if (toDoItem.deadline == null || toDoItem.deadline.get().isAfter(deadline.get())) {
             toDoItem.deadline = deadline;
         }
