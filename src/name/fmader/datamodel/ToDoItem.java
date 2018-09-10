@@ -34,6 +34,7 @@ public class ToDoItem {
         if (!dependsOn.contains(toDoItem)) {
             dependsOn.add(toDoItem);
             toDoItem.addDependedOnBy(this);
+            passOnDeadline(toDoItem);
         }
     }
 
@@ -79,6 +80,12 @@ public class ToDoItem {
             return dependsOn.isEmpty();
         }
         return false;
+    }
+
+    private void passOnDeadline(ToDoItem toDoItem) {
+        if (toDoItem.deadline == null || toDoItem.deadline.get().isAfter(deadline.get())) {
+            toDoItem.deadline = deadline;
+        }
     }
 
 //    @Override
@@ -131,6 +138,10 @@ public class ToDoItem {
             this.deadline.set(deadline);
         } else {
             this.deadline = new SimpleObjectProperty<>(deadline);
+        }
+
+        for (ToDoItem toDoItem : dependsOn) {
+            passOnDeadline(toDoItem);
         }
     }
 
