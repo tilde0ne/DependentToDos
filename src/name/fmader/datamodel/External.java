@@ -2,6 +2,8 @@ package name.fmader.datamodel;
 
 public class External extends ToDoItem {
 
+    private static final long serialVersionUID = -4447036618223208643L;
+
     public External(String title) {
         super(title);
     }
