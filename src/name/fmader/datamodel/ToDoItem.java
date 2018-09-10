@@ -28,12 +28,12 @@ public class ToDoItem implements Serializable {
 
     public ToDoItem(String title) {
         this.title = new SimpleStringProperty(title);
+        this.dependsOn = new ArrayList<>();
+        this.dependedOnBy = new ArrayList<>();
+        this.contexts = new ArrayList<>();
     }
 
     public void addDependsOn(ToDoItem toDoItem) {
-        if (dependsOn == null) {
-            dependsOn = new ArrayList<>();
-        }
         if (!dependsOn.contains(toDoItem)) {
             dependsOn.add(toDoItem);
             toDoItem.addDependedOnBy(this);
@@ -42,40 +42,28 @@ public class ToDoItem implements Serializable {
     }
 
     public void removeDependsOn(ToDoItem toDoItem) {
-        if (dependsOn != null) {
-            dependsOn.remove(toDoItem);
-            toDoItem.removeDependedOnBy(this);
-        }
+        dependsOn.remove(toDoItem);
+        toDoItem.removeDependedOnBy(this);
     }
 
     public void addDependedOnBy(ToDoItem toDoItem) {
-        if (dependedOnBy == null) {
-            dependedOnBy = new ArrayList<>();
-        }
         if (!dependedOnBy.contains(toDoItem)) {
             dependedOnBy.add(toDoItem);
         }
     }
 
     public void removeDependedOnBy(ToDoItem toDoItem) {
-        if (dependedOnBy != null) {
-            dependedOnBy.remove(toDoItem);
-        }
+        dependedOnBy.remove(toDoItem);
     }
 
     public void addContext(String context) {
-        if (contexts == null) {
-            contexts = new ArrayList<>();
-        }
         if (!contexts.contains(context)) {
             contexts.add(context);
         }
     }
 
     public void removeContext(String context) {
-        if (contexts != null) {
-            contexts.remove(context);
-        }
+        contexts.remove(context);
     }
 
     public boolean isDoable() {
@@ -197,8 +185,8 @@ public class ToDoItem implements Serializable {
                 ", description='" + description + '\'' +
                 ", deadline=" + (deadline == null ? null : deadline.get()) +
                 ", start=" + start +
-                ", dependsOn=" + (dependsOn == null ? null : dependsOn.size()) +
-                ", dependedOnBy=" + (dependedOnBy == null ? null : dependedOnBy.size()) +
+                ", dependsOn=" + dependsOn.size() +
+                ", dependedOnBy=" + dependedOnBy.size() +
                 ", contexts=" + contexts +
                 ", isRecurrent=" + isRecurrent +
                 ", recurringPattern=" + recurringPattern +

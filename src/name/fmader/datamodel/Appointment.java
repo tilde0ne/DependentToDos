@@ -51,8 +51,8 @@ public class Appointment extends ToDoItem {
                 ", description='" + description + '\'' +
                 ", deadline=" + deadline.get() +
                 ", start=" + start +
-                ", dependsOn=" + (dependsOn == null ? null : dependsOn.size()) +
-                ", dependedOnBy=" + (dependedOnBy == null ? null : dependedOnBy.size()) +
+                ", dependsOn=" + dependsOn.size() +
+                ", dependedOnBy=" + dependedOnBy.size() +
                 ", contexts=" + contexts +
                 ", isRecurrent=" + isRecurrent +
                 ", recurringPattern=" + recurringPattern +
