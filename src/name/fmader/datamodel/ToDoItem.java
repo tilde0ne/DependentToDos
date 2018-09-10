@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ToDoItem {
@@ -25,6 +26,54 @@ public class ToDoItem {
     public ToDoItem(String title) {
         this.title = new SimpleStringProperty(title);
     }
+
+    public void addDependsOn(ToDoItem toDoItem) {
+        if (dependsOn == null) {
+            dependsOn = new ArrayList<>();
+        }
+        if (!dependsOn.contains(toDoItem)) {
+            dependsOn.add(toDoItem);
+        }
+    }
+
+    public void removeDependsOn(ToDoItem toDoItem) {
+        if (dependsOn != null) {
+            dependsOn.remove(toDoItem);
+        }
+    }
+
+    public void addDependedOnBy(ToDoItem toDoItem) {
+        if (dependedOnBy == null) {
+            dependedOnBy = new ArrayList<>();
+        }
+        if (!dependedOnBy.contains(toDoItem)) {
+            dependedOnBy.add(toDoItem);
+        }
+    }
+
+    public void removeDependedOnBy(ToDoItem toDoItem) {
+        if (dependedOnBy != null) {
+            dependedOnBy.remove(toDoItem);
+        }
+    }
+
+    public void addContext(String context) {
+        if (contexts == null) {
+            contexts = new ArrayList<>();
+        }
+        if (!contexts.contains(context)) {
+            contexts.add(context);
+        }
+    }
+
+    public void removeContext(String context) {
+        if (contexts != null) {
+            contexts.remove(context);
+        }
+    }
+
+    // Getters and Setters
+    //////////////////////
 
     public String getTitle() {
         return title.get();
