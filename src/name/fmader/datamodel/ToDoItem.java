@@ -81,6 +81,20 @@ public class ToDoItem {
         return start == null || !start.isAfter(LocalDate.now());
     }
 
+//    @Override
+//    public int compareTo(ToDoItem o) {
+//        if (deadline == null) {
+//            if (o.deadline == null) {
+//                return 0;
+//            }
+//            return 1;
+//        }
+//        if (o.deadline == null) {
+//            return -1;
+//        }
+//        return deadline.get().compareTo(o.deadline.get());
+//    }
+
     // Getters and Setters
     //////////////////////
 
