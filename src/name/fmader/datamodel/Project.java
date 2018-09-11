@@ -78,6 +78,7 @@ public class Project extends ToDoItem{
                 ", contexts=" + contexts +
                 ", isRecurrent=" + isRecurrent +
                 ", recurringPattern=" + recurringPattern +
+                ", hasFollowUp=" + hasFollowUp +
                 '}';
     }
 }

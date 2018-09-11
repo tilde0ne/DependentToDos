@@ -82,6 +82,7 @@ public class Appointment extends ToDoItem {
                 ", contexts=" + contexts +
                 ", isRecurrent=" + isRecurrent +
                 ", recurringPattern=" + recurringPattern +
+                ", hasFollowUp=" + hasFollowUp +
                 '}';
     }
 }

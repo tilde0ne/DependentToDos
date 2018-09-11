@@ -83,6 +83,7 @@ public class External extends ToDoItem {
                 ", contexts=" + contexts +
                 ", isRecurrent=" + isRecurrent +
                 ", recurringPattern=" + recurringPattern +
+                ", hasFollowUp=" + hasFollowUp +
                 '}';
     }
 }

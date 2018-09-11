@@ -227,7 +227,7 @@ public class ToDoItem implements Serializable {
         this.recurringPattern = recurringPattern;
     }
 
-    public boolean isHasFollowUp() {
+    public boolean hasFollowUp() {
         return hasFollowUp;
     }
 
@@ -248,6 +248,7 @@ public class ToDoItem implements Serializable {
                 ", contexts=" + contexts +
                 ", isRecurrent=" + isRecurrent +
                 ", recurringPattern=" + recurringPattern +
+                ", hasFollowUp=" + hasFollowUp +
                 '}';
     }
 }
