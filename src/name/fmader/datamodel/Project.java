@@ -68,17 +68,17 @@ public class Project extends ToDoItem{
     @Override
     public String toString() {
         return "Project{" +
-                "title=" + title.get() +
-                ", description='" + description + '\'' +
-                ", deadline=" + (deadline == null ? null : deadline.get()) +
-                ", originalDeadline=" + originalDeadline +
-                ", start=" + start +
-                ", dependsOn=" + dependsOn.size() +
-                ", dependedOnBy=" + dependedOnBy.size() +
-                ", contexts=" + contexts +
-                ", isRecurrent=" + isRecurrent +
-                ", recurringPattern=" + recurringPattern +
-                ", hasFollowUp=" + hasFollowUp +
-                '}';
+                "\ntitle=" + title.get() +
+                "\n, description='" + description + '\'' +
+                "\n, deadline=" + (deadline == null ? null : deadline.get()) +
+                "\n, originalDeadline=" + originalDeadline +
+                "\n, start=" + start +
+                "\n, dependsOn=" + dependsOn.size() +
+                "\n, dependedOnBy=" + dependedOnBy.size() +
+                "\n, contexts=" + contexts +
+                "\n, isRecurrent=" + isRecurrent +
+                "\n, recurringPattern=" + recurringPattern +
+                "\n, hasFollowUp=" + hasFollowUp +
+                "\n}";
     }
 }

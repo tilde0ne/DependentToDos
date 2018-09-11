@@ -71,18 +71,18 @@ public class Appointment extends ToDoItem {
     @Override
     public String toString() {
         return "Appointment{" +
-                "title=" + title.get() +
-                ", dateTime=" + dateTime.get() +
-                ", description='" + description + '\'' +
-                ", deadline=" + deadline.get() +
-                ", originalDeadline=" + originalDeadline +
-                ", start=" + start +
-                ", dependsOn=" + dependsOn.size() +
-                ", dependedOnBy=" + dependedOnBy.size() +
-                ", contexts=" + contexts +
-                ", isRecurrent=" + isRecurrent +
-                ", recurringPattern=" + recurringPattern +
-                ", hasFollowUp=" + hasFollowUp +
-                '}';
+                "\ntitle=" + title.get() +
+                "\n, dateTime=" + dateTime.get() +
+                "\n, description='" + description + '\'' +
+                "\n, deadline=" + deadline.get() +
+                "\n, originalDeadline=" + originalDeadline +
+                "\n, start=" + start +
+                "\n, dependsOn=" + dependsOn.size() +
+                "\n, dependedOnBy=" + dependedOnBy.size() +
+                "\n, contexts=" + contexts +
+                "\n, isRecurrent=" + isRecurrent +
+                "\n, recurringPattern=" + recurringPattern +
+                "\n, hasFollowUp=" + hasFollowUp +
+                "\n}";
     }
 }

@@ -45,11 +45,11 @@ public class RecurringPattern implements Serializable {
     @Override
     public String toString() {
         return "RecurringPattern{" +
-                "fix=" + fix +
-                ", everyNDays=" + everyNDays +
-                ", everyNMonths=" + everyNMonths +
-                ", everyNYears=" + everyNYears +
-                ", recurrencyEnds=" + recurrencyEnds +
-                '}';
+                "\nfix=" + fix +
+                "\n, everyNDays=" + everyNDays +
+                "\n, everyNMonths=" + everyNMonths +
+                "\n, everyNYears=" + everyNYears +
+                "\n, recurrencyEnds=" + recurrencyEnds +
+                "\n}";
     }
 }
