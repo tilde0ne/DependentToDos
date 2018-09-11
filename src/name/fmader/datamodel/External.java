@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 public class External extends ToDoItem {
 
-    private static final long serialVersionUID = -4447036618223208643L;
+    private static final long serialVersionUID = -4597744662345186357L;
 
     private LocalDate inheritedDeadline;
 
