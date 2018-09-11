@@ -43,6 +43,9 @@ public class External extends ToDoItem {
 
         deadline = checkAgainstParentDeadlines(deadline);
         inheritedDeadline = deadline;
+        if (!isInherited()) {
+            inheritedDeadline = null;
+        }
 
         if (dependsOn != null && !dependsOn.isEmpty()) {
             for (ToDoItem toDoItem : dependsOn) {
