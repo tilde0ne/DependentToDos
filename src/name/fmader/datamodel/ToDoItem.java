@@ -92,6 +92,10 @@ public class ToDoItem implements Serializable {
     public void removeDeadline() {
         if (checkAgainstParentDeadlines(null) == null) {
             deadline = null;
+
+            for (ToDoItem toDoItem : dependsOn) {
+                toDoItem.restoreOriginalDeadline();
+            }
         }
         originalDeadline = null;
     }
@@ -115,6 +119,8 @@ public class ToDoItem implements Serializable {
         }
         if (toDoItem.deadline == null || toDoItem.deadline.get().isAfter(deadline.get())) {
             toDoItem.setDeadline(deadline.get(), false);
+        } else {
+            toDoItem.restoreOriginalDeadline();
         }
     }
 
