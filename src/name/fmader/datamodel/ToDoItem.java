@@ -43,14 +43,14 @@ public class ToDoItem implements Serializable {
         if (!dependsOn.contains(toDoItem)) {
             dependsOn.add(toDoItem);
             toDoItem.addDependedOnBy(this);
-            passOnDeadline(toDoItem);
+            toDoItem.recalculateDeadline();
         }
     }
 
     public void removeDependsOn(ToDoItem toDoItem) {
         dependsOn.remove(toDoItem);
         toDoItem.removeDependedOnBy(this);
-        toDoItem.restoreOriginalDeadline();
+        toDoItem.recalculateDeadline();
     }
 
     public void addDependedOnBy(ToDoItem toDoItem) {
@@ -80,24 +80,15 @@ public class ToDoItem implements Serializable {
         return false;
     }
 
-    public void restoreOriginalDeadline() {
+    public void recalculateDeadline() {
         LocalDate temp = checkAgainstParentDeadlines(originalDeadline);
         if (temp == null) {
             deadline = null;
-        } else {
+        } else if (deadline != null){
             deadline.set(temp);
+        } else {
+            deadline = new SimpleObjectProperty<>(temp);
         }
-    }
-
-    public void removeDeadline() {
-        if (checkAgainstParentDeadlines(null) == null) {
-            deadline = null;
-
-            for (ToDoItem toDoItem : dependsOn) {
-                toDoItem.restoreOriginalDeadline();
-            }
-        }
-        originalDeadline = null;
     }
 
     public boolean isInherited() {
@@ -110,34 +101,19 @@ public class ToDoItem implements Serializable {
         return !deadline.get().equals(originalDeadline);
     }
 
-    private void passOnDeadline(ToDoItem toDoItem) {
-        if (toDoItem.getClass().getSimpleName().equals("Appointment")) {
-            return;
-        }
-        if (deadline == null) {
-            return;
-        }
-        if (toDoItem.deadline == null || toDoItem.deadline.get().isAfter(deadline.get())) {
-            toDoItem.setDeadline(deadline.get(), false);
-        } else {
-            toDoItem.restoreOriginalDeadline();
-        }
-    }
-
     private LocalDate checkAgainstParentDeadlines(LocalDate deadline) {
-        LocalDate temp = deadline;
         if (dependedOnBy != null && !dependedOnBy.isEmpty()) {
             for (ToDoItem toDoItem : dependedOnBy) {
-                LocalDate parentDeadline = toDoItem.getDeadline();
-                if (parentDeadline == null) {
+                if (toDoItem.deadline == null) {
                     continue;
                 }
-                if (temp == null || temp.isAfter(parentDeadline)) {
-                    temp = parentDeadline;
+                LocalDate parentDeadline = toDoItem.deadline.get();
+                if (deadline == null || deadline.isAfter(parentDeadline)) {
+                    deadline = parentDeadline;
                 }
             }
         }
-        return temp;
+        return deadline;
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
@@ -155,22 +131,8 @@ public class ToDoItem implements Serializable {
         }
     }
 
-//    @Override
-//    public int compareTo(ToDoItem o) {
-//        if (deadline == null) {
-//            if (o.deadline == null) {
-//                return 0;
-//            }
-//            return 1;
-//        }
-//        if (o.deadline == null) {
-//            return -1;
-//        }
-//        return deadline.get().compareTo(o.deadline.get());
-//    }
-
-                             // Getters and Setters
-                             //////////////////////
+    // Getters and Setters
+    //////////////////////
 
     public LocalDate getCreated() {
         return created;
@@ -209,23 +171,20 @@ public class ToDoItem implements Serializable {
     }
 
     public void setDeadline(LocalDate deadline) {
-        setDeadline(deadline, true);
-    }
+        originalDeadline = deadline;
 
-    public void setDeadline(LocalDate deadline, boolean isOriginal) {
-        if (this.deadline == null) {
+        deadline = checkAgainstParentDeadlines(deadline);
+        if (deadline == null) {
+            this.deadline = null;
+        } else if (this.deadline == null) {
             this.deadline = new SimpleObjectProperty<>(deadline);
-        } else if (isOriginal){
-            this.deadline.set(checkAgainstParentDeadlines(deadline));
-        }
-
-        if (isOriginal) {
-            originalDeadline = deadline;
+        } else {
+            this.deadline.set(deadline);
         }
 
         if (dependsOn != null && !dependsOn.isEmpty()) {
             for (ToDoItem toDoItem : dependsOn) {
-                passOnDeadline(toDoItem);
+                toDoItem.recalculateDeadline();
             }
         }
     }
