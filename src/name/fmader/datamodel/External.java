@@ -12,8 +12,32 @@ public class External extends ToDoItem {
 
     private static final long serialVersionUID = -4447036618223208643L;
 
+    private LocalDate inheritedDeadline;
+
     public External(String title) {
         super(title);
+    }
+
+    @Override
+    public void setDeadline(LocalDate deadline) {
+        originalDeadline = deadline;
+
+        if (deadline == null) {
+            this.deadline = null;
+        } else if (this.deadline == null) {
+            this.deadline = new SimpleObjectProperty<>(deadline);
+        } else {
+            this.deadline.set(deadline);
+        }
+
+        deadline = checkAgainstParentDeadlines(deadline);
+        inheritedDeadline = deadline;
+
+        if (dependsOn != null && !dependsOn.isEmpty()) {
+            for (ToDoItem toDoItem : dependsOn) {
+                toDoItem.recalculateDeadline();
+            }
+        }
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
@@ -38,6 +62,7 @@ public class External extends ToDoItem {
                 ", description='" + description + '\'' +
                 ", deadline=" + (deadline == null ? null : deadline.get()) +
                 ", originalDeadline=" + originalDeadline +
+                ", inheritedDeadline=" + inheritedDeadline +
                 ", start=" + start +
                 ", dependsOn=" + dependsOn.size() +
                 ", dependedOnBy=" + dependedOnBy.size() +
