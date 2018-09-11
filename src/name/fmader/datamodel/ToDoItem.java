@@ -81,14 +81,7 @@ public class ToDoItem implements Serializable {
     }
 
     public void recalculateDeadline() {
-        LocalDate temp = checkAgainstParentDeadlines(originalDeadline);
-        if (temp == null) {
-            deadline = null;
-        } else if (deadline != null){
-            deadline.set(temp);
-        } else {
-            deadline = new SimpleObjectProperty<>(temp);
-        }
+        setDeadline(originalDeadline);
     }
 
     public boolean isInherited() {
@@ -101,7 +94,7 @@ public class ToDoItem implements Serializable {
         return !deadline.get().equals(originalDeadline);
     }
 
-    private LocalDate checkAgainstParentDeadlines(LocalDate deadline) {
+    protected LocalDate checkAgainstParentDeadlines(LocalDate deadline) {
         if (dependedOnBy != null && !dependedOnBy.isEmpty()) {
             for (ToDoItem toDoItem : dependedOnBy) {
                 if (toDoItem.deadline == null) {

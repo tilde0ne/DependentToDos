@@ -19,12 +19,18 @@ public class Appointment extends ToDoItem {
     public Appointment(String title, LocalDate date, LocalTime time) {
         super(title);
         this.deadline = new SimpleObjectProperty<>(date);
+        this.originalDeadline = date;
         this.dateTime = new SimpleObjectProperty<>(date.atTime(time));
     }
 
     @Override
     public boolean isDoable() {
         return dependsOn.isEmpty();
+    }
+
+    @Override
+    protected LocalDate checkAgainstParentDeadlines(LocalDate deadline) {
+        return deadline;
     }
 
     @Override
