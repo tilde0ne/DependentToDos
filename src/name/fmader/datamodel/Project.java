@@ -71,6 +71,7 @@ public class Project extends ToDoItem{
                 "title=" + title.get() +
                 ", description='" + description + '\'' +
                 ", deadline=" + (deadline == null ? null : deadline.get()) +
+                ", originalDeadline=" + originalDeadline +
                 ", start=" + start +
                 ", dependsOn=" + dependsOn.size() +
                 ", dependedOnBy=" + dependedOnBy.size() +

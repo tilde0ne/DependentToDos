@@ -69,6 +69,7 @@ public class Appointment extends ToDoItem {
                 ", dateTime=" + dateTime.get() +
                 ", description='" + description + '\'' +
                 ", deadline=" + deadline.get() +
+                ", originalDeadline=" + originalDeadline +
                 ", start=" + start +
                 ", dependsOn=" + dependsOn.size() +
                 ", dependedOnBy=" + dependedOnBy.size() +

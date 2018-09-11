@@ -21,6 +21,7 @@ public class ToDoItem implements Serializable {
     protected String description;
 
     protected transient SimpleObjectProperty<LocalDate> deadline;
+    protected LocalDate originalDeadline;
     protected LocalDate start;
 
     protected List<ToDoItem> dependsOn;
@@ -49,6 +50,7 @@ public class ToDoItem implements Serializable {
     public void removeDependsOn(ToDoItem toDoItem) {
         dependsOn.remove(toDoItem);
         toDoItem.removeDependedOnBy(this);
+        toDoItem.restoreOriginalDeadline();
     }
 
     public void addDependedOnBy(ToDoItem toDoItem) {
@@ -78,13 +80,58 @@ public class ToDoItem implements Serializable {
         return false;
     }
 
+    public void restoreOriginalDeadline() {
+        LocalDate temp = checkAgainstParentDeadlines(originalDeadline);
+        if (temp == null) {
+            deadline = null;
+        } else {
+            deadline.set(temp);
+        }
+    }
+
+    public void removeDeadline() {
+        if (checkAgainstParentDeadlines(null) == null) {
+            deadline = null;
+        }
+        originalDeadline = null;
+    }
+
+    public boolean isInherited() {
+        if (deadline == null) {
+            return false;
+        }
+        if (originalDeadline == null) {
+            return true;
+        }
+        return !deadline.get().equals(originalDeadline);
+    }
+
     private void passOnDeadline(ToDoItem toDoItem) {
         if (toDoItem.getClass().getSimpleName().equals("Appointment")) {
             return;
         }
-        if (toDoItem.deadline == null || toDoItem.deadline.get().isAfter(deadline.get())) {
-            toDoItem.deadline = deadline;
+        if (deadline == null) {
+            return;
         }
+        if (toDoItem.deadline == null || toDoItem.deadline.get().isAfter(deadline.get())) {
+            toDoItem.setDeadline(deadline.get(), false);
+        }
+    }
+
+    private LocalDate checkAgainstParentDeadlines(LocalDate deadline) {
+        LocalDate temp = deadline;
+        if (dependedOnBy != null && !dependedOnBy.isEmpty()) {
+            for (ToDoItem toDoItem : dependedOnBy) {
+                LocalDate parentDeadline = toDoItem.getDeadline();
+                if (parentDeadline == null) {
+                    continue;
+                }
+                if (temp == null || temp.isAfter(parentDeadline)) {
+                    temp = parentDeadline;
+                }
+            }
+        }
+        return temp;
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
@@ -156,18 +203,33 @@ public class ToDoItem implements Serializable {
     }
 
     public void setDeadline(LocalDate deadline) {
-        if (this.deadline != null) {
-            this.deadline.set(deadline);
-        } else {
+        setDeadline(deadline, true);
+    }
+
+    public void setDeadline(LocalDate deadline, boolean isOriginal) {
+        if (this.deadline == null) {
             this.deadline = new SimpleObjectProperty<>(deadline);
+        } else if (isOriginal){
+            this.deadline.set(checkAgainstParentDeadlines(deadline));
         }
 
-        if (dependsOn == null || dependsOn.isEmpty()) {
-            return;
+        if (isOriginal) {
+            originalDeadline = deadline;
         }
-        for (ToDoItem toDoItem : dependsOn) {
-            passOnDeadline(toDoItem);
+
+        if (dependsOn != null && !dependsOn.isEmpty()) {
+            for (ToDoItem toDoItem : dependsOn) {
+                passOnDeadline(toDoItem);
+            }
         }
+    }
+
+    public LocalDate getOriginalDeadline() {
+        return originalDeadline;
+    }
+
+    public void setOriginalDeadline(LocalDate originalDeadline) {
+        this.originalDeadline = originalDeadline;
     }
 
     public LocalDate getStart() {
@@ -212,6 +274,7 @@ public class ToDoItem implements Serializable {
                 "title=" + title.get() +
                 ", description='" + description + '\'' +
                 ", deadline=" + (deadline == null ? null : deadline.get()) +
+                ", originalDeadline=" + originalDeadline +
                 ", start=" + start +
                 ", dependsOn=" + dependsOn.size() +
                 ", dependedOnBy=" + dependedOnBy.size() +
