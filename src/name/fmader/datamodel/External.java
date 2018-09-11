@@ -19,6 +19,17 @@ public class External extends ToDoItem {
     }
 
     @Override
+    public boolean isInherited() {
+        if (inheritedDeadline == null) {
+            return false;
+        }
+        if (originalDeadline == null) {
+            return true;
+        }
+        return !inheritedDeadline.equals(originalDeadline);
+    }
+
+    @Override
     public void setDeadline(LocalDate deadline) {
         originalDeadline = deadline;
 
