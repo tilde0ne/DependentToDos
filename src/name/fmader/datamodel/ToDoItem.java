@@ -4,6 +4,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,13 +14,13 @@ import java.util.List;
 
 public class ToDoItem implements Serializable {
 
-    private static final long serialVersionUID = -4556982433591087459L;
+    private static final long serialVersionUID = 6210373413398884148L;
 
     protected LocalDate created;
-    protected SimpleStringProperty title;
+    protected transient SimpleStringProperty title;
     protected String description;
 
-    protected SimpleObjectProperty<LocalDate> deadline;
+    protected transient SimpleObjectProperty<LocalDate> deadline;
     protected LocalDate start;
 
     protected List<ToDoItem> dependsOn;
@@ -84,6 +87,21 @@ public class ToDoItem implements Serializable {
         }
     }
 
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeUTF(title.get());
+        out.writeObject(deadline == null ? LocalDate.of(1, 1, 1) : deadline.get());
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        title = new SimpleStringProperty(in.readUTF());
+        LocalDate date = (LocalDate) in.readObject();
+        if (!date.equals(LocalDate.of(1, 1, 1))) {
+            deadline = new SimpleObjectProperty<>(date);
+        }
+    }
+
 //    @Override
 //    public int compareTo(ToDoItem o) {
 //        if (deadline == null) {
@@ -98,8 +116,8 @@ public class ToDoItem implements Serializable {
 //        return deadline.get().compareTo(o.deadline.get());
 //    }
 
-    // Getters and Setters
-    //////////////////////
+                             // Getters and Setters
+                             //////////////////////
 
     public LocalDate getCreated() {
         return created;
