@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ToDoItem implements Serializable {
 
-    private static final long serialVersionUID = -4441683198531926203L;
+    private static final long serialVersionUID = -6394894748043619311L;
 
     protected LocalDate created;
     protected transient SimpleStringProperty title;
@@ -30,6 +30,7 @@ public class ToDoItem implements Serializable {
 
     protected boolean isRecurrent;
     protected RecurringPattern recurringPattern;
+    protected boolean hasFollowUp;
 
     public ToDoItem(String title) {
         this.created = LocalDate.now();
@@ -224,6 +225,14 @@ public class ToDoItem implements Serializable {
 
     public void setRecurringPattern(RecurringPattern recurringPattern) {
         this.recurringPattern = recurringPattern;
+    }
+
+    public boolean isHasFollowUp() {
+        return hasFollowUp;
+    }
+
+    public void setHasFollowUp(boolean hasFollowUp) {
+        this.hasFollowUp = hasFollowUp;
     }
 
     @Override
