@@ -3,9 +3,12 @@ package name.fmader.ui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import name.fmader.datamodel.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Controller {
@@ -27,6 +30,26 @@ public class Controller {
     TableView<Appointment> appointmentTableView;
     @FXML
     TableView<Project> projectTableView;
+    @FXML
+    TableColumn<ToDoItem, String> activeTitleColumn;
+    @FXML
+    TableColumn<ToDoItem, LocalDate> activeDeadlineColumn;
+    @FXML
+    TableColumn<ToDoItem, String> dependentTitleColumn;
+    @FXML
+    TableColumn<ToDoItem, LocalDate> dependentDeadlineColumn;
+    @FXML
+    TableColumn<External, String> externalStringTableColumn;
+    @FXML
+    TableColumn<External, LocalDate> externalLocalDateTableColumn;
+    @FXML
+    TableColumn<Appointment, String> appointmentStringTableColumn;
+    @FXML
+    TableColumn<Appointment, LocalDateTime> appointmentLocalDateTimeTableColumn;
+    @FXML
+    TableColumn<Project, String> projectStringTableColumn;
+    @FXML
+    TableColumn<Project, LocalDate> projectLocalDateTableColumn;
 
     public void initialize() {
         dataIO.load();
@@ -41,5 +64,11 @@ public class Controller {
         externalTableView.setItems(externals);
         appointmentTableView.setItems(appointments);
         projectTableView.setItems(projects);
+
+        activeTitleColumn.prefWidthProperty().bind(activeToDoTableView.widthProperty().subtract(activeDeadlineColumn.getWidth()));
+        dependentTitleColumn.prefWidthProperty().bind(dependentToDoTableView.widthProperty().subtract(dependentDeadlineColumn.getWidth()));
+        externalStringTableColumn.prefWidthProperty().bind(externalTableView.widthProperty().subtract(externalLocalDateTableColumn.getWidth()));
+        appointmentStringTableColumn.prefWidthProperty().bind(appointmentTableView.widthProperty().subtract(appointmentLocalDateTimeTableColumn.getWidth()));
+        projectStringTableColumn.prefWidthProperty().bind(projectTableView.widthProperty().subtract(projectLocalDateTableColumn.getWidth()));
     }
 }
