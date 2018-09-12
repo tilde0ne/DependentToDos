@@ -37,5 +37,9 @@ public class Controller {
         contexts = FXCollections.observableArrayList(dataIO.getContexts());
 
         activeToDoTableView.setItems(toDoItems);
+        dependentToDoTableView.setItems(toDoItems);
+        externalTableView.setItems(externals);
+        appointmentTableView.setItems(appointments);
+        projectTableView.setItems(projects);
     }
 }
