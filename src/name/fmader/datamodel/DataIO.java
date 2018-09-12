@@ -9,25 +9,16 @@ public class DataIO {
     public static final DataIO instance = new DataIO();
 
     private List<ToDoItem> toDoItems;
-    private List<Appointment> appointments;
-    private List<External> externals;
-    private List<Project> projects;
     private List<String> contexts;
 
     private DataIO() {
-        this.toDoItems = new ArrayList<>();
-        this.appointments = new ArrayList<>();
-        this.externals = new ArrayList<>();
-        this.projects = new ArrayList<>();
         this.contexts = new ArrayList<>();
+        this.toDoItems = new ArrayList<>();
     }
 
     public boolean load() {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("data.dtd"))) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("test.dtd"))) {
             toDoItems = (ArrayList<ToDoItem>) in.readObject();
-            appointments = (ArrayList<Appointment>) in.readObject();
-            externals = (ArrayList<External>) in.readObject();
-            projects = (ArrayList<Project>) in.readObject();
             contexts = (ArrayList<String>) in.readObject();
 
             return true;
@@ -38,11 +29,8 @@ public class DataIO {
     }
 
     public boolean save() {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("data.dtd"))) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("test.dtd"))) {
             out.writeObject(toDoItems);
-            out.writeObject(appointments);
-            out.writeObject(externals);
-            out.writeObject(projects);
             out.writeObject(contexts);
 
             return true;
@@ -57,18 +45,6 @@ public class DataIO {
 
     public List<ToDoItem> getToDoItems() {
         return toDoItems;
-    }
-
-    public List<Appointment> getAppointments() {
-        return appointments;
-    }
-
-    public List<External> getExternals() {
-        return externals;
-    }
-
-    public List<Project> getProjects() {
-        return projects;
     }
 
     public List<String> getContexts() {

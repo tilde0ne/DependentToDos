@@ -2,6 +2,7 @@ package name.fmader.ui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -10,26 +11,30 @@ import name.fmader.datamodel.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Controller {
 
     private DataIO dataIO = DataIO.getInstance();
     private ObservableList<ToDoItem> toDoItems;
-    private ObservableList<Appointment> appointments;
-    private ObservableList<External> externals;
-    private ObservableList<Project> projects;
     private ObservableList<String> contexts;
+
+    private Predicate<ToDoItem> isDoable = toDoItem -> toDoItem.isDoable();
+    private Predicate<ToDoItem> isExternal = toDoItem -> toDoItem.getClass().getSimpleName().equals("External");
+    private Predicate<ToDoItem> isAppointment = toDoItem -> toDoItem.getClass().getSimpleName().equals("Appointment");
+    private Predicate<ToDoItem> isToDoOrProject = toDoItem -> {
+        String itemClass = toDoItem.getClass().getSimpleName();
+        return itemClass.equals("ToDoItem") || itemClass.equals("Project");
+    };
 
     @FXML
     TableView<ToDoItem> activeToDoTableView;
     @FXML
     TableView<ToDoItem> dependentToDoTableView;
     @FXML
-    TableView<External> externalTableView;
+    TableView<ToDoItem> externalTableView;
     @FXML
-    TableView<Appointment> appointmentTableView;
-    @FXML
-    TableView<Project> projectTableView;
+    TableView<ToDoItem> appointmentTableView;
     @FXML
     TableColumn<ToDoItem, String> activeTitleColumn;
     @FXML
@@ -54,21 +59,21 @@ public class Controller {
     public void initialize() {
         dataIO.load();
         toDoItems = FXCollections.observableArrayList(dataIO.getToDoItems());
-        appointments = FXCollections.observableArrayList(dataIO.getAppointments());
-        externals = FXCollections.observableArrayList(dataIO.getExternals());
-        projects = FXCollections.observableArrayList(dataIO.getProjects());
         contexts = FXCollections.observableArrayList(dataIO.getContexts());
 
-        activeToDoTableView.setItems(toDoItems);
-        dependentToDoTableView.setItems(toDoItems);
+        FilteredList<ToDoItem> activeToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(isDoable));
+        FilteredList<ToDoItem> dependentToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(isDoable.negate()));
+        FilteredList<ToDoItem> externals = new FilteredList<>(toDoItems, isExternal);
+        FilteredList<ToDoItem> appointments = new FilteredList<>(toDoItems, isAppointment);
+
+        activeToDoTableView.setItems(activeToDoItems);
+        dependentToDoTableView.setItems(dependentToDoItems);
         externalTableView.setItems(externals);
         appointmentTableView.setItems(appointments);
-        projectTableView.setItems(projects);
 
         activeTitleColumn.prefWidthProperty().bind(activeToDoTableView.widthProperty().subtract(activeDeadlineColumn.getWidth() + 2));
         dependentTitleColumn.prefWidthProperty().bind(dependentToDoTableView.widthProperty().subtract(dependentDeadlineColumn.getWidth() + 2));
         externalStringTableColumn.prefWidthProperty().bind(externalTableView.widthProperty().subtract(externalLocalDateTableColumn.getWidth() + 2));
         appointmentStringTableColumn.prefWidthProperty().bind(appointmentTableView.widthProperty().subtract(appointmentLocalDateTimeTableColumn.getWidth() + 2));
-        projectStringTableColumn.prefWidthProperty().bind(projectTableView.widthProperty().subtract(projectLocalDateTableColumn.getWidth() + 2));
     }
 }
