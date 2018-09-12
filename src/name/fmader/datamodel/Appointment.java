@@ -15,6 +15,7 @@ public class Appointment extends ToDoItem {
     private static final long serialVersionUID = -7181226704019846366L;
 
     private transient SimpleObjectProperty<LocalDateTime> dateTime;
+    private LocalDate inheritedDeadline;
 
     public Appointment(String title, LocalDate date, LocalTime time) {
         super(title);
@@ -29,8 +30,42 @@ public class Appointment extends ToDoItem {
     }
 
     @Override
-    protected LocalDate checkAgainstParentDeadlines(LocalDate deadline) {
-        return deadline;
+    public boolean isInherited() {
+        if (inheritedDeadline == null) {
+            return false;
+        }
+        if (originalDeadline == null) {
+            return true;
+        }
+        return !inheritedDeadline.equals(originalDeadline);
+    }
+
+    @Override
+    public void setDeadline(LocalDate deadline) {
+        originalDeadline = deadline;
+
+        if (deadline == null) {
+            this.deadline = null;
+        } else if (this.deadline == null) {
+            this.deadline = new SimpleObjectProperty<>(deadline);
+        } else {
+            this.deadline.set(deadline);
+        }
+
+        LocalTime temp = dateTime.get().toLocalTime();
+        dateTime.set(this.deadline.get().atTime(temp));
+
+        deadline = checkAgainstParentDeadlines(deadline);
+        inheritedDeadline = deadline;
+        if (!isInherited()) {
+            inheritedDeadline = null;
+        }
+
+        if (dependsOn != null && !dependsOn.isEmpty()) {
+            for (ToDoItem toDoItem : dependsOn) {
+                toDoItem.recalculateDeadline();
+            }
+        }
     }
 
     @Override
@@ -76,6 +111,7 @@ public class Appointment extends ToDoItem {
                 "\n, description='" + description + '\'' +
                 "\n, deadline=" + deadline.get() +
                 "\n, originalDeadline=" + originalDeadline +
+                "\n, inheritedDeadline=" + inheritedDeadline +
                 "\n, start=" + start +
                 "\n, dependsOn=" + dependsOn.size() +
                 "\n, dependedOnBy=" + dependedOnBy.size() +
