@@ -12,7 +12,7 @@ import java.time.LocalTime;
 
 public class Appointment extends ToDoItem {
 
-    private static final long serialVersionUID = -7181226704019846366L;
+    private static final long serialVersionUID = -7353449093654208963L;
 
     private transient SimpleObjectProperty<LocalDateTime> dateTime;
     private LocalDate inheritedDeadline;

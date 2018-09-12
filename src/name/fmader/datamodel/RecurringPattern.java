@@ -28,17 +28,22 @@ public class RecurringPattern implements Serializable {
 
     public RecurringPattern(boolean fix, RecurringBase base, int baseUnits) {
         this.fix = fix;
-        if (base == RecurringBase.EVERYNDAYS) {
-            this.everyNDays = baseUnits;
-        }
-        if (base == RecurringBase.EVERYNWEEKS) {
-            this.everyNDays = 7 * baseUnits;
-        }
-        if (base == RecurringBase.EVERYNMONTHS) {
-            this.everyNMonths = baseUnits;
-        }
-        if (base == RecurringBase.EVERYNYEARS) {
-            this.everyNYears = baseUnits;
+        switch (base) {
+            case EVERYNDAYS:
+                this.everyNDays = baseUnits;
+                break;
+            case EVERYNWEEKS:
+                this.everyNDays = 7 * baseUnits;
+                break;
+            case EVERYNMONTHS:
+                this.everyNMonths = baseUnits;
+                break;
+            case EVERYNYEARS:
+                this.everyNYears = baseUnits;
+                break;
+            default:
+                this.recurrencyEnds = LocalDate.now();
+                break;
         }
     }
 

@@ -13,7 +13,7 @@ public class Project extends ToDoItem{
     private static final long serialVersionUID = 3665790250284612759L;
 
     public Project(String title) {
-        super(title);
+        super("[P] " + title);
     }
 
     @Override
