@@ -17,7 +17,7 @@ public class DataIO {
     }
 
     public boolean load() {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("test.dtd"))) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("data.dtd"))) {
             toDoItems = (ArrayList<ToDoItem>) in.readObject();
             contexts = (ArrayList<String>) in.readObject();
 
@@ -29,7 +29,7 @@ public class DataIO {
     }
 
     public boolean save() {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("test.dtd"))) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("data.dtd"))) {
             out.writeObject(toDoItems);
             out.writeObject(contexts);
 

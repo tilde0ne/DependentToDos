@@ -3,6 +3,7 @@ package name.fmader.ui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -10,7 +11,7 @@ import name.fmader.datamodel.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Comparator;
 import java.util.function.Predicate;
 
 public class Controller {
@@ -25,6 +26,48 @@ public class Controller {
     private Predicate<ToDoItem> isToDoOrProject = toDoItem -> {
         String itemClass = toDoItem.getClass().getSimpleName();
         return itemClass.equals("ToDoItem") || itemClass.equals("Project");
+    };
+
+    private Comparator<ToDoItem> sortByDeadline = (o1, o2) -> {
+        if (o1.getDeadline() == null) {
+            if (o2.getDeadline() == null) {
+                return 0;
+            }
+            return 1;
+        }
+        if (o2.getDeadline() == null) {
+            return -1;
+        }
+        if (o1.getDeadline().equals(o2.getDeadline())) {
+            return 0;
+        }
+        return o1.getDeadline().isAfter(o2.getDeadline()) ? 1 : -1;
+    };
+
+    private Comparator<ToDoItem> sortByDateTime = (o1, o2) -> {
+        Appointment appointment1 = (Appointment) o1;
+        Appointment appointment2 = (Appointment) o2;
+
+        if (appointment1.getDateTime() == null) {
+            if (appointment2.getDateTime() == null) {
+                return 0;
+            }
+            return 1;
+        }
+        if (appointment2.getDateTime() == null) {
+            return -1;
+        }
+        if (appointment1.getDateTime().equals(appointment2.getDateTime())) {
+            return 0;
+        }
+        return appointment1.getDateTime().isAfter(appointment2.getDateTime()) ? 1 : -1;
+    };
+
+    private Comparator<ToDoItem> sortByIsDoable = (o1, o2) -> {
+        if ((o1.isDoable() && o2.isDoable()) || (!o1.isDoable() && !o2.isDoable())) {
+            return 0;
+        }
+        return o1.isDoable() ? 1 : -1;
     };
 
     @FXML
@@ -51,20 +94,21 @@ public class Controller {
     TableColumn<Appointment, String> appointmentStringTableColumn;
     @FXML
     TableColumn<Appointment, LocalDateTime> appointmentLocalDateTimeTableColumn;
-    @FXML
-    TableColumn<Project, String> projectStringTableColumn;
-    @FXML
-    TableColumn<Project, LocalDate> projectLocalDateTableColumn;
 
     public void initialize() {
         dataIO.load();
         toDoItems = FXCollections.observableArrayList(dataIO.getToDoItems());
         contexts = FXCollections.observableArrayList(dataIO.getContexts());
 
-        FilteredList<ToDoItem> activeToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(isDoable));
-        FilteredList<ToDoItem> dependentToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(isDoable.negate()));
-        FilteredList<ToDoItem> externals = new FilteredList<>(toDoItems, isExternal);
-        FilteredList<ToDoItem> appointments = new FilteredList<>(toDoItems, isAppointment);
+        FilteredList<ToDoItem> filteredActiveToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(isDoable));
+        FilteredList<ToDoItem> filteredDependentToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(isDoable.negate()));
+        FilteredList<ToDoItem> filteredExternals = new FilteredList<>(toDoItems, isExternal);
+        FilteredList<ToDoItem> filteredAppointments = new FilteredList<>(toDoItems, isAppointment);
+
+        SortedList<ToDoItem> activeToDoItems = new SortedList<>(filteredActiveToDoItems, sortByDeadline);
+        SortedList<ToDoItem> dependentToDoItems = new SortedList<>(filteredDependentToDoItems, sortByDeadline);
+        SortedList<ToDoItem> externals = new SortedList<>(filteredExternals, sortByIsDoable.thenComparing(sortByDeadline));
+        SortedList<ToDoItem> appointments = new SortedList<>(filteredAppointments, sortByDateTime);
 
         activeToDoTableView.setItems(activeToDoItems);
         dependentToDoTableView.setItems(dependentToDoItems);
