@@ -5,8 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.util.StringConverter;
 import name.fmader.datamodel.*;
 
 import java.time.LocalDate;
@@ -94,6 +94,15 @@ public class Controller {
     @FXML
     TableColumn<Appointment, LocalDateTime> appointmentLocalDateTimeTableColumn;
 
+    @FXML
+    ChoiceBox<ToDoItem> projectChoiceBox;
+    @FXML
+    ChoiceBox<String> contextChoiceBox;
+    @FXML
+    CheckBox bothCheckBox;
+    @FXML
+    Button clearButton;
+
     public void initialize() {
         dataIO.load();
         toDoItems = FXCollections.observableArrayList(dataIO.getToDoItems());
@@ -103,6 +112,7 @@ public class Controller {
         FilteredList<ToDoItem> filteredDependentToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(isDoable.negate()));
         FilteredList<ToDoItem> filteredExternals = new FilteredList<>(toDoItems, isExternal);
         FilteredList<ToDoItem> filteredAppointments = new FilteredList<>(toDoItems, isAppointment);
+        FilteredList<ToDoItem> projects = new FilteredList<>(toDoItems, isProject);
 
         SortedList<ToDoItem> activeToDoItems = new SortedList<>(filteredActiveToDoItems, sortByDeadline);
         SortedList<ToDoItem> dependentToDoItems = new SortedList<>(filteredDependentToDoItems, sortByDeadline);
@@ -118,5 +128,23 @@ public class Controller {
         dependentTitleColumn.prefWidthProperty().bind(dependentToDoTableView.widthProperty().subtract(dependentDeadlineColumn.getWidth() + 2));
         externalStringTableColumn.prefWidthProperty().bind(externalTableView.widthProperty().subtract(externalLocalDateTableColumn.getWidth() + 2));
         appointmentStringTableColumn.prefWidthProperty().bind(appointmentTableView.widthProperty().subtract(appointmentLocalDateTimeTableColumn.getWidth() + 2));
+
+        projectChoiceBox.setItems(projects);
+        projectChoiceBox.setConverter(new StringConverter<ToDoItem>() {
+            @Override
+            public String toString(ToDoItem object) {
+                return object.getTitle();
+            }
+
+            @Override
+            public ToDoItem fromString(String string) {
+                return projectChoiceBox.getItems()
+                        .stream()
+                        .filter(toDoItem -> toDoItem.getTitle().equals(string))
+                        .findFirst()
+                        .orElse(null);
+            }
+        });
+        contextChoiceBox.setItems(contexts);
     }
 }
