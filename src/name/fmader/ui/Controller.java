@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import javafx.util.StringConverter;
 import name.fmader.datamodel.Appointment;
 import name.fmader.datamodel.DataIO;
@@ -25,13 +26,14 @@ public class Controller {
     private ObservableList<ToDoItem> toDoItems;
     private ObservableList<String> contexts;
 
-    FilteredList<ToDoItem> filteredActiveToDoItems;
-    FilteredList<ToDoItem> filteredDependentToDoItems;
-    FilteredList<ToDoItem> filteredExternals;
-    FilteredList<ToDoItem> filteredAppointments;
+    private FilteredList<ToDoItem> filteredActiveToDoItems;
+    private FilteredList<ToDoItem> filteredDependentToDoItems;
+    private FilteredList<ToDoItem> filteredExternals;
+    private FilteredList<ToDoItem> filteredAppointments;
 
+    private ToDoItem selectedToDoItem;
 
-    private Predicate<ToDoItem> isDoable = toDoItem -> toDoItem.isDoable();
+    private Predicate<ToDoItem> isDoable = ToDoItem::isDoable;
     private Predicate<ToDoItem> isExternal = toDoItem -> toDoItem.getClass().getSimpleName().equals("External");
     private Predicate<ToDoItem> isAppointment = toDoItem -> toDoItem.getClass().getSimpleName().equals("Appointment");
     private Predicate<ToDoItem> isToDoItem = toDoItem -> toDoItem.getClass().getSimpleName().equals("ToDoItem");
@@ -179,5 +181,23 @@ public class Controller {
         filteredDependentToDoItems.setPredicate(temp1.and(temp2).and(dependentToDoItemsPredicate));
         filteredExternals.setPredicate(temp1.and(temp2).and(isExternal));
         filteredAppointments.setPredicate(temp1.and(temp2).and(isAppointment));
+    }
+
+    @FXML
+    public void select(MouseEvent event) {
+        if (!event.getSource().equals(activeToDoTableView)) {
+            activeToDoTableView.getSelectionModel().clearSelection();
+        }
+        if (!event.getSource().equals(dependentToDoTableView)) {
+            dependentToDoTableView.getSelectionModel().clearSelection();
+        }
+        if (!event.getSource().equals(externalTableView)) {
+            externalTableView.getSelectionModel().clearSelection();
+        }
+        if (!event.getSource().equals(appointmentTableView)) {
+            appointmentTableView.getSelectionModel().clearSelection();
+        }
+
+        selectedToDoItem = ((TableView<ToDoItem>) event.getSource()).getSelectionModel().getSelectedItem();
     }
 }
