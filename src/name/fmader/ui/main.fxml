@@ -77,7 +77,7 @@
                         <PropertyValueFactory property="title" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="activeDeadlineColumn" prefWidth="90.0" resizable="false" text="Deadline">
+                <TableColumn fx:id="activeDeadlineColumn" editable="false" prefWidth="90.0" resizable="false" sortable="false" text="Deadline">
                     <cellValueFactory>
                         <PropertyValueFactory property="deadline" />
                     </cellValueFactory>
@@ -86,12 +86,12 @@
         </TableView>
         <TableView fx:id="dependentToDoTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
             <columns>
-                <TableColumn fx:id="dependentTitleColumn" prefWidth="150.0" text="Title">
+                <TableColumn fx:id="dependentTitleColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
                     <cellValueFactory>
                         <PropertyValueFactory property="title" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="dependentDeadlineColumn" prefWidth="90.0" resizable="false" text="Deadline">
+                <TableColumn fx:id="dependentDeadlineColumn" editable="false" prefWidth="90.0" resizable="false" sortable="false" text="Deadline">
                     <cellValueFactory>
                         <PropertyValueFactory property="deadline" />
                     </cellValueFactory>
@@ -100,7 +100,7 @@
         </TableView>
         <TableView fx:id="externalTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
             <columns>
-                <TableColumn fx:id="externalStringTableColumn" prefWidth="150.0" text="Title">
+                <TableColumn fx:id="externalStringTableColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
                     <cellValueFactory>
                         <PropertyValueFactory property="title" />
                     </cellValueFactory>
@@ -114,12 +114,12 @@
         </TableView>
         <TableView fx:id="appointmentTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
             <columns>
-                <TableColumn fx:id="appointmentStringTableColumn" prefWidth="150.0" text="Title">
+                <TableColumn fx:id="appointmentStringTableColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
                     <cellValueFactory>
                         <PropertyValueFactory property="title" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="appointmentLocalDateTimeTableColumn" prefWidth="125.0" resizable="false" text="Date/Time">
+                <TableColumn fx:id="appointmentLocalDateTimeTableColumn" editable="false" prefWidth="125.0" resizable="false" sortable="false" text="Date/Time">
                     <cellValueFactory>
                         <PropertyValueFactory property="dateTime" />
                     </cellValueFactory>
