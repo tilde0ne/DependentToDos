@@ -90,47 +90,47 @@ public class Controller {
     };
 
     @FXML
-    GridPane mainGridPane;
+    private GridPane mainGridPane;
     @FXML
-    GridPane detailPane;
+    private GridPane detailPane;
 
     @FXML
-    TableView<ToDoItem> activeToDoTableView;
+    private TableView<ToDoItem> activeToDoTableView;
     @FXML
-    TableView<ToDoItem> dependentToDoTableView;
+    private TableView<ToDoItem> dependentToDoTableView;
     @FXML
-    TableView<ToDoItem> externalTableView;
+    private TableView<ToDoItem> externalTableView;
     @FXML
-    TableView<ToDoItem> appointmentTableView;
+    private TableView<ToDoItem> appointmentTableView;
 
-    List<TableView<ToDoItem>> tableViews = new ArrayList<>();
-
-    @FXML
-    TableColumn<ToDoItem, String> activeTitleColumn;
-    @FXML
-    TableColumn<ToDoItem, LocalDate> activeDeadlineColumn;
-    @FXML
-    TableColumn<ToDoItem, String> dependentTitleColumn;
-    @FXML
-    TableColumn<ToDoItem, LocalDate> dependentDeadlineColumn;
-    @FXML
-    TableColumn<External, String> externalStringTableColumn;
-    @FXML
-    TableColumn<External, LocalDate> externalLocalDateTableColumn;
-    @FXML
-    TableColumn<Appointment, String> appointmentStringTableColumn;
-    @FXML
-    TableColumn<Appointment, LocalDateTime> appointmentLocalDateTimeTableColumn;
+    private List<TableView<ToDoItem>> tableViews = new ArrayList<>();
 
     @FXML
-    ChoiceBox<ToDoItem> projectChoiceBox;
+    private TableColumn<ToDoItem, String> activeTitleColumn;
     @FXML
-    ChoiceBox<String> contextChoiceBox;
+    private TableColumn<ToDoItem, LocalDate> activeDeadlineColumn;
+    @FXML
+    private TableColumn<ToDoItem, String> dependentTitleColumn;
+    @FXML
+    private TableColumn<ToDoItem, LocalDate> dependentDeadlineColumn;
+    @FXML
+    private TableColumn<External, String> externalStringTableColumn;
+    @FXML
+    private TableColumn<External, LocalDate> externalLocalDateTableColumn;
+    @FXML
+    private TableColumn<Appointment, String> appointmentStringTableColumn;
+    @FXML
+    private TableColumn<Appointment, LocalDateTime> appointmentLocalDateTimeTableColumn;
 
     @FXML
-    Button addButton;
+    private ChoiceBox<ToDoItem> projectChoiceBox;
     @FXML
-    Button editButton;
+    private ChoiceBox<String> contextChoiceBox;
+
+    @FXML
+    private Button addButton;
+    @FXML
+    private Button editButton;
 
     public void initialize() {
         dataIO.load();
