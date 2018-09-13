@@ -236,9 +236,9 @@ public class Controller {
             dialog.setTitle("Edit item");
         }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("dialog.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("dialog.fxml"));
         try {
-            dialog.getDialogPane().setContent(loader.load());
+            dialog.getDialogPane().setContent(fxmlLoader.load());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -246,7 +246,7 @@ public class Controller {
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 
-        DialogController dialogController = loader.getController();
+        DialogController dialogController = fxmlLoader.getController();
         if (event.getSource().equals(editButton)) {
             dialogController.initForm(selectedToDoItem);
         }
