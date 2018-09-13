@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
@@ -20,12 +21,21 @@ public class Controller {
     private ObservableList<ToDoItem> toDoItems;
     private ObservableList<String> contexts;
 
+    FilteredList<ToDoItem> filteredActiveToDoItems;
+    FilteredList<ToDoItem> filteredDependentToDoItems;
+    FilteredList<ToDoItem> filteredExternals;
+    FilteredList<ToDoItem> filteredAppointments;
+
+
     private Predicate<ToDoItem> isDoable = toDoItem -> toDoItem.isDoable();
     private Predicate<ToDoItem> isExternal = toDoItem -> toDoItem.getClass().getSimpleName().equals("External");
     private Predicate<ToDoItem> isAppointment = toDoItem -> toDoItem.getClass().getSimpleName().equals("Appointment");
     private Predicate<ToDoItem> isToDoItem = toDoItem -> toDoItem.getClass().getSimpleName().equals("ToDoItem");
     private Predicate<ToDoItem> isProject = toDoItem -> toDoItem.getClass().getSimpleName().equals("Project");
     private Predicate<ToDoItem> isToDoOrProject = isToDoItem.or(isProject);
+
+    private Predicate<ToDoItem> activeToDoItemsPredicate = isToDoOrProject.and(isDoable);
+    private Predicate<ToDoItem> dependentToDoItemsPredicate = isToDoOrProject.and(isDoable.negate());
 
     private Comparator<ToDoItem> sortByDeadline = (o1, o2) -> {
         if (o1.getDeadline() == null) {
@@ -108,10 +118,10 @@ public class Controller {
         toDoItems = FXCollections.observableArrayList(dataIO.getToDoItems());
         contexts = FXCollections.observableArrayList(dataIO.getContexts());
 
-        FilteredList<ToDoItem> filteredActiveToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(isDoable));
-        FilteredList<ToDoItem> filteredDependentToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(isDoable.negate()));
-        FilteredList<ToDoItem> filteredExternals = new FilteredList<>(toDoItems, isExternal);
-        FilteredList<ToDoItem> filteredAppointments = new FilteredList<>(toDoItems, isAppointment);
+        filteredActiveToDoItems = new FilteredList<>(toDoItems, activeToDoItemsPredicate);
+        filteredDependentToDoItems = new FilteredList<>(toDoItems, dependentToDoItemsPredicate);
+        filteredExternals = new FilteredList<>(toDoItems, isExternal);
+        filteredAppointments = new FilteredList<>(toDoItems, isAppointment);
         FilteredList<ToDoItem> projects = new FilteredList<>(toDoItems, isProject);
 
         SortedList<ToDoItem> activeToDoItems = new SortedList<>(filteredActiveToDoItems, sortByDeadline);
@@ -146,5 +156,33 @@ public class Controller {
             }
         });
         contextChoiceBox.setItems(contexts);
+    }
+
+    @FXML
+    public void clearFilters() {
+        projectChoiceBox.getSelectionModel().clearSelection();
+        contextChoiceBox.getSelectionModel().clearSelection();
+        bothCheckBox.setSelected(false);
+    }
+
+    @FXML
+    public void filterItems(ActionEvent event) {
+        if (!bothCheckBox.isSelected()) {
+            if (event.getSource().equals(projectChoiceBox)) {
+//                contextChoiceBox.getSelectionModel().clearSelection();
+            } else if (event.getSource().equals(contextChoiceBox)){
+//                projectChoiceBox.getSelectionModel().clearSelection();
+            }
+        }
+
+        Predicate<ToDoItem> temp1 =
+                toDoItem -> projectChoiceBox.getValue() == null || toDoItem.getDependedOnBy().contains(projectChoiceBox.getValue());
+        Predicate<ToDoItem> temp2 =
+                toDoItem -> contextChoiceBox.getValue() == null || toDoItem.getContexts().contains(contextChoiceBox.getValue());
+
+        filteredActiveToDoItems.setPredicate(temp1.and(temp2).and(activeToDoItemsPredicate));
+        filteredDependentToDoItems.setPredicate(temp1.and(temp2).and(dependentToDoItemsPredicate));
+        filteredExternals.setPredicate(temp1.and(temp2).and(isExternal));
+        filteredAppointments.setPredicate(temp1.and(temp2).and(isAppointment));
     }
 }
