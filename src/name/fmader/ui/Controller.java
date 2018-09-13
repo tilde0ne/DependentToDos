@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseEvent;
 import javafx.util.StringConverter;
 import name.fmader.datamodel.Appointment;
 import name.fmader.datamodel.DataIO;
@@ -136,6 +135,39 @@ public class Controller {
         externalTableView.setItems(externals);
         appointmentTableView.setItems(appointments);
 
+        activeToDoTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                dependentToDoTableView.getSelectionModel().clearSelection();
+                externalTableView.getSelectionModel().clearSelection();
+                appointmentTableView.getSelectionModel().clearSelection();
+                selectedToDoItem = newSelection;
+            }
+        });
+        dependentToDoTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                activeToDoTableView.getSelectionModel().clearSelection();
+                externalTableView.getSelectionModel().clearSelection();
+                appointmentTableView.getSelectionModel().clearSelection();
+                selectedToDoItem = newSelection;
+            }
+        });
+        externalTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                activeToDoTableView.getSelectionModel().clearSelection();
+                dependentToDoTableView.getSelectionModel().clearSelection();
+                appointmentTableView.getSelectionModel().clearSelection();
+                selectedToDoItem = newSelection;
+            }
+        });
+        appointmentTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                activeToDoTableView.getSelectionModel().clearSelection();
+                dependentToDoTableView.getSelectionModel().clearSelection();
+                externalTableView.getSelectionModel().clearSelection();
+                selectedToDoItem = newSelection;
+            }
+        });
+
         activeTitleColumn.prefWidthProperty().bind(activeToDoTableView.widthProperty().subtract(activeDeadlineColumn.getWidth() + 2));
         dependentTitleColumn.prefWidthProperty().bind(dependentToDoTableView.widthProperty().subtract(dependentDeadlineColumn.getWidth() + 2));
         externalStringTableColumn.prefWidthProperty().bind(externalTableView.widthProperty().subtract(externalLocalDateTableColumn.getWidth() + 2));
@@ -181,23 +213,5 @@ public class Controller {
         filteredDependentToDoItems.setPredicate(temp1.and(temp2).and(dependentToDoItemsPredicate));
         filteredExternals.setPredicate(temp1.and(temp2).and(isExternal));
         filteredAppointments.setPredicate(temp1.and(temp2).and(isAppointment));
-    }
-
-    @FXML
-    public void select(MouseEvent event) {
-        if (!event.getSource().equals(activeToDoTableView)) {
-            activeToDoTableView.getSelectionModel().clearSelection();
-        }
-        if (!event.getSource().equals(dependentToDoTableView)) {
-            dependentToDoTableView.getSelectionModel().clearSelection();
-        }
-        if (!event.getSource().equals(externalTableView)) {
-            externalTableView.getSelectionModel().clearSelection();
-        }
-        if (!event.getSource().equals(appointmentTableView)) {
-            appointmentTableView.getSelectionModel().clearSelection();
-        }
-
-        selectedToDoItem = ((TableView<ToDoItem>) event.getSource()).getSelectionModel().getSelectedItem();
     }
 }

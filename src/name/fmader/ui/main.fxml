@@ -70,7 +70,7 @@
                 <Font size="14.0" />
             </font>
         </Label>
-        <TableView fx:id="activeToDoTableView" onMouseClicked="#select" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
+        <TableView fx:id="activeToDoTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
             <columns>
                 <TableColumn fx:id="activeTitleColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
                     <cellValueFactory>
@@ -84,7 +84,7 @@
                 </TableColumn>
             </columns>
         </TableView>
-        <TableView fx:id="dependentToDoTableView" onMouseClicked="#select" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <TableView fx:id="dependentToDoTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
             <columns>
                 <TableColumn fx:id="dependentTitleColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
                     <cellValueFactory>
@@ -98,7 +98,7 @@
                 </TableColumn>
             </columns>
         </TableView>
-        <TableView fx:id="externalTableView" onMouseClicked="#select" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+        <TableView fx:id="externalTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
             <columns>
                 <TableColumn fx:id="externalStringTableColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
                     <cellValueFactory>
@@ -112,7 +112,7 @@
                 </TableColumn>
             </columns>
         </TableView>
-        <TableView fx:id="appointmentTableView" onMouseClicked="#select" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
+        <TableView fx:id="appointmentTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
             <columns>
                 <TableColumn fx:id="appointmentStringTableColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
                     <cellValueFactory>
