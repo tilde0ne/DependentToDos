@@ -16,7 +16,9 @@ import name.fmader.datamodel.ToDoItem;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class Controller {
@@ -92,6 +94,9 @@ public class Controller {
     TableView<ToDoItem> externalTableView;
     @FXML
     TableView<ToDoItem> appointmentTableView;
+
+    List<TableView<ToDoItem>> tableViews = new ArrayList<>();
+
     @FXML
     TableColumn<ToDoItem, String> activeTitleColumn;
     @FXML
@@ -135,38 +140,25 @@ public class Controller {
         externalTableView.setItems(externals);
         appointmentTableView.setItems(appointments);
 
-        activeToDoTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                dependentToDoTableView.getSelectionModel().clearSelection();
-                externalTableView.getSelectionModel().clearSelection();
-                appointmentTableView.getSelectionModel().clearSelection();
-                selectedToDoItem = newSelection;
-            }
-        });
-        dependentToDoTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                activeToDoTableView.getSelectionModel().clearSelection();
-                externalTableView.getSelectionModel().clearSelection();
-                appointmentTableView.getSelectionModel().clearSelection();
-                selectedToDoItem = newSelection;
-            }
-        });
-        externalTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                activeToDoTableView.getSelectionModel().clearSelection();
-                dependentToDoTableView.getSelectionModel().clearSelection();
-                appointmentTableView.getSelectionModel().clearSelection();
-                selectedToDoItem = newSelection;
-            }
-        });
-        appointmentTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                activeToDoTableView.getSelectionModel().clearSelection();
-                dependentToDoTableView.getSelectionModel().clearSelection();
-                externalTableView.getSelectionModel().clearSelection();
-                selectedToDoItem = newSelection;
-            }
-        });
+        tableViews.add(activeToDoTableView);
+        tableViews.add(dependentToDoTableView);
+        tableViews.add(externalTableView);
+        tableViews.add(appointmentTableView);
+
+        for (TableView<ToDoItem> tableView : tableViews) {
+            tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+                if (newSelection != null) {
+                    for (TableView<ToDoItem> innerTableView : tableViews) {
+                        if (innerTableView != tableView) {
+                            innerTableView.getSelectionModel().clearSelection();
+                        }
+                    }
+                    selectedToDoItem = tableView.getSelectionModel().getSelectedItem();
+                } else {
+                    selectNull();
+                }
+            });
+        }
 
         activeTitleColumn.prefWidthProperty().bind(activeToDoTableView.widthProperty().subtract(activeDeadlineColumn.getWidth() + 2));
         dependentTitleColumn.prefWidthProperty().bind(dependentToDoTableView.widthProperty().subtract(dependentDeadlineColumn.getWidth() + 2));
@@ -213,5 +205,18 @@ public class Controller {
         filteredDependentToDoItems.setPredicate(temp1.and(temp2).and(dependentToDoItemsPredicate));
         filteredExternals.setPredicate(temp1.and(temp2).and(isExternal));
         filteredAppointments.setPredicate(temp1.and(temp2).and(isAppointment));
+    }
+
+    private void selectNull() {
+        ToDoItem temp = null;
+        for (TableView<ToDoItem> tableView : tableViews) {
+            ToDoItem inspect = tableView.getSelectionModel().getSelectedItem();
+            if (inspect != null) {
+                temp = inspect;
+            }
+        }
+        if (temp == null) {
+            selectedToDoItem = null;
+        }
     }
 }
