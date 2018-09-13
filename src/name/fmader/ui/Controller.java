@@ -4,11 +4,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.util.StringConverter;
-import name.fmader.datamodel.*;
+import name.fmader.datamodel.Appointment;
+import name.fmader.datamodel.DataIO;
+import name.fmader.datamodel.External;
+import name.fmader.datamodel.ToDoItem;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -108,10 +112,6 @@ public class Controller {
     ChoiceBox<ToDoItem> projectChoiceBox;
     @FXML
     ChoiceBox<String> contextChoiceBox;
-    @FXML
-    CheckBox bothCheckBox;
-    @FXML
-    Button clearButton;
 
     public void initialize() {
         dataIO.load();
@@ -159,22 +159,17 @@ public class Controller {
     }
 
     @FXML
-    public void clearFilters() {
+    public void clearProjectFilter() {
         projectChoiceBox.getSelectionModel().clearSelection();
-        contextChoiceBox.getSelectionModel().clearSelection();
-        bothCheckBox.setSelected(false);
     }
 
     @FXML
-    public void filterItems(ActionEvent event) {
-        if (!bothCheckBox.isSelected()) {
-            if (event.getSource().equals(projectChoiceBox)) {
-//                contextChoiceBox.getSelectionModel().clearSelection();
-            } else if (event.getSource().equals(contextChoiceBox)){
-//                projectChoiceBox.getSelectionModel().clearSelection();
-            }
-        }
+    public void clearContextFilter() {
+        contextChoiceBox.getSelectionModel().clearSelection();
+    }
 
+    @FXML
+    public void filterItems() {
         Predicate<ToDoItem> temp1 =
                 toDoItem -> projectChoiceBox.getValue() == null || toDoItem.getDependedOnBy().contains(projectChoiceBox.getValue());
         Predicate<ToDoItem> temp2 =
