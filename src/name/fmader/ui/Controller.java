@@ -4,21 +4,24 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import name.fmader.datamodel.Appointment;
 import name.fmader.datamodel.DataIO;
 import name.fmader.datamodel.External;
 import name.fmader.datamodel.ToDoItem;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class Controller {
@@ -87,6 +90,11 @@ public class Controller {
     };
 
     @FXML
+    GridPane mainGridPane;
+    @FXML
+    GridPane detailPane;
+
+    @FXML
     TableView<ToDoItem> activeToDoTableView;
     @FXML
     TableView<ToDoItem> dependentToDoTableView;
@@ -118,6 +126,11 @@ public class Controller {
     ChoiceBox<ToDoItem> projectChoiceBox;
     @FXML
     ChoiceBox<String> contextChoiceBox;
+
+    @FXML
+    Button addButton;
+    @FXML
+    Button editButton;
 
     public void initialize() {
         dataIO.load();
@@ -154,6 +167,7 @@ public class Controller {
                         }
                     }
                     selectedToDoItem = tableView.getSelectionModel().getSelectedItem();
+                    showDetails();
                 } else {
                     selectNull();
                 }
@@ -207,6 +221,68 @@ public class Controller {
         filteredAppointments.setPredicate(temp1.and(temp2).and(isAppointment));
     }
 
+    @FXML
+    public void addOrEditToDoItem(ActionEvent event) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(mainGridPane.getScene().getWindow());
+
+        if (event.getSource().equals(addButton)) {
+            dialog.setTitle("Add new item");
+        } else if (event.getSource().equals(editButton)) {
+            if (selectedToDoItem == null) {
+                alertNoSelection();
+                return;
+            }
+            dialog.setTitle("Edit item");
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("dialog.fxml"));
+        try {
+            dialog.getDialogPane().setContent(loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+        DialogController dialogController = loader.getController();
+        if (event.getSource().equals(editButton)) {
+            dialogController.initForm(selectedToDoItem);
+        }
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent() && result.get().equals(ButtonType.OK)) {
+            ToDoItem toDoItem = dialogController.getToDoItem();
+
+            if (event.getSource().equals(addButton)) {
+                toDoItems.add(toDoItem);
+            } else if (event.getSource().equals(editButton)) {
+                toDoItems.remove(selectedToDoItem);
+                toDoItems.add(toDoItem);
+            }
+
+//            selectedToDoItem = toDoItem;
+            for (TableView<ToDoItem> tableView : tableViews) {
+                if (tableView.getItems().contains(toDoItem)) {
+                    tableView.getSelectionModel().select(toDoItem);
+                    showDetails();
+                }
+            }
+        }
+    }
+
+    private void alertNoSelection() {
+
+    }
+
+    private void showDetails() {
+        if (selectedToDoItem != null) {
+            detailPane.setVisible(true);
+        }
+
+    }
+
     private void selectNull() {
         ToDoItem temp = null;
         for (TableView<ToDoItem> tableView : tableViews) {
@@ -218,5 +294,6 @@ public class Controller {
         if (temp == null) {
             selectedToDoItem = null;
         }
+        detailPane.setVisible(false);
     }
 }
