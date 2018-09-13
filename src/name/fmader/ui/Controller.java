@@ -23,10 +23,9 @@ public class Controller {
     private Predicate<ToDoItem> isDoable = toDoItem -> toDoItem.isDoable();
     private Predicate<ToDoItem> isExternal = toDoItem -> toDoItem.getClass().getSimpleName().equals("External");
     private Predicate<ToDoItem> isAppointment = toDoItem -> toDoItem.getClass().getSimpleName().equals("Appointment");
-    private Predicate<ToDoItem> isToDoOrProject = toDoItem -> {
-        String itemClass = toDoItem.getClass().getSimpleName();
-        return itemClass.equals("ToDoItem") || itemClass.equals("Project");
-    };
+    private Predicate<ToDoItem> isToDoItem = toDoItem -> toDoItem.getClass().getSimpleName().equals("ToDoItem");
+    private Predicate<ToDoItem> isProject = toDoItem -> toDoItem.getClass().getSimpleName().equals("Project");
+    private Predicate<ToDoItem> isToDoOrProject = isToDoItem.or(isProject);
 
     private Comparator<ToDoItem> sortByDeadline = (o1, o2) -> {
         if (o1.getDeadline() == null) {
