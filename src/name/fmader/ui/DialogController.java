@@ -144,7 +144,10 @@ public class DialogController {
         children.addListener(setSourcePredicate);
         parents.addListener(setSourcePredicate);
 
-        itemContexts.addListener((ListChangeListener<String>) c -> filteredContextSource.setPredicate(excludeContexts));
+        itemContexts.addListener((ListChangeListener<String>) c -> {
+            filteredContextSource.setPredicate(excludeContexts);
+            contextSourceListView.refresh();
+        });
     }
 
     public void initForm(ToDoItem toDoItem) {
@@ -290,7 +293,6 @@ public class DialogController {
     @FXML
     private void addItemContext() {
         String context = contextSourceListView.getSelectionModel().getSelectedItem();
-        System.out.println(context);
         if (context != null && !context.isEmpty()) {
             itemContexts.add(context);
         }
@@ -310,8 +312,8 @@ public class DialogController {
     @FXML
     private void addContext() {
         String context = newContextTextField.getText();
-        if (context != null && !availableContexts.contains(context)) {
-            availableContexts.add(context);
+        if (context != null && !context.isEmpty() && !availableContexts.contains(context.trim())) {
+            availableContexts.add(context.trim());
             newContextTextField.setText("");
         }
     }
@@ -321,9 +323,9 @@ public class DialogController {
         KeyCode keyCode = event.getCode();
         if (keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
             String context = contextSourceListView.getSelectionModel().getSelectedItem();
-            if (context != null) {
+            if (context != null && !context.isEmpty()) {
                 System.out.println("Alert: remove context");// Implement alert
-                availableContexts.remove(context);
+                availableContexts.remove(context.trim());
                 System.out.println("Removing context from all items");// remove this context from all ToDoItem's contexts
             }
         }
