@@ -55,7 +55,7 @@
                 <Font size="14.0" />
             </font>
         </Label>
-        <Label text="Dependent ToDo's" GridPane.columnIndex="1" GridPane.rowIndex="3">
+        <Label text="Inactive ToDo's" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <font>
                 <Font size="14.0" />
             </font>
