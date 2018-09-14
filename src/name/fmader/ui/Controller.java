@@ -37,7 +37,7 @@ public class Controller {
 
     private ToDoItem selectedToDoItem;
 
-    private Predicate<ToDoItem> isDoable = toDoItem -> toDoItem.isDoable();
+    private Predicate<ToDoItem> isDoable = ToDoItem::isDoable;
     private Predicate<ToDoItem> isExternal = toDoItem -> toDoItem.getClass().getSimpleName().equals("External");
     private Predicate<ToDoItem> isAppointment = toDoItem -> toDoItem.getClass().getSimpleName().equals("Appointment");
     private Predicate<ToDoItem> isToDoItem = toDoItem -> toDoItem.getClass().getSimpleName().equals("ToDoItem");
@@ -270,6 +270,9 @@ public class Controller {
                 }
             }
         }
+
+        contexts.clear();
+        contexts.addAll(dataIO.getContexts());
     }
 
     private void alertNoSelection() {
