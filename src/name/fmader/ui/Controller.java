@@ -134,7 +134,7 @@ public class Controller {
 
     public void initialize() {
         dataIO.load();
-        toDoItems = FXCollections.observableArrayList(dataIO.getToDoItems());
+        toDoItems = FXCollections.observableList(dataIO.getToDoItems());
         contexts = FXCollections.observableArrayList(dataIO.getContexts());
 
         filteredActiveToDoItems = new FilteredList<>(toDoItems, activeToDoItemsPredicate);
