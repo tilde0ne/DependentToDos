@@ -11,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 import name.fmader.datamodel.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -27,7 +28,7 @@ public class DialogController {
     private ObservableList<ToDoItem> toDoItems = FXCollections.observableArrayList(dataIO.getToDoItems());
     private ObservableList<String> availableContexts = FXCollections.observableList(dataIO.getContexts());
 
-    private FilteredList<ToDoItem> filteredChildrenSource = new FilteredList<>(toDoItems);
+    private FilteredList<ToDoItem> filteredDependencySource = new FilteredList<>(toDoItems);
     private FilteredList<String> filteredContextSource = new FilteredList<>(availableContexts);
 
     private List<ListView<ToDoItem>> listViews = new ArrayList<>();
@@ -120,11 +121,11 @@ public class DialogController {
         parentsListView.setItems(parents);
         contextsListView.setItems(itemContexts);
 
-        dependencySourceListView.setItems(filteredChildrenSource);
+        dependencySourceListView.setItems(filteredDependencySource);
         contextSourceListView.setItems(filteredContextSource);
 
         filterDependencySourceTextField.textProperty().addListener(((observable, oldValue, newValue) ->
-                filteredChildrenSource.setPredicate(excludeDependencies.and(toDoItem -> {
+                filteredDependencySource.setPredicate(excludeDependencies.and(toDoItem -> {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
@@ -132,7 +133,7 @@ public class DialogController {
                 }))));
 
         ListChangeListener<ToDoItem> setSourcePredicate = c ->
-                filteredChildrenSource.setPredicate(excludeDependencies.and(toDoItem -> {
+                filteredDependencySource.setPredicate(excludeDependencies.and(toDoItem -> {
                     String filter = filterDependencySourceTextField.getText();
                     if (filter == null || filter.isEmpty()) {
                         return true;
@@ -149,14 +150,16 @@ public class DialogController {
 
     public void initForm(ToDoItem toDoItem) {
         selectedToDoItem = toDoItem;
-        filteredChildrenSource.setPredicate(excludeDependencies);
+        filteredDependencySource.setPredicate(excludeDependencies);
 
         String type = toDoItem.getClass().getSimpleName();
 
         if (!type.equals("ToDoItem")) {
             typeLabel.setText(type);
+            typeChoiceBox.setValue(type);
         } else {
             typeLabel.setText("ToDo");
+            typeChoiceBox.setValue("ToDo");
         }
         typeChoiceBox.setVisible(false);
 
@@ -246,7 +249,67 @@ public class DialogController {
     }
 
     public ToDoItem getToDoItem() {
-        return null;
+        ToDoItem newToDoItem;
+        String type = typeChoiceBox.getValue();
+        String title = titleTextField.getText().trim();
+        switch (type) {
+            case "ToDo":
+                newToDoItem = new ToDoItem(title);
+                break;
+            case "External":
+                newToDoItem = new External(title);
+                break;
+            case "Appointment":
+                String[] timeArray = timeTextField.getText().trim().split(":");
+                int hours = Integer.parseInt(timeArray[0]);
+                int minutes = Integer.parseInt(timeArray[1]);
+                newToDoItem = new Appointment(title, deadlineDatePicker.getValue(), LocalTime.of(hours, minutes));
+                break;
+            case "Project":
+                newToDoItem = new Project(title);
+                break;
+            default:
+                newToDoItem = new ToDoItem(title);
+        }
+        newToDoItem.setStart(startDatePicker.getValue());
+        if (!type.equals("Appointment")) {
+            newToDoItem.setDeadline(deadlineDatePicker.getValue());
+        }
+        newToDoItem.setRecurrent(recurrentCheckBox.isSelected());
+        if (recurrentCheckBox.isSelected()) {
+            String base = recurringBaseChoiceBox.getValue();
+            RecurringBase recurringBase;
+            switch (base) {
+                case "days":
+                    recurringBase = RecurringBase.EVERYNDAYS;
+                    break;
+                case "weeks":
+                    recurringBase = RecurringBase.EVERYNWEEKS;
+                    break;
+                case "months":
+                    recurringBase = RecurringBase.EVERYNMONTHS;
+                    break;
+                case "years":
+                    recurringBase = RecurringBase.EVERYNYEARS;
+                    break;
+                default:
+                    recurringBase = RecurringBase.EVERYNDAYS;
+            }
+            newToDoItem.setRecurringPattern(new RecurringPattern(fixCheckBox.isSelected(), recurringBase,
+                    Integer.parseInt(everyTextField.getText())));
+        }
+        for (ToDoItem toDoItem : children) {
+            newToDoItem.addDependsOn(toDoItem);
+        }
+        for (ToDoItem toDoItem : parents) {
+            toDoItem.addDependsOn(newToDoItem);
+        }
+        for (String context : itemContexts) {
+            newToDoItem.addContext(context);
+        }
+        newToDoItem.setDescription(descriptionTextArea.getText().trim());
+
+        return newToDoItem;
     }
 
     @FXML
