@@ -228,6 +228,7 @@ public class Controller {
 
         if (event.getSource().equals(addButton)) {
             dialog.setTitle("Add new item");
+            dialog.setResizable(true);
         } else if (event.getSource().equals(editButton)) {
             if (selectedToDoItem == null) {
                 alertNoSelection();
