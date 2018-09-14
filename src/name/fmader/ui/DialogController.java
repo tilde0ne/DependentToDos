@@ -6,6 +6,8 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import name.fmader.datamodel.*;
 
 import java.time.LocalDate;
@@ -65,21 +67,13 @@ public class DialogController {
     @FXML
     private ListView<ToDoItem> childrenListView;
     @FXML
-    private Button addChildButton;
-    @FXML
     private TextField filterDependencySourceTextField;
     @FXML
     private ListView<ToDoItem> dependencySourceListView;
     @FXML
     private ListView<ToDoItem> parentsListView;
     @FXML
-    private Button addParentButton;
-    @FXML
     private ListView<String> contextsListView;
-    @FXML
-    private Button addContextButton;
-    @FXML
-    private Button newContextButton;
     @FXML
     private TextField newContextTextField;
     @FXML
@@ -241,17 +235,9 @@ public class DialogController {
             }
         }
 
-        for (ToDoItem childItem : toDoItem.getDependsOn()) {
-            children.add(childItem);
-        }
-
-        for (ToDoItem parentItem : toDoItem.getDependedOnBy()) {
-            parents.add(parentItem);
-        }
-
-        for (String context : toDoItem.getContexts()) {
-            itemContexts.add(context);
-        }
+        children.addAll(toDoItem.getDependsOn());
+        parents.addAll(toDoItem.getDependedOnBy());
+        itemContexts.addAll(toDoItem.getContexts());
 
         String description = toDoItem.getDescription();
         if (description != null) {
@@ -261,5 +247,85 @@ public class DialogController {
 
     public ToDoItem getToDoItem() {
         return null;
+    }
+
+    @FXML
+    private void addToChildren() {
+        ToDoItem toDoItem = dependencySourceListView.getSelectionModel().getSelectedItem();
+        if (toDoItem != null) {
+            children.add(toDoItem);
+        }
+    }
+
+    @FXML
+    private void removeChild(KeyEvent event) {
+        KeyCode keyCode = event.getCode();
+        if (keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
+            ToDoItem toDoItem = childrenListView.getSelectionModel().getSelectedItem();
+            if (toDoItem != null) {
+                children.remove(toDoItem);
+            }
+        }
+    }
+
+    @FXML
+    private void addToParents() {
+        ToDoItem toDoItem = dependencySourceListView.getSelectionModel().getSelectedItem();
+        if (toDoItem != null) {
+            parents.add(toDoItem);
+        }
+    }
+
+    @FXML
+    private void removeParent(KeyEvent event) {
+        KeyCode keyCode = event.getCode();
+        if (keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
+            ToDoItem toDoItem = parentsListView.getSelectionModel().getSelectedItem();
+            if (toDoItem != null) {
+                parents.remove(toDoItem);
+            }
+        }
+    }
+
+    @FXML
+    private void addItemContext() {
+        String context = contextSourceListView.getSelectionModel().getSelectedItem();
+        System.out.println(context);
+        if (context != null && !context.isEmpty()) {
+            itemContexts.add(context);
+        }
+    }
+
+    @FXML
+    private void removeItemContext(KeyEvent event) {
+        KeyCode keyCode = event.getCode();
+        if (keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
+            String context = contextsListView.getSelectionModel().getSelectedItem();
+            if (context != null && !context.isEmpty()) {
+                itemContexts.remove(context);
+            }
+        }
+    }
+
+    @FXML
+    private void addContext() {
+        String context = newContextTextField.getText();
+        if (context != null && !availableContexts.contains(context)) {
+            availableContexts.add(context);
+            newContextTextField.setText("");
+        }
+    }
+
+    @FXML
+    private void removeContext(KeyEvent event) {
+        KeyCode keyCode = event.getCode();
+        if (keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
+            String context = contextSourceListView.getSelectionModel().getSelectedItem();
+            if (context != null) {
+                System.out.println("Alert: remove context");// Implement alert
+                availableContexts.remove(context);
+                System.out.println("Removing context from all items");// remove this context from all ToDoItem's contexts
+            }
+        }
     }
 }
