@@ -16,7 +16,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
 <ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="name.fmader.ui.DialogController">
    <content>
       <GridPane hgap="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="900.0" vgap="5.0">
@@ -58,16 +57,28 @@
             <Label fx:id="inheritedLabel" text="False" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="neededLabel" text="Needed deadline:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
             <Label text="Dependencies (Children):" GridPane.rowIndex="6" />
-            <ListView fx:id="dependenciesListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+            <ListView fx:id="childrenListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="7" />
             <Label text="Dependencies (Parents):" GridPane.columnIndex="2" GridPane.rowIndex="6" />
             <ListView fx:id="parentsListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" />
-            <ListView fx:id="depencySourceListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="9" />
-            <ListView fx:id="parentSourceListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9" />
-            <TextField fx:id="filterDepencySourceTextField" promptText="Filter" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <TextField fx:id="filterParentSourceTextField" promptText="Filter" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+            <GridPane hgap="5.0" vgap="5.0" GridPane.columnSpan="4" GridPane.rowIndex="8" GridPane.rowSpan="2">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <TextField fx:id="filterDependencySourceTextField" promptText="Filter" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                  <Button fx:id="addParentButton" mnemonicParsing="false" text="Add to parents" GridPane.columnIndex="3" GridPane.halignment="RIGHT" />
+                  <ListView fx:id="dependencySourceListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <Button fx:id="addChildButton" mnemonicParsing="false" text="Add to children" />
+               </children>
+            </GridPane>
             <Label text="Contexts:" GridPane.rowIndex="10" />
-            <Button fx:id="addDependencyButton" mnemonicParsing="false" text="Add" GridPane.rowIndex="8" />
-            <Button fx:id="addParentButton" mnemonicParsing="false" text="Add" GridPane.columnIndex="2" GridPane.rowIndex="8" />
             <ListView fx:id="contextsListView" editable="true" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
             <VBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="10">
                <children>

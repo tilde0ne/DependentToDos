@@ -26,7 +26,6 @@ public class DialogController {
     private ObservableList<String> availableContexts = FXCollections.observableArrayList(dataIO.getContexts());
 
     private FilteredList<ToDoItem> filteredChildrenSource = new FilteredList<>(toDoItems);
-    private FilteredList<ToDoItem> filteredParentSource = new FilteredList<>(toDoItems);
     private FilteredList<String> filteredContextSource = new FilteredList<>(availableContexts);
 
     private List<ListView<ToDoItem>> listViews = new ArrayList<>();
@@ -64,21 +63,17 @@ public class DialogController {
     @FXML
     private CheckBox fixCheckBox;
     @FXML
-    private ListView<ToDoItem> dependenciesListView;
+    private ListView<ToDoItem> childrenListView;
     @FXML
-    private Button addDependencyButton;
+    private Button addChildButton;
     @FXML
-    private TextField filterDepencySourceTextField;
+    private TextField filterDependencySourceTextField;
     @FXML
-    private ListView<ToDoItem> depencySourceListView;
+    private ListView<ToDoItem> dependencySourceListView;
     @FXML
     private ListView<ToDoItem> parentsListView;
     @FXML
     private Button addParentButton;
-    @FXML
-    private TextField filterParentSourceTextField;
-    @FXML
-    private ListView<ToDoItem> parentSourceListView;
     @FXML
     private ListView<String> contextsListView;
     @FXML
@@ -110,10 +105,9 @@ public class DialogController {
         recurringBaseChoiceBox.getItems().add("months");
         recurringBaseChoiceBox.getItems().add("years");
 
-        listViews.add(dependenciesListView);
-        listViews.add(depencySourceListView);
+        listViews.add(childrenListView);
+        listViews.add(dependencySourceListView);
         listViews.add(parentsListView);
-        listViews.add(parentSourceListView);
 
         for (ListView<ToDoItem> listView : listViews) {
             listView.setCellFactory(lv -> new ListCell<ToDoItem>() {
@@ -129,15 +123,14 @@ public class DialogController {
             });
         }
 
-        dependenciesListView.setItems(children);
+        childrenListView.setItems(children);
         parentsListView.setItems(parents);
         contextsListView.setItems(itemContexts);
 
-        depencySourceListView.setItems(filteredChildrenSource);
-        parentSourceListView.setItems(filteredParentSource);
+        dependencySourceListView.setItems(filteredChildrenSource);
         contextSourceListView.setItems(filteredContextSource);
 
-        filterDepencySourceTextField.textProperty().addListener(((observable, oldValue, newValue) ->
+        filterDependencySourceTextField.textProperty().addListener(((observable, oldValue, newValue) ->
                 filteredChildrenSource.setPredicate(excludeDependencies.and(toDoItem -> {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
@@ -145,36 +138,17 @@ public class DialogController {
                     return toDoItem.getTitle().toLowerCase().contains(newValue.toLowerCase());
                 }))));
 
-        filterParentSourceTextField.textProperty().addListener(((observable, oldValue, newValue) ->
-                filteredParentSource.setPredicate(excludeDependencies.and(toDoItem -> {
-                    if (newValue == null || newValue.isEmpty()) {
-                        return true;
-                    }
-                    return toDoItem.getTitle().toLowerCase().contains(newValue.toLowerCase());
-                }))));
-
-        ListChangeListener<ToDoItem> setChildrenSourcePredicate = c ->
+        ListChangeListener<ToDoItem> setSourcePredicate = c ->
                 filteredChildrenSource.setPredicate(excludeDependencies.and(toDoItem -> {
-                    String filter = filterDepencySourceTextField.getText();
+                    String filter = filterDependencySourceTextField.getText();
                     if (filter == null || filter.isEmpty()) {
                         return true;
                     }
                     return toDoItem.getTitle().toLowerCase().contains(filter.toLowerCase());
                 }));
 
-        ListChangeListener<ToDoItem> setParentSourcePredicate = c ->
-                filteredParentSource.setPredicate(excludeDependencies.and(toDoItem -> {
-                    String filter = filterParentSourceTextField.getText();
-                    if (filter == null || filter.isEmpty()) {
-                        return true;
-                    }
-                    return toDoItem.getTitle().toLowerCase().contains(filter.toLowerCase());
-                }));
-
-        children.addListener(setChildrenSourcePredicate);
-        children.addListener(setParentSourcePredicate);
-        parents.addListener(setChildrenSourcePredicate);
-        parents.addListener(setParentSourcePredicate);
+        children.addListener(setSourcePredicate);
+        parents.addListener(setSourcePredicate);
 
         itemContexts.addListener((ListChangeListener<String>) c -> filteredContextSource.setPredicate(excludeContexts));
     }
@@ -182,7 +156,6 @@ public class DialogController {
     public void initForm(ToDoItem toDoItem) {
         selectedToDoItem = toDoItem;
         filteredChildrenSource.setPredicate(excludeDependencies);
-        filteredParentSource.setPredicate(excludeDependencies);
 
         String type = toDoItem.getClass().getSimpleName();
 
