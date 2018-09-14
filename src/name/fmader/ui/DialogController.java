@@ -31,9 +31,8 @@ public class DialogController {
 
     private List<ListView<ToDoItem>> listViews = new ArrayList<>();
 
-    private Predicate<ToDoItem> excludeSelected = toDoItem -> !toDoItem.equals(selectedToDoItem);
-    private Predicate<ToDoItem> excludeChildren = toDoItem -> !children.contains(toDoItem);
-    private Predicate<ToDoItem> excludeParents = toDoItem -> !parents.contains(toDoItem);
+    private Predicate<ToDoItem> excludeDependencies = toDoItem ->
+            !children.contains(toDoItem) && !parents.contains(toDoItem) && !toDoItem.equals(selectedToDoItem);
     private Predicate<String> excludeContexts = string -> !itemContexts.contains(string);
 
     @FXML
@@ -139,7 +138,7 @@ public class DialogController {
         contextSourceListView.setItems(filteredContextSource);
 
         filterDepencySourceTextField.textProperty().addListener(((observable, oldValue, newValue) ->
-                filteredChildrenSource.setPredicate(excludeSelected.and(excludeChildren).and(toDoItem -> {
+                filteredChildrenSource.setPredicate(excludeDependencies.and(toDoItem -> {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
@@ -147,38 +146,43 @@ public class DialogController {
                 }))));
 
         filterParentSourceTextField.textProperty().addListener(((observable, oldValue, newValue) ->
-                filteredParentSource.setPredicate(excludeSelected.and(excludeParents).and(toDoItem -> {
+                filteredParentSource.setPredicate(excludeDependencies.and(toDoItem -> {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
                     return toDoItem.getTitle().toLowerCase().contains(newValue.toLowerCase());
                 }))));
 
-        children.addListener((ListChangeListener<ToDoItem>) c ->
-                filteredChildrenSource.setPredicate(excludeSelected.and(excludeChildren).and(toDoItem -> {
+        ListChangeListener<ToDoItem> setChildrenSourcePredicate = c ->
+                filteredChildrenSource.setPredicate(excludeDependencies.and(toDoItem -> {
                     String filter = filterDepencySourceTextField.getText();
                     if (filter == null || filter.isEmpty()) {
                         return true;
                     }
                     return toDoItem.getTitle().toLowerCase().contains(filter.toLowerCase());
-                })));
+                }));
 
-        parents.addListener((ListChangeListener<ToDoItem>) c ->
-                filteredParentSource.setPredicate(excludeSelected.and(excludeParents).and(toDoItem -> {
+        ListChangeListener<ToDoItem> setParentSourcePredicate = c ->
+                filteredParentSource.setPredicate(excludeDependencies.and(toDoItem -> {
                     String filter = filterParentSourceTextField.getText();
                     if (filter == null || filter.isEmpty()) {
                         return true;
                     }
                     return toDoItem.getTitle().toLowerCase().contains(filter.toLowerCase());
-                })));
+                }));
+
+        children.addListener(setChildrenSourcePredicate);
+        children.addListener(setParentSourcePredicate);
+        parents.addListener(setChildrenSourcePredicate);
+        parents.addListener(setParentSourcePredicate);
 
         itemContexts.addListener((ListChangeListener<String>) c -> filteredContextSource.setPredicate(excludeContexts));
     }
 
     public void initForm(ToDoItem toDoItem) {
         selectedToDoItem = toDoItem;
-        filteredChildrenSource.setPredicate(excludeSelected);
-        filteredParentSource.setPredicate(excludeSelected);
+        filteredChildrenSource.setPredicate(excludeDependencies);
+        filteredParentSource.setPredicate(excludeDependencies);
 
         String type = toDoItem.getClass().getSimpleName();
 
