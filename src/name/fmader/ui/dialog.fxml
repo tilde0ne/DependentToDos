@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<ScrollPane prefHeight="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="name.fmader.ui.DialogController">
+<ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="name.fmader.ui.DialogController">
    <content>
       <GridPane hgap="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="900.0" vgap="5.0">
         <columnConstraints>
@@ -57,17 +57,17 @@
             <DatePicker fx:id="startDatePicker" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="inheritedLabel" text="False" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="neededLabel" text="Needed deadline:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-            <Label text="Dependencies:" GridPane.rowIndex="6" />
-            <ListView fx:id="dependenciesListView" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="7" />
-            <Label text="Projects:" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-            <ListView fx:id="projectsListView" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+            <Label text="Dependencies (Children):" GridPane.rowIndex="6" />
+            <ListView fx:id="dependenciesListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+            <Label text="Dependencies (Parents):" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <ListView fx:id="parentsListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" />
             <ListView fx:id="depencySourceListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="9" />
-            <ListView fx:id="projectSourceListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+            <ListView fx:id="parentSourceListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9" />
             <TextField fx:id="filterDepencySourceTextField" promptText="Filter" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <TextField fx:id="filterProjectSourceTextField" promptText="Filter" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+            <TextField fx:id="filterParentSourceTextField" promptText="Filter" GridPane.columnIndex="3" GridPane.rowIndex="8" />
             <Label text="Contexts:" GridPane.rowIndex="10" />
             <Button fx:id="addDependencyButton" mnemonicParsing="false" text="Add" GridPane.rowIndex="8" />
-            <Button fx:id="addProjectButton" mnemonicParsing="false" text="Add" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+            <Button fx:id="addParentButton" mnemonicParsing="false" text="Add" GridPane.columnIndex="2" GridPane.rowIndex="8" />
             <ListView fx:id="contextsListView" editable="true" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
             <VBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="10">
                <children>
