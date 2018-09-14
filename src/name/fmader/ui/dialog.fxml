@@ -1,64 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="name.fmader.ui.DialogController">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-  </rowConstraints>
-   <children>
-      <Label text="Title:" GridPane.rowIndex="1" />
-      <TextField GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
-      <Label text="Type:" />
-      <Label text="Start:" GridPane.rowIndex="2" />
-      <Label text="Time:" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-      <Label text="Deadline:" GridPane.rowIndex="3" />
-      <TextField promptText="hh:mm" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-      <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Label text="False" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label text="Is inherited:" GridPane.rowIndex="4" />
-      <TextField GridPane.columnIndex="1" />
-      <Label text="Dependencies:" GridPane.rowIndex="5" />
-      <ListView editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-      <Label text="Projects:" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-      <ListView editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-      <ListView prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-      <ListView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-      <TextField promptText="Filter" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-      <TextField promptText="Filter" GridPane.columnIndex="3" GridPane.rowIndex="7" />
-      <Label text="Contexts:" GridPane.rowIndex="9" />
-      <Button mnemonicParsing="false" text="Add" GridPane.rowIndex="7" />
-      <Button mnemonicParsing="false" text="Add" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-      <ListView editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-      <Button mnemonicParsing="false" text="Add" GridPane.columnIndex="2" GridPane.rowIndex="9" />
-      <ListView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="9" />
-      <Label text="Description:" GridPane.rowIndex="10" />
-      <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="11" />
-   </children>
-</GridPane>
+
+<ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="name.fmader.ui.DialogController">
+   <content>
+      <GridPane hgap="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="900.0" vgap="5.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="150.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="150.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+        </rowConstraints>
+         <children>
+            <Label text="Title:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+            <TextField fx:id="titleTextField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+            <Label fx:id="typeLabel" text="Type:" GridPane.halignment="RIGHT" />
+            <Label text="Start:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+            <Label fx:id="timeLabel" text="Time:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+            <Label fx:id="deadlineLabel" text="Deadline:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+            <TextField fx:id="timeTextField" promptText="hh:mm" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <DatePicker fx:id="startDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <DatePicker fx:id="deadlineDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="inheritedLabel" text="False" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="neededLabel" text="Needed deadline:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+            <Label text="Dependencies:" GridPane.rowIndex="6" />
+            <ListView fx:id="dependenciesListView" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+            <Label text="Projects:" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <ListView fx:id="projectsListView" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+            <ListView fx:id="depencySourceListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+            <ListView fx:id="projectSourceListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+            <TextField fx:id="filterDepencySourceTextField" promptText="Filter" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <TextField fx:id="filterProjectSourceTextField" promptText="Filter" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+            <Label text="Contexts:" GridPane.rowIndex="10" />
+            <Button fx:id="addDependencyButton" mnemonicParsing="false" text="Add" GridPane.rowIndex="8" />
+            <Button fx:id="addProjectButton" mnemonicParsing="false" text="Add" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+            <ListView fx:id="contextsListView" editable="true" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <VBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="10">
+               <children>
+                  <Button fx:id="addContextButton" mnemonicParsing="false" text="Add" />
+                  <Button fx:id="newContextButton" mnemonicParsing="false" text="New" />
+                  <TextField fx:id="newContextTextField" />
+               </children>
+            </VBox>
+            <ListView fx:id="contextSourceListView" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="10" />
+            <Label text="Description:" GridPane.rowIndex="11" />
+            <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="12" />
+            <CheckBox fx:id="recurrentCheckBox" mnemonicParsing="false" text="Recurrent item? Every" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+            <Spinner fx:id="everySpinner" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="3" GridPane.rowIndex="5">
+               <children>
+                  <ChoiceBox fx:id="recurringBaseChoiceBox" prefWidth="150.0" />
+                  <CheckBox fx:id="fixCheckBox" mnemonicParsing="false" text="Fix?" />
+               </children>
+            </HBox>
+            <ChoiceBox fx:id="typeChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" />
+         </children>
+      </GridPane>
+   </content>
+</ScrollPane>
