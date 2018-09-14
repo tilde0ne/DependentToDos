@@ -14,11 +14,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="name.fmader.ui.DialogController">
+<ScrollPane prefViewportHeight="920.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="name.fmader.ui.DialogController">
    <content>
-      <GridPane hgap="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="900.0" vgap="5.0">
+      <GridPane hgap="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1200.0" prefWidth="900.0" vgap="5.0">
         <columnConstraints>
           <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="150.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -33,12 +32,13 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
             <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
         </rowConstraints>
          <children>
             <Label text="Title:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
@@ -80,16 +80,9 @@
             </GridPane>
             <Label text="Contexts:" GridPane.rowIndex="10" />
             <ListView fx:id="contextsListView" editable="true" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-            <VBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="10">
-               <children>
-                  <Button fx:id="addContextButton" mnemonicParsing="false" text="Add" />
-                  <Button fx:id="newContextButton" mnemonicParsing="false" text="New" />
-                  <TextField fx:id="newContextTextField" />
-               </children>
-            </VBox>
             <ListView fx:id="contextSourceListView" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="10" />
-            <Label text="Description:" GridPane.rowIndex="11" />
-            <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="12" />
+            <Label text="Description:" GridPane.rowIndex="12" />
+            <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="13" />
             <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                <children>
                   <CheckBox fx:id="recurrentCheckBox" mnemonicParsing="false" text="Recurrent item? Every" />
@@ -100,6 +93,13 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
             <ChoiceBox fx:id="typeChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" />
+            <HBox prefWidth="200.0" spacing="5.0" GridPane.columnIndex="3" GridPane.rowIndex="11">
+               <children>
+                  <TextField fx:id="newContextTextField" />
+                  <Button fx:id="newContextButton" mnemonicParsing="false" text="New" />
+               </children>
+            </HBox>
+            <Button fx:id="addContextButton" mnemonicParsing="false" text="Add" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
          </children>
          <padding>
             <Insets right="15.0" />

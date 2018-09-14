@@ -225,10 +225,10 @@ public class Controller {
     public void addOrEditToDoItem(ActionEvent event) {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainGridPane.getScene().getWindow());
+        dialog.setResizable(true);
 
         if (event.getSource().equals(addButton)) {
             dialog.setTitle("Add new item");
-            dialog.setResizable(true);
         } else if (event.getSource().equals(editButton)) {
             if (selectedToDoItem == null) {
                 alertNoSelection();
