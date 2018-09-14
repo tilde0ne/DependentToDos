@@ -25,6 +25,10 @@ public class DialogController {
     private ObservableList<ToDoItem> toDoItems = FXCollections.observableArrayList(dataIO.getToDoItems());
     private ObservableList<String> availableContexts = FXCollections.observableArrayList(dataIO.getContexts());
 
+    private FilteredList<ToDoItem> filteredChildrenSource = new FilteredList<>(toDoItems);
+    private FilteredList<ToDoItem> filteredParentSource = new FilteredList<>(toDoItems);
+    private FilteredList<String> filteredContextSource = new FilteredList<>(availableContexts);
+
     private List<ListView<ToDoItem>> listViews = new ArrayList<>();
 
     private Predicate<ToDoItem> excludeSelected = toDoItem -> !toDoItem.equals(selectedToDoItem);
@@ -130,10 +134,6 @@ public class DialogController {
         parentsListView.setItems(parents);
         contextsListView.setItems(itemContexts);
 
-        FilteredList<ToDoItem> filteredChildrenSource = new FilteredList<>(toDoItems);
-        FilteredList<ToDoItem> filteredParentSource = new FilteredList<>(toDoItems);
-        FilteredList<String> filteredContextSource = new FilteredList<>(availableContexts);
-
         depencySourceListView.setItems(filteredChildrenSource);
         parentSourceListView.setItems(filteredParentSource);
         contextSourceListView.setItems(filteredContextSource);
@@ -177,6 +177,9 @@ public class DialogController {
 
     public void initForm(ToDoItem toDoItem) {
         selectedToDoItem = toDoItem;
+        filteredChildrenSource.setPredicate(excludeSelected);
+        filteredParentSource.setPredicate(excludeSelected);
+
         String type = toDoItem.getClass().getSimpleName();
 
         if (!type.equals("ToDoItem")) {
