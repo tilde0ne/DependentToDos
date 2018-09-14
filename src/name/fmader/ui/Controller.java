@@ -255,8 +255,6 @@ public class Controller {
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get().equals(ButtonType.OK)) {
             ToDoItem toDoItem = dialogController.getToDoItem();
-            System.out.println(toDoItem);
-            System.out.println(toDoItem.isDoable());
 
             if (event.getSource().equals(addButton)) {
                 toDoItems.add(toDoItem);
@@ -265,7 +263,6 @@ public class Controller {
                 toDoItems.add(toDoItem);
             }
 
-//            selectedToDoItem = toDoItem;
             for (TableView<ToDoItem> tableView : tableViews) {
                 if (tableView.getItems().contains(toDoItem)) {
                     tableView.getSelectionModel().select(toDoItem);
