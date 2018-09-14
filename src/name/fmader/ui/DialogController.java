@@ -290,7 +290,7 @@ public class DialogController {
     @FXML
     private void addItemContext() {
         String context = contextSourceListView.getSelectionModel().getSelectedItem();
-        if (context != null && !context.isEmpty()) {
+        if (context != null) {
             itemContexts.add(context);
         }
     }
@@ -300,7 +300,7 @@ public class DialogController {
         KeyCode keyCode = event.getCode();
         if (keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
             String context = contextsListView.getSelectionModel().getSelectedItem();
-            if (context != null && !context.isEmpty()) {
+            if (context != null) {
                 itemContexts.remove(context);
             }
         }
@@ -320,9 +320,9 @@ public class DialogController {
         KeyCode keyCode = event.getCode();
         if (keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
             String context = contextSourceListView.getSelectionModel().getSelectedItem();
-            if (context != null && !context.isEmpty()) {
+            if (context != null) {
                 System.out.println("Alert: remove context");// Implement alert
-                availableContexts.remove(context.trim());
+                availableContexts.remove(context);
                 System.out.println("Removing context from all items");// remove this context from all ToDoItem's contexts
             }
         }
