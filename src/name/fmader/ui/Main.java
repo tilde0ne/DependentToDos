@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import name.fmader.datamodel.DataIO;
 
 public class Main extends Application {
 
@@ -14,6 +15,12 @@ public class Main extends Application {
         primaryStage.setTitle("Dependent ToDo's");
         primaryStage.setScene(new Scene(root, 1200, 900));
         primaryStage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        DataIO.getInstance().save();
     }
 
     public static void main(String[] args) {

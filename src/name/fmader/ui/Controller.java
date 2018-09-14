@@ -37,15 +37,15 @@ public class Controller {
 
     private ToDoItem selectedToDoItem;
 
-    private Predicate<ToDoItem> isDoable = ToDoItem::isDoable;
+    private Predicate<ToDoItem> isDependent = toDoItem -> toDoItem.getDependsOn() != null && !toDoItem.getDependsOn().isEmpty();
     private Predicate<ToDoItem> isExternal = toDoItem -> toDoItem.getClass().getSimpleName().equals("External");
     private Predicate<ToDoItem> isAppointment = toDoItem -> toDoItem.getClass().getSimpleName().equals("Appointment");
     private Predicate<ToDoItem> isToDoItem = toDoItem -> toDoItem.getClass().getSimpleName().equals("ToDoItem");
     private Predicate<ToDoItem> isProject = toDoItem -> toDoItem.getClass().getSimpleName().equals("Project");
     private Predicate<ToDoItem> isToDoOrProject = isToDoItem.or(isProject);
 
-    private Predicate<ToDoItem> activeToDoItemsPredicate = isToDoOrProject.and(isDoable);
-    private Predicate<ToDoItem> dependentToDoItemsPredicate = isToDoOrProject.and(isDoable.negate());
+    private Predicate<ToDoItem> activeToDoItemsPredicate = isToDoOrProject.and(isDependent.negate());
+    private Predicate<ToDoItem> dependentToDoItemsPredicate = isToDoOrProject.and(isDependent);
 
     private Comparator<ToDoItem> sortByDeadline = (o1, o2) -> {
         if (o1.getDeadline() == null) {
@@ -86,7 +86,7 @@ public class Controller {
         if ((o1.isDoable() && o2.isDoable()) || (!o1.isDoable() && !o2.isDoable())) {
             return 0;
         }
-        return o1.isDoable() ? 1 : -1;
+        return o1.isDoable() ? -1 : 1;
     };
 
     @FXML
@@ -143,10 +143,10 @@ public class Controller {
         filteredAppointments = new FilteredList<>(toDoItems, isAppointment);
         FilteredList<ToDoItem> projects = new FilteredList<>(toDoItems, isProject);
 
-        SortedList<ToDoItem> activeToDoItems = new SortedList<>(filteredActiveToDoItems, sortByDeadline);
-        SortedList<ToDoItem> dependentToDoItems = new SortedList<>(filteredDependentToDoItems, sortByDeadline);
-        SortedList<ToDoItem> externals = new SortedList<>(filteredExternals, sortByIsDoable.thenComparing(sortByDeadline));
-        SortedList<ToDoItem> appointments = new SortedList<>(filteredAppointments, sortByDateTime);
+        SortedList<ToDoItem> activeToDoItems = new SortedList<>(filteredActiveToDoItems, sortByIsDoable.thenComparing(sortByDeadline));
+        SortedList<ToDoItem> dependentToDoItems = new SortedList<>(filteredDependentToDoItems, sortByIsDoable.thenComparing(sortByDeadline));
+        SortedList<ToDoItem> externals = new SortedList<>(filteredExternals, sortByDeadline.thenComparing(sortByIsDoable.reversed()));
+        SortedList<ToDoItem> appointments = new SortedList<>(filteredAppointments, sortByDateTime.thenComparing(sortByIsDoable.reversed()));
 
         activeToDoTableView.setItems(activeToDoItems);
         dependentToDoTableView.setItems(dependentToDoItems);
@@ -255,6 +255,8 @@ public class Controller {
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get().equals(ButtonType.OK)) {
             ToDoItem toDoItem = dialogController.getToDoItem();
+            System.out.println(toDoItem);
+            System.out.println(toDoItem.isDoable());
 
             if (event.getSource().equals(addButton)) {
                 toDoItems.add(toDoItem);
