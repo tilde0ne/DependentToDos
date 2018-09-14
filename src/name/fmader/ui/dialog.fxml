@@ -8,7 +8,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -47,11 +46,15 @@
             <TextField fx:id="titleTextField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
             <Label fx:id="typeLabel" text="Type:" GridPane.halignment="RIGHT" />
             <Label text="Start:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-            <Label fx:id="timeLabel" text="Time:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+            <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+               <children>
+                  <DatePicker fx:id="deadlineDatePicker" prefWidth="100.0" />
+                  <Label fx:id="timeLabel" text="Time:" />
+                  <TextField fx:id="timeTextField" prefWidth="60.0" promptText="hh:mm" />
+               </children>
+            </HBox>
             <Label fx:id="deadlineLabel" text="Deadline:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-            <TextField fx:id="timeTextField" promptText="hh:mm" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-            <DatePicker fx:id="startDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <DatePicker fx:id="deadlineDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <DatePicker fx:id="startDatePicker" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="inheritedLabel" text="False" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="neededLabel" text="Needed deadline:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
             <Label text="Dependencies:" GridPane.rowIndex="6" />
@@ -76,14 +79,15 @@
             <ListView fx:id="contextSourceListView" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="10" />
             <Label text="Description:" GridPane.rowIndex="11" />
             <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="12" />
-            <CheckBox fx:id="recurrentCheckBox" mnemonicParsing="false" text="Recurrent item? Every" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-            <Spinner fx:id="everySpinner" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-            <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="3" GridPane.rowIndex="5">
+            <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                <children>
-                  <ChoiceBox fx:id="recurringBaseChoiceBox" prefWidth="150.0" />
+                  <CheckBox fx:id="recurrentCheckBox" mnemonicParsing="false" text="Recurrent item? Every" />
+                  <TextField fx:id="everyTextField" prefWidth="60.0" />
+                  <ChoiceBox fx:id="recurringBaseChoiceBox" prefWidth="100.0" />
                   <CheckBox fx:id="fixCheckBox" mnemonicParsing="false" text="Fix?" />
                </children>
             </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
             <ChoiceBox fx:id="typeChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" />
          </children>
          <padding>

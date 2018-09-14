@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class RecurringPattern implements Serializable {
 
-    private static final long serialVersionUID = -7392251297239683590L;
+    private static final long serialVersionUID = 2141473658200795374L;
 
     /*fix:
 
@@ -19,42 +19,39 @@ public class RecurringPattern implements Serializable {
     deadline will be as values dictate, start will be added according to the current start-due range
     if it lies in the future at creation date;*/
     private boolean fix;
+    private int everyN;
+    private RecurringBase recurringBase;
+    private LocalDate recurringEnds;
 
-    private int everyNDays;
-    private int everyNMonths;
-    private int everyNYears;
-
-    private LocalDate recurrencyEnds;
-
-    public RecurringPattern(boolean fix, RecurringBase base, int baseUnits) {
+    public RecurringPattern(boolean fix, RecurringBase base, int everyN) {
         this.fix = fix;
-        switch (base) {
-            case EVERYNDAYS:
-                this.everyNDays = baseUnits;
-                break;
-            case EVERYNWEEKS:
-                this.everyNDays = 7 * baseUnits;
-                break;
-            case EVERYNMONTHS:
-                this.everyNMonths = baseUnits;
-                break;
-            case EVERYNYEARS:
-                this.everyNYears = baseUnits;
-                break;
-            default:
-                this.recurrencyEnds = LocalDate.now();
-                break;
-        }
+        this.recurringBase = base;
+        this.everyN = everyN;
+    }
+
+    public boolean isFix() {
+        return fix;
+    }
+
+    public int getEveryN() {
+        return everyN;
+    }
+
+    public RecurringBase getRecurringBase() {
+        return recurringBase;
+    }
+
+    public LocalDate getRecurringEnds() {
+        return recurringEnds;
     }
 
     @Override
     public String toString() {
         return "RecurringPattern{" +
                 "\nfix=" + fix +
-                "\n, everyNDays=" + everyNDays +
-                "\n, everyNMonths=" + everyNMonths +
-                "\n, everyNYears=" + everyNYears +
-                "\n, recurrencyEnds=" + recurrencyEnds +
+                "\n, everyN=" + everyN +
+                "\n, recurringBase=" + recurringBase +
+                "\n, recurringEnds=" + recurringEnds +
                 "\n}";
     }
 }

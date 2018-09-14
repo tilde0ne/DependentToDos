@@ -2,11 +2,15 @@ package name.fmader.ui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import name.fmader.datamodel.Appointment;
+import name.fmader.datamodel.External;
+import name.fmader.datamodel.RecurringPattern;
 import name.fmader.datamodel.ToDoItem;
+
+import java.time.LocalDate;
 
 public class DialogController {
 
-    private boolean isNew = true;
     private ToDoItem selectedToDoItem = null;
 
     @FXML
@@ -32,7 +36,7 @@ public class DialogController {
     @FXML
     private CheckBox recurrentCheckBox;
     @FXML
-    private Spinner<Integer> everySpinner;
+    private TextField everyTextField;
     @FXML
     private ChoiceBox<String> recurringBaseChoiceBox;
     @FXML
@@ -67,8 +71,75 @@ public class DialogController {
     private TextArea descriptionTextArea;
 
     public void initForm(ToDoItem toDoItem) {
-        isNew = false;
         selectedToDoItem = toDoItem;
+        String type = toDoItem.getClass().getSimpleName();
+
+        if (!type.equals("ToDoItem")) {
+            typeLabel.setText(type);
+        } else {
+            typeLabel.setText("ToDo");
+        }
+        typeChoiceBox.setVisible(false);
+
+        titleTextField.setText(toDoItem.getTitle());
+
+        LocalDate start = toDoItem.getStart();
+        if (start != null) {
+            startDatePicker.setValue(start);
+        }
+
+        LocalDate deadline = toDoItem.getDeadline();
+        if (deadline != null) {
+            deadlineDatePicker.setValue(deadline);
+        }
+
+        if (type.equals("Appointment")) {
+            deadlineLabel.setText("Date:");
+            timeLabel.setVisible(true);
+            timeTextField.setVisible(true);
+
+            Appointment appointment = (Appointment) toDoItem;
+            timeTextField.setText(appointment.getDateTime().toLocalTime().toString());
+        } else {
+            deadlineLabel.setText("Deadline:");
+            timeLabel.setVisible(false);
+            timeTextField.setVisible(false);
+        }
+
+        if (type.equals("Appointment") || type.equals("External")) {
+            if (toDoItem.isInherited()) {
+                neededLabel.setVisible(true);
+                if (type.equals("Appointment")) {
+                    Appointment appointment = (Appointment) toDoItem;
+                    inheritedLabel.setText(appointment.getInheritedDeadline().toString());
+                }
+                if (type.equals("External")) {
+                    External external = (External) toDoItem;
+                    inheritedLabel.setText(external.getInheritedDeadline().toString());
+                }
+            } else {
+                neededLabel.setVisible(false);
+                inheritedLabel.setVisible(false);
+            }
+        } else {
+            neededLabel.setVisible(false);
+            if (toDoItem.isInherited()) {
+                inheritedLabel.setVisible(true);
+                inheritedLabel.setText("Deadline is inherited!");
+            } else {
+                inheritedLabel.setVisible(false);
+            }
+        }
+
+        if (toDoItem.isRecurrent()) {
+            recurrentCheckBox.setSelected(true);
+            RecurringPattern recurringPattern = toDoItem.getRecurringPattern();
+            everyTextField.setText(((Integer) recurringPattern.getEveryN()).toString());
+            // implement set recurringBase
+            if (recurringPattern.isFix()) {
+                fixCheckBox.setSelected(true);
+            }
+        }
     }
 
     public ToDoItem getToDoItem() {
