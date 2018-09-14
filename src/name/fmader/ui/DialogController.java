@@ -25,7 +25,7 @@ public class DialogController {
     private ObservableList<ToDoItem> parents = FXCollections.observableArrayList();
     private ObservableList<String> itemContexts = FXCollections.observableArrayList();
     private ObservableList<ToDoItem> toDoItems = FXCollections.observableArrayList(dataIO.getToDoItems());
-    private ObservableList<String> availableContexts = FXCollections.observableArrayList(dataIO.getContexts());
+    private ObservableList<String> availableContexts = FXCollections.observableList(dataIO.getContexts());
 
     private FilteredList<ToDoItem> filteredChildrenSource = new FilteredList<>(toDoItems);
     private FilteredList<String> filteredContextSource = new FilteredList<>(availableContexts);
@@ -34,7 +34,6 @@ public class DialogController {
 
     private Predicate<ToDoItem> excludeDependencies = toDoItem ->
             !children.contains(toDoItem) && !parents.contains(toDoItem) && !toDoItem.equals(selectedToDoItem);
-    private Predicate<String> excludeContexts = string -> !itemContexts.contains(string);
 
     @FXML
     private Label typeLabel;
@@ -144,10 +143,8 @@ public class DialogController {
         children.addListener(setSourcePredicate);
         parents.addListener(setSourcePredicate);
 
-        itemContexts.addListener((ListChangeListener<String>) c -> {
-            filteredContextSource.setPredicate(excludeContexts);
-            contextSourceListView.refresh();
-        });
+        itemContexts.addListener((ListChangeListener<String>) c ->
+                filteredContextSource.setPredicate(string -> !itemContexts.contains(string)));
     }
 
     public void initForm(ToDoItem toDoItem) {
