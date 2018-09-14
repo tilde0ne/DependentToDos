@@ -309,9 +309,9 @@ public class DialogController {
     @FXML
     private void addContext() {
         String context = newContextTextField.getText();
-        if (context != null && !context.isEmpty() && !availableContexts.contains(context.trim())) {
+        if (context != null && !context.trim().isEmpty() && !availableContexts.contains(context.trim())) {
             availableContexts.add(context.trim());
-            newContextTextField.setText("");
+            newContextTextField.clear();
         }
     }
 
