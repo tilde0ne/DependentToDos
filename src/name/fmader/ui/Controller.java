@@ -296,11 +296,21 @@ public class Controller {
                 toDoItems.add(toDoItem);
             }
 
+            List<ToDoItem> oldChildren = dialogController.getOldChildren();
+            List<ToDoItem> children = toDoItem.getChildren();
+            List<ToDoItem> union = new ArrayList<>(children);
+            union.addAll(oldChildren);
+            List<ToDoItem> intersection = new ArrayList<>(children);
+            intersection.retainAll(oldChildren);
+            union.removeAll(intersection);
+            toDoItems.removeAll(union);
+            toDoItems.addAll(union);
+
             List<ToDoItem> oldParents = dialogController.getOldParents();
             List<ToDoItem> parents = toDoItem.getParents();
-            List<ToDoItem> union = new ArrayList<>(parents);
+            union = new ArrayList<>(parents);
             union.addAll(oldParents);
-            List<ToDoItem> intersection = new ArrayList<>(parents);
+            intersection = new ArrayList<>(parents);
             intersection.retainAll(oldParents);
             union.removeAll(intersection);
             toDoItems.removeAll(union);

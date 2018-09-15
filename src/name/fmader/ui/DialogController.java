@@ -21,6 +21,7 @@ public class DialogController {
 
     private ToDoItem selectedToDoItem = null;
 
+    private List<ToDoItem> oldChildren = new ArrayList<>();
     private List<ToDoItem> oldParents = new ArrayList<>();
 
     private DataIO dataIO = DataIO.getInstance();
@@ -171,6 +172,7 @@ public class DialogController {
 
     public void initForm(ToDoItem toDoItem) {
         selectedToDoItem = toDoItem;
+        oldChildren.addAll(toDoItem.getChildren());
         oldParents.addAll(toDoItem.getParents());
         filteredDependencySource.setPredicate(excludeDependencies);
 
@@ -361,6 +363,10 @@ public class DialogController {
         }
 
         return newToDoItem;
+    }
+
+    public List<ToDoItem> getOldChildren() {
+        return oldChildren;
     }
 
     public List<ToDoItem> getOldParents() {
