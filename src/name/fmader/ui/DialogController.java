@@ -43,6 +43,8 @@ public class DialogController {
     @FXML
     private TextField titleTextField;
     @FXML
+    private Label startLabel;
+    @FXML
     private DatePicker startDatePicker;
     @FXML
     private Label deadlineLabel;
@@ -93,6 +95,22 @@ public class DialogController {
         timeTextField.setVisible(false);
         neededLabel.setVisible(false);
         inheritedLabel.setVisible(false);
+
+        typeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("Appointment")) {
+                deadlineLabel.setText("Date:");
+                timeLabel.setVisible(true);
+                timeTextField.setVisible(true);
+                startLabel.setVisible(false);
+                startDatePicker.setVisible(false);
+            } else {
+                deadlineLabel.setText("Deadline:");
+                timeLabel.setVisible(false);
+                timeTextField.setVisible(false);
+                startLabel.setVisible(true);
+                startDatePicker.setVisible(true);
+            }
+        });
 
         recurringBaseChoiceBox.getItems().add("days");
         recurringBaseChoiceBox.getItems().add("weeks");
@@ -176,16 +194,8 @@ public class DialogController {
         }
 
         if (type.equals("Appointment")) {
-            deadlineLabel.setText("Date:");
-            timeLabel.setVisible(true);
-            timeTextField.setVisible(true);
-
             Appointment appointment = (Appointment) toDoItem;
             timeTextField.setText(appointment.getDateTime().toLocalTime().toString());
-        } else {
-            deadlineLabel.setText("Deadline:");
-            timeLabel.setVisible(false);
-            timeTextField.setVisible(false);
         }
 
         if (type.equals("Appointment") || type.equals("External")) {
