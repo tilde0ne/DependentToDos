@@ -100,12 +100,12 @@
         </TableView>
         <TableView fx:id="externalTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
             <columns>
-                <TableColumn fx:id="externalStringTableColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
+                <TableColumn fx:id="externalTitleColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
                     <cellValueFactory>
                         <PropertyValueFactory property="title" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="externalLocalDateTableColumn" prefWidth="90.0" resizable="false" text="Deadline">
+                <TableColumn fx:id="externalDeadlineColumn" prefWidth="90.0" resizable="false" text="Deadline">
                     <cellValueFactory>
                         <PropertyValueFactory property="deadline" />
                     </cellValueFactory>
@@ -114,12 +114,12 @@
         </TableView>
         <TableView fx:id="appointmentTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
             <columns>
-                <TableColumn fx:id="appointmentStringTableColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
+                <TableColumn fx:id="appointmentTitleColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
                     <cellValueFactory>
                         <PropertyValueFactory property="title" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="appointmentLocalDateTimeTableColumn" editable="false" prefWidth="125.0" resizable="false" sortable="false" text="Date/Time">
+                <TableColumn fx:id="appointmentDateTimeColumn" editable="false" prefWidth="125.0" resizable="false" sortable="false" text="Date/Time">
                     <cellValueFactory>
                         <PropertyValueFactory property="dateTime" />
                     </cellValueFactory>

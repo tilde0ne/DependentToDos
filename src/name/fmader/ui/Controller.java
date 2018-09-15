@@ -12,7 +12,6 @@ import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import name.fmader.datamodel.Appointment;
 import name.fmader.datamodel.DataIO;
-import name.fmader.datamodel.External;
 import name.fmader.datamodel.ToDoItem;
 
 import java.io.IOException;
@@ -114,13 +113,13 @@ public class Controller {
     @FXML
     private TableColumn<ToDoItem, LocalDate> dependentDeadlineColumn;
     @FXML
-    private TableColumn<External, String> externalStringTableColumn;
+    private TableColumn<ToDoItem, String> externalTitleColumn;
     @FXML
-    private TableColumn<External, LocalDate> externalLocalDateTableColumn;
+    private TableColumn<ToDoItem, LocalDate> externalDeadlineColumn;
     @FXML
-    private TableColumn<Appointment, String> appointmentStringTableColumn;
+    private TableColumn<ToDoItem, String> appointmentTitleColumn;
     @FXML
-    private TableColumn<Appointment, LocalDateTime> appointmentLocalDateTimeTableColumn;
+    private TableColumn<ToDoItem, LocalDateTime> appointmentDateTimeColumn;
 
     @FXML
     private ChoiceBox<ToDoItem> projectChoiceBox;
@@ -176,8 +175,13 @@ public class Controller {
 
         activeTitleColumn.prefWidthProperty().bind(activeToDoTableView.widthProperty().subtract(activeDeadlineColumn.getWidth() + 2));
         dependentTitleColumn.prefWidthProperty().bind(dependentToDoTableView.widthProperty().subtract(dependentDeadlineColumn.getWidth() + 2));
-        externalStringTableColumn.prefWidthProperty().bind(externalTableView.widthProperty().subtract(externalLocalDateTableColumn.getWidth() + 2));
-        appointmentStringTableColumn.prefWidthProperty().bind(appointmentTableView.widthProperty().subtract(appointmentLocalDateTimeTableColumn.getWidth() + 2));
+        externalTitleColumn.prefWidthProperty().bind(externalTableView.widthProperty().subtract(externalDeadlineColumn.getWidth() + 2));
+        appointmentTitleColumn.prefWidthProperty().bind(appointmentTableView.widthProperty().subtract(appointmentDateTimeColumn.getWidth() + 2));
+
+        activeDeadlineColumn.setCellFactory(param -> new DateCell());
+        dependentDeadlineColumn.setCellFactory(param -> new DateCell());
+        externalDeadlineColumn.setCellFactory(param -> new DateCell());
+        appointmentDateTimeColumn.setCellFactory(param -> new DateTimeCell());
 
         projectChoiceBox.setItems(projects);
         projectChoiceBox.setConverter(new StringConverter<ToDoItem>() {
