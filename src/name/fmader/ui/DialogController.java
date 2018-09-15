@@ -21,9 +21,6 @@ public class DialogController {
 
     private ToDoItem selectedToDoItem = null;
 
-    private List<ToDoItem> oldChildren = new ArrayList<>();
-    private List<ToDoItem> oldParents = new ArrayList<>();
-
     private DataIO dataIO = DataIO.getInstance();
 
     private ObservableList<ToDoItem> children = FXCollections.observableArrayList();
@@ -114,6 +111,17 @@ public class DialogController {
                 startLabel.setVisible(true);
                 startDatePicker.setVisible(true);
             }
+            if (newValue.equals("Project")) {
+                recurrentCheckBox.setVisible(false);
+                everyTextField.setVisible(false);
+                recurringBaseChoiceBox.setVisible(false);
+                fixCheckBox.setVisible(false);
+            } else {
+                recurrentCheckBox.setVisible(true);
+                everyTextField.setVisible(true);
+                recurringBaseChoiceBox.setVisible(true);
+                fixCheckBox.setVisible(true);
+            }
         });
 
         recurringBaseChoiceBox.getItems().add("days");
@@ -172,8 +180,6 @@ public class DialogController {
 
     public void initForm(ToDoItem toDoItem) {
         selectedToDoItem = toDoItem;
-        oldChildren.addAll(toDoItem.getChildren());
-        oldParents.addAll(toDoItem.getParents());
         filteredDependencySource.setPredicate(excludeDependencies);
 
         String type = toDoItem.getClass().getSimpleName();
@@ -342,6 +348,7 @@ public class DialogController {
             newToDoItem.addChild(toDoItem);
         }
 
+        List<ToDoItem> oldParents = new ArrayList<>(newToDoItem.getParents());
         for (ToDoItem toDoItem : oldParents) {
             if (!parents.contains(toDoItem)) {
                 toDoItem.removeChild(newToDoItem);
@@ -367,14 +374,6 @@ public class DialogController {
         }
 
         return newToDoItem;
-    }
-
-    public List<ToDoItem> getOldChildren() {
-        return oldChildren;
-    }
-
-    public List<ToDoItem> getOldParents() {
-        return oldParents;
     }
 
     @FXML
