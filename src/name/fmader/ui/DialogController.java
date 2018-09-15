@@ -21,6 +21,8 @@ public class DialogController {
 
     private ToDoItem selectedToDoItem = null;
 
+    private List<ToDoItem> oldParents = new ArrayList<>();
+
     private DataIO dataIO = DataIO.getInstance();
 
     private ObservableList<ToDoItem> children = FXCollections.observableArrayList();
@@ -169,6 +171,7 @@ public class DialogController {
 
     public void initForm(ToDoItem toDoItem) {
         selectedToDoItem = toDoItem;
+        oldParents.addAll(toDoItem.getParents());
         filteredDependencySource.setPredicate(excludeDependencies);
 
         String type = toDoItem.getClass().getSimpleName();
@@ -333,7 +336,6 @@ public class DialogController {
             newToDoItem.addChild(toDoItem);
         }
 
-        List<ToDoItem> oldParents = new ArrayList<>(newToDoItem.getParents());
         for (ToDoItem toDoItem : oldParents) {
             if (!parents.contains(toDoItem)) {
                 toDoItem.removeChild(newToDoItem);
@@ -359,6 +361,10 @@ public class DialogController {
         }
 
         return newToDoItem;
+    }
+
+    public List<ToDoItem> getOldParents() {
+        return oldParents;
     }
 
     @FXML

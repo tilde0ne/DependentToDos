@@ -260,20 +260,25 @@ public class Controller {
             if (event.getSource().equals(addButton)) {
                 toDoItems.add(toDoItem);
             } else if (event.getSource().equals(editButton)) {
-                toDoItems.remove(selectedToDoItem);
+                // FilteredList's watch ObservableLists for Changes in the list
+                // but not for changes of the lists members state.
+                // If you add an item as a parent in dialog, the new parent
+                // won't get properly filtered (i.e. stays in activeToDoTableView.
+                // Workaround: Remove and then add again all former parents
+                // and notParents of toDoItem to toDoItems.
+                toDoItems.remove(toDoItem);
                 toDoItems.add(toDoItem);
             }
 
-            // TableViews watch ObservableLists for Changes in the list
-            // but not for changes of the lists members state.
-            // If you add an item as a parent in dialog, the new parent
-            // won't get properly filtered (i.e. stays in activeToDoTableView.
-            // Workaround: Remove and then add again all parents of toDoItem to
-            // toDoItems.
-
-//            List<ToDoItem> parents = toDoItem.getParents();
-//            toDoItems.removeAll(parents);
-//            toDoItems.addAll(parents);
+            List<ToDoItem> oldParents = dialogController.getOldParents();
+            List<ToDoItem> parents = toDoItem.getParents();
+            List<ToDoItem> union = new ArrayList<>(parents);
+            union.addAll(oldParents);
+            List<ToDoItem> intersection = new ArrayList<>(parents);
+            intersection.retainAll(oldParents);
+            union.removeAll(intersection);
+            toDoItems.removeAll(union);
+            toDoItems.addAll(union);
 
             //////////////////////////////////////////////////////////////////////
 
