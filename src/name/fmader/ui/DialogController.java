@@ -12,6 +12,7 @@ import name.fmader.datamodel.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -25,7 +26,7 @@ public class DialogController {
     private ObservableList<ToDoItem> children = FXCollections.observableArrayList();
     private ObservableList<ToDoItem> parents = FXCollections.observableArrayList();
     private ObservableList<String> itemContexts = FXCollections.observableArrayList();
-    private ObservableList<ToDoItem> toDoItems = FXCollections.observableArrayList(dataIO.getToDoItems());
+    private ObservableList<ToDoItem> toDoItems = FXCollections.observableList(dataIO.getToDoItems());
     private ObservableList<String> availableContexts = FXCollections.observableList(dataIO.getContexts());
 
     private FilteredList<ToDoItem> filteredDependencySource = new FilteredList<>(toDoItems);
@@ -262,31 +263,38 @@ public class DialogController {
         ToDoItem newToDoItem;
         String type = typeChoiceBox.getValue();
         String title = titleTextField.getText().trim();
+        LocalDate deadline = deadlineDatePicker.getValue();
+        String timeString = timeTextField.getText();
 
-        switch (type) {
-            case "ToDo":
-                newToDoItem = new ToDoItem(title);
-                break;
-            case "External":
-                newToDoItem = new External(title);
-                break;
-            case "Appointment":
-                String[] timeArray = timeTextField.getText().trim().split(":");
-                int hours = Integer.parseInt(timeArray[0]);
-                int minutes = Integer.parseInt(timeArray[1]);
-                newToDoItem = new Appointment(title, deadlineDatePicker.getValue(), LocalTime.of(hours, minutes));
-                break;
-            case "Project":
-                newToDoItem = new Project(title);
-                break;
-            default:
-                newToDoItem = new ToDoItem(title);
+        if (selectedToDoItem == null) {
+            switch (type) {
+                case "ToDo":
+                    newToDoItem = new ToDoItem(title);
+                    break;
+                case "External":
+                    newToDoItem = new External(title);
+                    break;
+                case "Appointment":
+                    newToDoItem = new Appointment(title, deadline, LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm")));
+                    break;
+                case "Project":
+                    newToDoItem = new Project(title);
+                    break;
+                default:
+                    newToDoItem = new ToDoItem(title);
+            }
+        } else {
+            newToDoItem = selectedToDoItem;
         }
 
         newToDoItem.setStart(startDatePicker.getValue());
 
-        if (!type.equals("Appointment")) {
+        if (!type.equals("Appointment") || selectedToDoItem != null) {
             newToDoItem.setDeadline(deadlineDatePicker.getValue());
+        }
+
+        if (type.equals("Appointment") && selectedToDoItem != null) {
+            ((Appointment) newToDoItem).setDateTime(deadline.atTime(LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"))));
         }
 
         newToDoItem.setRecurrent(recurrentCheckBox.isSelected());
@@ -311,21 +319,44 @@ public class DialogController {
             }
             newToDoItem.setRecurringPattern(new RecurringPattern(fixCheckBox.isSelected(), recurringBase,
                     Integer.parseInt(everyTextField.getText())));
+        } else {
+            newToDoItem.setRecurringPattern(null);
         }
 
+        List<ToDoItem> oldChildren = new ArrayList<>(newToDoItem.getChildren());
+        for (ToDoItem toDoItem : oldChildren) {
+            if (!children.contains(toDoItem)) {
+                newToDoItem.removeChild(toDoItem);
+            }
+        }
         for (ToDoItem toDoItem : children) {
             newToDoItem.addChild(toDoItem);
         }
 
+        List<ToDoItem> oldParents = new ArrayList<>(newToDoItem.getParents());
+        for (ToDoItem toDoItem : oldParents) {
+            if (!parents.contains(toDoItem)) {
+                toDoItem.removeChild(newToDoItem);
+            }
+        }
         for (ToDoItem toDoItem : parents) {
             toDoItem.addChild(newToDoItem);
         }
 
+        List<String> oldContexts = new ArrayList<>(newToDoItem.getContexts());
+        for (String context : oldContexts) {
+            if (!itemContexts.contains(context)) {
+                newToDoItem.removeContext(context);
+            }
+        }
         for (String context : itemContexts) {
             newToDoItem.addContext(context);
         }
 
-        newToDoItem.setDescription(descriptionTextArea.getText().trim());
+        String description = descriptionTextArea.getText();
+        if (description != null && !description.trim().isEmpty()) {
+            newToDoItem.setDescription(description.trim());
+        }
 
         return newToDoItem;
     }

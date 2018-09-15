@@ -271,9 +271,9 @@ public class Controller {
             // Workaround: Remove and then add again all parents of toDoItem to
             // toDoItems.
 
-            List<ToDoItem> parents = toDoItem.getParents();
-            toDoItems.removeAll(parents);
-            toDoItems.addAll(parents);
+//            List<ToDoItem> parents = toDoItem.getParents();
+//            toDoItems.removeAll(parents);
+//            toDoItems.addAll(parents);
 
             //////////////////////////////////////////////////////////////////////
 
