@@ -222,6 +222,30 @@ public class Controller {
         });
         contextChoiceBox.setItems(contexts);
 
+        detailsChildren.setCellFactory(lv -> new ListCell<ToDoItem>() {
+            @Override
+            protected void updateItem(ToDoItem item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(item.getTitle());
+                }
+            }
+        });
+
+        detailsParents.setCellFactory(lv -> new ListCell<ToDoItem>() {
+            @Override
+            protected void updateItem(ToDoItem item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(item.getTitle());
+                }
+            }
+        });
+
         selectNull();
     }
 
@@ -409,12 +433,38 @@ public class Controller {
         if (selectedToDoItem.isRecurrent()) {
             detailsPattern.setVisible(true);
             RecurringPattern pattern = selectedToDoItem.getRecurringPattern();
-            detailsPattern.setText("Every " + pattern.getEveryN() + " " + pattern.getRecurringBase() + ", is fix: " + String.valueOf(pattern.isFix()));
+            String base;
+            switch (pattern.getRecurringBase()) {
+                case EVERYNDAYS:
+                    base = "days";
+                    break;
+                case EVERYNWEEKS:
+                    base = "weeks";
+                    break;
+                case EVERYNMONTHS:
+                    base = "months";
+                    break;
+                case EVERYNYEARS:
+                    base = "years";
+                    break;
+                default:
+                    base = "days";
+                    break;
+            }
+            detailsPattern.setText("Every " + pattern.getEveryN() + " " + base + (pattern.isFix()? ", fix" : ""));
         } else {
             detailsPattern.setVisible(false);
         }
 
+        detailsChildren.setItems(FXCollections.observableArrayList(selectedToDoItem.getChildren()));
+        detailsParents.setItems(FXCollections.observableArrayList(selectedToDoItem.getParents()));
 
+        String description = selectedToDoItem.getDescription();
+        if (description != null) {
+            detailsDescription.setText(description);
+        } else {
+            detailsDescription.setText("");
+        }
     }
 
     private void selectNull() {
