@@ -396,7 +396,9 @@ public class DialogController {
             if (context != null) {
                 System.out.println("Alert: remove context");// Implement alert
                 availableContexts.remove(context);
-                System.out.println("Removing context from all items");// remove this context from all ToDoItem's contexts
+                for (ToDoItem toDoItem : toDoItems) {
+                    toDoItem.getContexts().remove(context);
+                }
             }
         }
     }
