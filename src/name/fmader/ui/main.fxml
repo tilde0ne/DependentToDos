@@ -163,7 +163,7 @@
                     <buttons>
                         <Button fx:id="addButton" mnemonicParsing="false" onAction="#addOrEditToDoItem" text="Add" />
                         <Button fx:id="editButton" mnemonicParsing="false" onAction="#addOrEditToDoItem" text="Edit" />
-                        <Button mnemonicParsing="false" text="Done" />
+                        <Button mnemonicParsing="false" onAction="#done" text="Done" />
                     </buttons>
                 </ButtonBar>
                 <Separator orientation="VERTICAL" />

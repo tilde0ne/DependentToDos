@@ -17,10 +17,7 @@ import name.fmader.datamodel.ToDoItem;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class Controller {
@@ -215,7 +212,7 @@ public class Controller {
     @FXML
     public void filterItems() {
         Predicate<ToDoItem> temp1 =
-                toDoItem -> projectChoiceBox.getValue() == null || toDoItem.getDependedOnBy().contains(projectChoiceBox.getValue());
+                toDoItem -> projectChoiceBox.getValue() == null || toDoItem.getParents().contains(projectChoiceBox.getValue());
         Predicate<ToDoItem> temp2 =
                 toDoItem -> contextChoiceBox.getValue() == null || toDoItem.getContexts().contains(contextChoiceBox.getValue());
 
@@ -267,6 +264,19 @@ public class Controller {
                 toDoItems.add(toDoItem);
             }
 
+            // TableViews watch ObservableLists for Changes in the list
+            // but not for changes of the lists members state.
+            // If you add an item as a parent in dialog, the new parent
+            // won't get properly filtered (i.e. stays in activeToDoTableView.
+            // Workaround: Remove and then add again all parents of toDoItem to
+            // toDoItems.
+
+            List<ToDoItem> parents = toDoItem.getParents();
+            toDoItems.removeAll(parents);
+            toDoItems.addAll(parents);
+
+            //////////////////////////////////////////////////////////////////////
+
             for (TableView<ToDoItem> tableView : tableViews) {
                 if (tableView.getItems().contains(toDoItem)) {
                     tableView.getSelectionModel().select(toDoItem);
@@ -277,6 +287,24 @@ public class Controller {
 
         contexts.clear();
         contexts.addAll(dataIO.getContexts());
+    }
+
+    @FXML
+    public void done() {
+        if (selectedToDoItem == null) {
+            alertNoSelection();
+            return;
+        }
+        List<ToDoItem> children = new ArrayList<>(selectedToDoItem.getChildren());
+        List<ToDoItem> parents = new ArrayList<>(selectedToDoItem.getParents());
+        for (ToDoItem toDoItem : children) {
+            selectedToDoItem.removeChild(toDoItem);
+        }
+        for (ToDoItem toDoItem : parents) {
+            toDoItem.removeChild(selectedToDoItem);
+        }
+        toDoItems.remove(selectedToDoItem);
+        selectNull();
     }
 
     private void alertNoSelection() {

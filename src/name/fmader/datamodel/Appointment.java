@@ -26,7 +26,7 @@ public class Appointment extends ToDoItem {
 
     @Override
     public boolean isDoable() {
-        return dependsOn.isEmpty();
+        return children.isEmpty();
     }
 
     @Override
@@ -61,8 +61,8 @@ public class Appointment extends ToDoItem {
             inheritedDeadline = null;
         }
 
-        if (dependsOn != null && !dependsOn.isEmpty()) {
-            for (ToDoItem toDoItem : dependsOn) {
+        if (children != null && !children.isEmpty()) {
+            for (ToDoItem toDoItem : children) {
                 toDoItem.recalculateDeadline();
             }
         }
@@ -117,8 +117,8 @@ public class Appointment extends ToDoItem {
                 "\n, originalDeadline=" + originalDeadline +
                 "\n, inheritedDeadline=" + inheritedDeadline +
                 "\n, start=" + start +
-                "\n, dependsOn=" + dependsOn.size() +
-                "\n, dependedOnBy=" + dependedOnBy.size() +
+                "\n, children=" + children.size() +
+                "\n, parents=" + parents.size() +
                 "\n, contexts=" + contexts +
                 "\n, isRecurrent=" + isRecurrent +
                 "\n, recurringPattern=" + recurringPattern +

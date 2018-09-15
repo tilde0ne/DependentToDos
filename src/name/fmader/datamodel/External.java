@@ -47,8 +47,8 @@ public class External extends ToDoItem {
             inheritedDeadline = null;
         }
 
-        if (dependsOn != null && !dependsOn.isEmpty()) {
-            for (ToDoItem toDoItem : dependsOn) {
+        if (children != null && !children.isEmpty()) {
+            for (ToDoItem toDoItem : children) {
                 toDoItem.recalculateDeadline();
             }
         }
@@ -82,8 +82,8 @@ public class External extends ToDoItem {
                 "\n, originalDeadline=" + originalDeadline +
                 "\n, inheritedDeadline=" + inheritedDeadline +
                 "\n, start=" + start +
-                "\n, dependsOn=" + dependsOn.size() +
-                "\n, dependedOnBy=" + dependedOnBy.size() +
+                "\n, children=" + children.size() +
+                "\n, parents=" + parents.size() +
                 "\n, contexts=" + contexts +
                 "\n, isRecurrent=" + isRecurrent +
                 "\n, recurringPattern=" + recurringPattern +

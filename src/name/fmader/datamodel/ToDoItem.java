@@ -24,8 +24,8 @@ public class ToDoItem implements Serializable {
     protected LocalDate originalDeadline;
     protected LocalDate start;
 
-    protected List<ToDoItem> dependsOn;
-    protected List<ToDoItem> dependedOnBy;
+    protected List<ToDoItem> children;
+    protected List<ToDoItem> parents;
     protected List<String> contexts;
 
     protected boolean isRecurrent;
@@ -35,33 +35,33 @@ public class ToDoItem implements Serializable {
     public ToDoItem(String title) {
         this.created = LocalDate.now();
         this.title = new SimpleStringProperty(title);
-        this.dependsOn = new ArrayList<>();
-        this.dependedOnBy = new ArrayList<>();
+        this.children = new ArrayList<>();
+        this.parents = new ArrayList<>();
         this.contexts = new ArrayList<>();
     }
 
-    public void addDependsOn(ToDoItem toDoItem) {
-        if (!dependsOn.contains(toDoItem)) {
-            dependsOn.add(toDoItem);
-            toDoItem.addDependedOnBy(this);
+    public void addChild(ToDoItem toDoItem) {
+        if (!children.contains(toDoItem)) {
+            children.add(toDoItem);
+            toDoItem.addParent(this);
             toDoItem.recalculateDeadline();
         }
     }
 
-    public void removeDependsOn(ToDoItem toDoItem) {
-        dependsOn.remove(toDoItem);
-        toDoItem.removeDependedOnBy(this);
+    public void removeChild(ToDoItem toDoItem) {
+        children.remove(toDoItem);
+        toDoItem.removeParent(this);
         toDoItem.recalculateDeadline();
     }
 
-    public void addDependedOnBy(ToDoItem toDoItem) {
-        if (!dependedOnBy.contains(toDoItem)) {
-            dependedOnBy.add(toDoItem);
+    public void addParent(ToDoItem toDoItem) {
+        if (!parents.contains(toDoItem)) {
+            parents.add(toDoItem);
         }
     }
 
-    public void removeDependedOnBy(ToDoItem toDoItem) {
-        dependedOnBy.remove(toDoItem);
+    public void removeParent(ToDoItem toDoItem) {
+        parents.remove(toDoItem);
     }
 
     public void addContext(String context) {
@@ -76,7 +76,7 @@ public class ToDoItem implements Serializable {
 
     public boolean isDoable() {
         if (start == null || !start.isAfter(LocalDate.now())) {
-            return dependsOn.isEmpty();
+            return children.isEmpty();
         }
         return false;
     }
@@ -96,8 +96,8 @@ public class ToDoItem implements Serializable {
     }
 
     protected LocalDate checkAgainstParentDeadlines(LocalDate deadline) {
-        if (dependedOnBy != null && !dependedOnBy.isEmpty()) {
-            for (ToDoItem toDoItem : dependedOnBy) {
+        if (parents != null && !parents.isEmpty()) {
+            for (ToDoItem toDoItem : parents) {
                 if (toDoItem.deadline == null) {
                     continue;
                 }
@@ -176,8 +176,8 @@ public class ToDoItem implements Serializable {
             this.deadline.set(deadline);
         }
 
-        if (dependsOn != null && !dependsOn.isEmpty()) {
-            for (ToDoItem toDoItem : dependsOn) {
+        if (children != null && !children.isEmpty()) {
+            for (ToDoItem toDoItem : children) {
                 toDoItem.recalculateDeadline();
             }
         }
@@ -199,12 +199,12 @@ public class ToDoItem implements Serializable {
         this.start = start;
     }
 
-    public List<ToDoItem> getDependsOn() {
-        return dependsOn;
+    public List<ToDoItem> getChildren() {
+        return children;
     }
 
-    public List<ToDoItem> getDependedOnBy() {
-        return dependedOnBy;
+    public List<ToDoItem> getParents() {
+        return parents;
     }
 
     public List<String> getContexts() {
@@ -243,8 +243,8 @@ public class ToDoItem implements Serializable {
                 "\n, deadline=" + (deadline == null ? null : deadline.get()) +
                 "\n, originalDeadline=" + originalDeadline +
                 "\n, start=" + start +
-                "\n, dependsOn=" + dependsOn.size() +
-                "\n, dependedOnBy=" + dependedOnBy.size() +
+                "\n, children=" + children.size() +
+                "\n, parents=" + parents.size() +
                 "\n, contexts=" + contexts +
                 "\n, isRecurrent=" + isRecurrent +
                 "\n, recurringPattern=" + recurringPattern +

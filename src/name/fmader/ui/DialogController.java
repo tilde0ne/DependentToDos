@@ -248,8 +248,8 @@ public class DialogController {
             }
         }
 
-        children.addAll(toDoItem.getDependsOn());
-        parents.addAll(toDoItem.getDependedOnBy());
+        children.addAll(toDoItem.getChildren());
+        parents.addAll(toDoItem.getParents());
         itemContexts.addAll(toDoItem.getContexts());
 
         String description = toDoItem.getDescription();
@@ -262,6 +262,7 @@ public class DialogController {
         ToDoItem newToDoItem;
         String type = typeChoiceBox.getValue();
         String title = titleTextField.getText().trim();
+
         switch (type) {
             case "ToDo":
                 newToDoItem = new ToDoItem(title);
@@ -281,10 +282,13 @@ public class DialogController {
             default:
                 newToDoItem = new ToDoItem(title);
         }
+
         newToDoItem.setStart(startDatePicker.getValue());
+
         if (!type.equals("Appointment")) {
             newToDoItem.setDeadline(deadlineDatePicker.getValue());
         }
+
         newToDoItem.setRecurrent(recurrentCheckBox.isSelected());
         if (recurrentCheckBox.isSelected()) {
             String base = recurringBaseChoiceBox.getValue();
@@ -308,15 +312,19 @@ public class DialogController {
             newToDoItem.setRecurringPattern(new RecurringPattern(fixCheckBox.isSelected(), recurringBase,
                     Integer.parseInt(everyTextField.getText())));
         }
+
         for (ToDoItem toDoItem : children) {
-            newToDoItem.addDependsOn(toDoItem);
+            newToDoItem.addChild(toDoItem);
         }
+
         for (ToDoItem toDoItem : parents) {
-            toDoItem.addDependsOn(newToDoItem);
+            toDoItem.addChild(newToDoItem);
         }
+
         for (String context : itemContexts) {
             newToDoItem.addContext(context);
         }
+
         newToDoItem.setDescription(descriptionTextArea.getText().trim());
 
         return newToDoItem;

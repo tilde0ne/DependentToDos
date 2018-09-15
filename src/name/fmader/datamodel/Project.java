@@ -21,10 +21,10 @@ public class Project extends ToDoItem{
         if (start != null && start.isAfter(LocalDate.now())) {
             return false;
         }
-        if (dependsOn == null || dependsOn.isEmpty()) {
+        if (children == null || children.isEmpty()) {
             return true;
         }
-        for (ToDoItem toDoItem : dependsOn) {
+        for (ToDoItem toDoItem : children) {
             if (toDoItem.isDoable()) {
                 return true;
             }
@@ -73,8 +73,8 @@ public class Project extends ToDoItem{
                 "\n, deadline=" + (deadline == null ? null : deadline.get()) +
                 "\n, originalDeadline=" + originalDeadline +
                 "\n, start=" + start +
-                "\n, dependsOn=" + dependsOn.size() +
-                "\n, dependedOnBy=" + dependedOnBy.size() +
+                "\n, children=" + children.size() +
+                "\n, parents=" + parents.size() +
                 "\n, contexts=" + contexts +
                 "\n, isRecurrent=" + isRecurrent +
                 "\n, recurringPattern=" + recurringPattern +
