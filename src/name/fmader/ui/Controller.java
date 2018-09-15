@@ -343,6 +343,7 @@ public class Controller {
         for (ToDoItem toDoItem : parents) {
             toDoItem.removeChild(selectedToDoItem);
         }
+        toDoItemsData.remove(selectedToDoItem);
         toDoItems.remove(selectedToDoItem);
         selectNull();
     }
@@ -454,7 +455,10 @@ public class Controller {
         }
         if (temp == null) {
             selectedToDoItem = null;
+            detailPane.setVisible(false);
+        } else {
+            selectedToDoItem = temp;
+            showDetails();
         }
-        detailPane.setVisible(false);
     }
 }
