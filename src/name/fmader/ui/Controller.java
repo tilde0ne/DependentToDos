@@ -10,13 +10,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
-import name.fmader.datamodel.Appointment;
-import name.fmader.datamodel.DataIO;
-import name.fmader.datamodel.ToDoItem;
+import name.fmader.datamodel.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -128,6 +127,31 @@ public class Controller {
     @FXML
     private Button editButton;
 
+    @FXML
+    private Label detailsType;
+    @FXML
+    private Label detailsTitle;
+    @FXML
+    private Label detailsStart;
+    @FXML
+    private Label detailsDeadlineLabel;
+    @FXML
+    private Label detailsDeadlineValue;
+    @FXML
+    private Label detailsNeeded;
+    @FXML
+    private Label detailsInherited;
+    @FXML
+    private Label detailsRecurrent;
+    @FXML
+    private Label detailsPattern;
+    @FXML
+    private ListView<ToDoItem> detailsChildren;
+    @FXML
+    private ListView<ToDoItem> detailsParents;
+    @FXML
+    private TextArea detailsDescription;
+
     public void initialize() {
         dataIO.load();
         toDoItems = FXCollections.observableList(dataIO.getToDoItems());
@@ -197,6 +221,8 @@ public class Controller {
             }
         });
         contextChoiceBox.setItems(contexts);
+
+        selectNull();
     }
 
     @FXML
@@ -317,9 +343,67 @@ public class Controller {
     }
 
     private void showDetails() {
-        if (selectedToDoItem != null) {
-            detailPane.setVisible(true);
+        if (selectedToDoItem == null) {
+            detailPane.setVisible(false);
+            return;
         }
+        detailPane.setVisible(true);
+
+        String type = selectedToDoItem.getClass().getSimpleName();
+        if (type.equals("ToDoItem")) {
+            type = "ToDo";
+        }
+        detailsType.setText(type);
+
+        detailsTitle.setText(selectedToDoItem.getTitle());
+
+        LocalDate start = selectedToDoItem.getStart();
+        if (start != null) {
+            detailsStart.setText(start.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        } else {
+            detailsStart.setText("");
+        }
+
+        if (type.equals("Appointment")) {
+            detailsDeadlineLabel.setText("Date/Time:");
+            detailsDeadlineValue.setText(((Appointment) selectedToDoItem).getDateTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+        } else {
+            detailsDeadlineLabel.setText("Deadline:");
+            if (selectedToDoItem.getDeadline() != null) {
+                detailsDeadlineValue.setText(selectedToDoItem.getDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            } else {
+                detailsDeadlineValue.setText("");
+            }
+        }
+
+        if ((type.equals("Appointment") || type.equals("External")) && selectedToDoItem.isInherited()) {
+            detailsNeeded.setVisible(true);
+            detailsInherited.setVisible(true);
+            if (type.equals("Appointment")) {
+                detailsInherited.setText(((Appointment) selectedToDoItem).getInheritedDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            }
+            if (type.equals("External")) {
+                detailsInherited.setText(((External) selectedToDoItem).getInheritedDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            }
+        } else {
+            detailsNeeded.setVisible(false);
+            if (selectedToDoItem.isInherited()) {
+                detailsInherited.setVisible(true);
+                detailsInherited.setText("Is inherited!");
+            } else {
+                detailsInherited.setVisible(false);
+            }
+        }
+
+        detailsRecurrent.setText(String.valueOf(selectedToDoItem.isRecurrent()));
+        if (selectedToDoItem.isRecurrent()) {
+            detailsPattern.setVisible(true);
+            RecurringPattern pattern = selectedToDoItem.getRecurringPattern();
+            detailsPattern.setText("Every " + pattern.getEveryN() + " " + pattern.getRecurringBase() + ", is fix: " + String.valueOf(pattern.isFix()));
+        } else {
+            detailsPattern.setVisible(false);
+        }
+
 
     }
 
