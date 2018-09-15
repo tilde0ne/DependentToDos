@@ -150,7 +150,7 @@
                 <Label fx:id="detailsDeadlineLabel" text="Deadline:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
                 <Label text="Title:" GridPane.halignment="RIGHT" />
                 <Label text="Start:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                <Label fx:id="detailsNeeded" text="Req. deadline:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                <Label fx:id="detailsNeeded" text="Needed Date:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
                 <Label fx:id="detailsInherited" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                 <Label fx:id="detailsType" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="detailsTitle" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="5" />

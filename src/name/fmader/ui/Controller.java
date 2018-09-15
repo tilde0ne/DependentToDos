@@ -1,5 +1,6 @@
 package name.fmader.ui;
 
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -22,6 +23,7 @@ import java.util.function.Predicate;
 public class Controller {
 
     private DataIO dataIO = DataIO.getInstance();
+    private List<ToDoItem> toDoItemsData;
     private ObservableList<ToDoItem> toDoItems;
     private ObservableList<String> contexts;
 
@@ -154,7 +156,10 @@ public class Controller {
 
     public void initialize() {
         dataIO.load();
-        toDoItems = FXCollections.observableList(dataIO.getToDoItems());
+        toDoItemsData = dataIO.getToDoItems();
+        toDoItems = FXCollections.observableArrayList(item ->
+                new Observable[] {item.deadlineProperty(), item.startProperty(), item.isDependentProperty()});
+        toDoItems.addAll(toDoItemsData);
         contexts = FXCollections.observableArrayList(dataIO.getContexts());
 
         filteredActiveToDoItems = new FilteredList<>(toDoItems, activeToDoItemsPredicate);
@@ -309,38 +314,8 @@ public class Controller {
 
             if (event.getSource().equals(addButton)) {
                 toDoItems.add(toDoItem);
-            } else if (event.getSource().equals(editButton)) {
-                // FilteredList's watch ObservableLists for Changes in the list
-                // but not for changes of the lists members state.
-                // If you add an item as a parent in dialog, the new parent
-                // won't get properly filtered (i.e. stays in activeToDoTableView.
-                // Workaround: Remove and then add again all former parents
-                // and notParents of toDoItem to toDoItems.
-//                toDoItems.remove(toDoItem);
-//                toDoItems.add(toDoItem);
+                toDoItemsData.add(toDoItem);
             }
-
-//            List<ToDoItem> oldChildren = dialogController.getOldChildren();
-//            List<ToDoItem> children = toDoItem.getChildren();
-//            List<ToDoItem> union = new ArrayList<>(children);
-//            union.addAll(oldChildren);
-//            List<ToDoItem> intersection = new ArrayList<>(children);
-//            intersection.retainAll(oldChildren);
-//            union.removeAll(intersection);
-//            toDoItems.removeAll(union);
-//            toDoItems.addAll(union);
-//
-//            List<ToDoItem> oldParents = dialogController.getOldParents();
-//            List<ToDoItem> parents = toDoItem.getParents();
-//            union = new ArrayList<>(parents);
-//            union.addAll(oldParents);
-//            intersection = new ArrayList<>(parents);
-//            intersection.retainAll(oldParents);
-//            union.removeAll(intersection);
-//            toDoItems.removeAll(union);
-//            toDoItems.addAll(union);
-
-            //////////////////////////////////////////////////////////////////////
 
             for (TableView<ToDoItem> tableView : tableViews) {
                 if (tableView.getItems().contains(toDoItem)) {
@@ -414,9 +389,11 @@ public class Controller {
             detailsNeeded.setVisible(true);
             detailsInherited.setVisible(true);
             if (type.equals("Appointment")) {
+                detailsNeeded.setText("Needed Date:");
                 detailsInherited.setText(((Appointment) selectedToDoItem).getInheritedDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
             }
             if (type.equals("External")) {
+                detailsNeeded.setText("Req. Deadline:");
                 detailsInherited.setText(((External) selectedToDoItem).getInheritedDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
             }
         } else {
