@@ -316,29 +316,29 @@ public class Controller {
                 // won't get properly filtered (i.e. stays in activeToDoTableView.
                 // Workaround: Remove and then add again all former parents
                 // and notParents of toDoItem to toDoItems.
-                toDoItems.remove(toDoItem);
-                toDoItems.add(toDoItem);
+//                toDoItems.remove(toDoItem);
+//                toDoItems.add(toDoItem);
             }
 
-            List<ToDoItem> oldChildren = dialogController.getOldChildren();
-            List<ToDoItem> children = toDoItem.getChildren();
-            List<ToDoItem> union = new ArrayList<>(children);
-            union.addAll(oldChildren);
-            List<ToDoItem> intersection = new ArrayList<>(children);
-            intersection.retainAll(oldChildren);
-            union.removeAll(intersection);
-            toDoItems.removeAll(union);
-            toDoItems.addAll(union);
-
-            List<ToDoItem> oldParents = dialogController.getOldParents();
-            List<ToDoItem> parents = toDoItem.getParents();
-            union = new ArrayList<>(parents);
-            union.addAll(oldParents);
-            intersection = new ArrayList<>(parents);
-            intersection.retainAll(oldParents);
-            union.removeAll(intersection);
-            toDoItems.removeAll(union);
-            toDoItems.addAll(union);
+//            List<ToDoItem> oldChildren = dialogController.getOldChildren();
+//            List<ToDoItem> children = toDoItem.getChildren();
+//            List<ToDoItem> union = new ArrayList<>(children);
+//            union.addAll(oldChildren);
+//            List<ToDoItem> intersection = new ArrayList<>(children);
+//            intersection.retainAll(oldChildren);
+//            union.removeAll(intersection);
+//            toDoItems.removeAll(union);
+//            toDoItems.addAll(union);
+//
+//            List<ToDoItem> oldParents = dialogController.getOldParents();
+//            List<ToDoItem> parents = toDoItem.getParents();
+//            union = new ArrayList<>(parents);
+//            union.addAll(oldParents);
+//            intersection = new ArrayList<>(parents);
+//            intersection.retainAll(oldParents);
+//            union.removeAll(intersection);
+//            toDoItems.removeAll(union);
+//            toDoItems.addAll(union);
 
             //////////////////////////////////////////////////////////////////////
 

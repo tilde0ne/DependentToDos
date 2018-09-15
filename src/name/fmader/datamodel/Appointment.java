@@ -1,5 +1,7 @@
 package name.fmader.datamodel;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -14,7 +16,7 @@ public class Appointment extends ToDoItem {
 
     private static final long serialVersionUID = -226146364586406102L;
 
-    private transient SimpleObjectProperty<LocalDateTime> dateTime;
+    private transient ObjectProperty<LocalDateTime> dateTime;
     private LocalDate inheritedDeadline;
 
     public Appointment(String title, LocalDate date, LocalTime time) {
@@ -43,14 +45,7 @@ public class Appointment extends ToDoItem {
     @Override
     public void setDeadline(LocalDate deadline) {
         originalDeadline = deadline;
-
-        if (deadline == null) {
-            this.deadline = null;
-        } else if (this.deadline == null) {
-            this.deadline = new SimpleObjectProperty<>(deadline);
-        } else {
-            this.deadline.set(deadline);
-        }
+        this.deadline.set(deadline);
 
         LocalTime temp = dateTime.get().toLocalTime();
         dateTime.set(this.deadline.get().atTime(temp));
@@ -61,16 +56,11 @@ public class Appointment extends ToDoItem {
             inheritedDeadline = null;
         }
 
-        if (children != null && !children.isEmpty()) {
+        if (!children.isEmpty()) {
             for (ToDoItem toDoItem : children) {
                 toDoItem.recalculateDeadline();
             }
         }
-    }
-
-    @Override
-    public LocalDate getStart() {
-        return null;
     }
 
     @Override
@@ -93,13 +83,15 @@ public class Appointment extends ToDoItem {
         title = new SimpleStringProperty(in.readUTF());
         deadline = new SimpleObjectProperty<>((LocalDate) in.readObject());
         dateTime = new SimpleObjectProperty<>((LocalDateTime) in.readObject());
+        start = new SimpleObjectProperty<>();
+        isDependent = new SimpleBooleanProperty(!children.isEmpty());
     }
 
     public LocalDateTime getDateTime() {
         return dateTime.get();
     }
 
-    public SimpleObjectProperty<LocalDateTime> dateTimeProperty() {
+    public ObjectProperty<LocalDateTime> dateTimeProperty() {
         return dateTime;
     }
 
@@ -116,10 +108,11 @@ public class Appointment extends ToDoItem {
                 "\n, deadline=" + deadline.get() +
                 "\n, originalDeadline=" + originalDeadline +
                 "\n, inheritedDeadline=" + inheritedDeadline +
-                "\n, start=" + start +
+                "\n, start=" + start.get() +
                 "\n, children=" + children.size() +
                 "\n, parents=" + parents.size() +
                 "\n, contexts=" + contexts +
+                "\n, isDependent=" + isDependent.get() +
                 "\n, isRecurrent=" + isRecurrent +
                 "\n, recurringPattern=" + recurringPattern +
                 "\n, hasFollowUp=" + hasFollowUp +

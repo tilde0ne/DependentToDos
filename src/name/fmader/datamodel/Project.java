@@ -1,5 +1,6 @@
 package name.fmader.datamodel;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -16,26 +17,11 @@ public class Project extends ToDoItem{
         super("[P] " + title);
     }
 
-    @Override
-    public boolean isDoable() {
-        if (start != null && start.isAfter(LocalDate.now())) {
-            return false;
-        }
-        if (children == null || children.isEmpty()) {
-            return true;
-        }
-        for (ToDoItem toDoItem : children) {
-            if (toDoItem.isDoable()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         out.writeUTF(title.get());
-        out.writeObject(deadline == null ? LocalDate.of(1, 1, 1) : deadline.get());
+        out.writeObject(deadline.get() == null ? LocalDate.of(1, 1, 1) : deadline.get());
+        out.writeObject(start.get() == null ? LocalDate.of(1, 1, 1) : start.get());
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -44,7 +30,16 @@ public class Project extends ToDoItem{
         LocalDate date = (LocalDate) in.readObject();
         if (!date.equals(LocalDate.of(1, 1, 1))) {
             deadline = new SimpleObjectProperty<>(date);
+        } else {
+            deadline = new SimpleObjectProperty<>();
         }
+        date = (LocalDate) in.readObject();
+        if (!date.equals(LocalDate.of(1, 1, 1))) {
+            start = new SimpleObjectProperty<>(date);
+        } else {
+            start = new SimpleObjectProperty<>();
+        }
+        isDependent = new SimpleBooleanProperty(!children.isEmpty());
     }
 
     @Override
@@ -72,10 +67,11 @@ public class Project extends ToDoItem{
                 "\n, description='" + description + '\'' +
                 "\n, deadline=" + (deadline == null ? null : deadline.get()) +
                 "\n, originalDeadline=" + originalDeadline +
-                "\n, start=" + start +
+                "\n, start=" + start.get() +
                 "\n, children=" + children.size() +
                 "\n, parents=" + parents.size() +
                 "\n, contexts=" + contexts +
+                "\n, isDependent=" + isDependent.get() +
                 "\n, isRecurrent=" + isRecurrent +
                 "\n, recurringPattern=" + recurringPattern +
                 "\n, hasFollowUp=" + hasFollowUp +

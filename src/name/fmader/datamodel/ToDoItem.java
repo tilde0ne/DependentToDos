@@ -1,8 +1,6 @@
 package name.fmader.datamodel;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,12 +15,14 @@ public class ToDoItem implements Serializable {
     private static final long serialVersionUID = -5027435631969990301L;
 
     protected LocalDate created;
-    protected transient SimpleStringProperty title;
+    protected transient StringProperty title;
     protected String description;
 
-    protected transient SimpleObjectProperty<LocalDate> deadline;
+    protected transient ObjectProperty<LocalDate> deadline = new SimpleObjectProperty<>();
     protected LocalDate originalDeadline;
-    protected LocalDate start;
+    protected transient ObjectProperty<LocalDate> start = new SimpleObjectProperty<>();
+
+    protected transient BooleanProperty isDependent = new SimpleBooleanProperty();
 
     protected List<ToDoItem> children;
     protected List<ToDoItem> parents;
@@ -38,6 +38,7 @@ public class ToDoItem implements Serializable {
         this.children = new ArrayList<>();
         this.parents = new ArrayList<>();
         this.contexts = new ArrayList<>();
+        this.isDependent.set(false);
     }
 
     public void addChild(ToDoItem toDoItem) {
@@ -46,12 +47,14 @@ public class ToDoItem implements Serializable {
             toDoItem.addParent(this);
             toDoItem.recalculateDeadline();
         }
+        isDependent.set(!children.isEmpty());
     }
 
     public void removeChild(ToDoItem toDoItem) {
         children.remove(toDoItem);
         toDoItem.removeParent(this);
         toDoItem.recalculateDeadline();
+        isDependent.set(!children.isEmpty());
     }
 
     public void addParent(ToDoItem toDoItem) {
@@ -75,7 +78,7 @@ public class ToDoItem implements Serializable {
     }
 
     public boolean isDoable() {
-        if (start == null || !start.isAfter(LocalDate.now())) {
+        if (start.get() == null || !start.get().isAfter(LocalDate.now())) {
             return children.isEmpty();
         }
         return false;
@@ -86,7 +89,7 @@ public class ToDoItem implements Serializable {
     }
 
     public boolean isInherited() {
-        if (deadline == null) {
+        if (deadline.get() == null) {
             return false;
         }
         if (originalDeadline == null) {
@@ -96,15 +99,13 @@ public class ToDoItem implements Serializable {
     }
 
     protected LocalDate checkAgainstParentDeadlines(LocalDate deadline) {
-        if (parents != null && !parents.isEmpty()) {
-            for (ToDoItem toDoItem : parents) {
-                if (toDoItem.deadline == null) {
-                    continue;
-                }
-                LocalDate parentDeadline = toDoItem.deadline.get();
-                if (deadline == null || deadline.isAfter(parentDeadline)) {
-                    deadline = parentDeadline;
-                }
+        for (ToDoItem toDoItem : parents) {
+            if (toDoItem.deadline.get() == null) {
+                continue;
+            }
+            LocalDate parentDeadline = toDoItem.deadline.get();
+            if (deadline == null || deadline.isAfter(parentDeadline)) {
+                deadline = parentDeadline;
             }
         }
         return deadline;
@@ -113,7 +114,8 @@ public class ToDoItem implements Serializable {
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         out.writeUTF(title.get());
-        out.writeObject(deadline == null ? LocalDate.of(1, 1, 1) : deadline.get());
+        out.writeObject(deadline.get() == null ? LocalDate.of(1, 1, 1) : deadline.get());
+        out.writeObject(start.get() == null ? LocalDate.of(1, 1, 1) : start.get());
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -122,7 +124,16 @@ public class ToDoItem implements Serializable {
         LocalDate date = (LocalDate) in.readObject();
         if (!date.equals(LocalDate.of(1, 1, 1))) {
             deadline = new SimpleObjectProperty<>(date);
+        } else {
+            deadline = new SimpleObjectProperty<>();
         }
+        date = (LocalDate) in.readObject();
+        if (!date.equals(LocalDate.of(1, 1, 1))) {
+            start = new SimpleObjectProperty<>(date);
+        } else {
+            start = new SimpleObjectProperty<>();
+        }
+        isDependent = new SimpleBooleanProperty(!children.isEmpty());
     }
 
     // Getters and Setters
@@ -140,7 +151,7 @@ public class ToDoItem implements Serializable {
         return title.get();
     }
 
-    public SimpleStringProperty titleProperty() {
+    public StringProperty titleProperty() {
         return title;
     }
 
@@ -157,7 +168,7 @@ public class ToDoItem implements Serializable {
     }
 
     public LocalDate getDeadline() {
-        return (deadline == null) ? null : deadline.get();
+        return deadline.get();
     }
 
     public ObjectProperty<LocalDate> deadlineProperty() {
@@ -168,15 +179,9 @@ public class ToDoItem implements Serializable {
         originalDeadline = deadline;
 
         deadline = checkAgainstParentDeadlines(deadline);
-        if (deadline == null) {
-            this.deadline = null;
-        } else if (this.deadline == null) {
-            this.deadline = new SimpleObjectProperty<>(deadline);
-        } else {
-            this.deadline.set(deadline);
-        }
+        this.deadline.set(deadline);
 
-        if (children != null && !children.isEmpty()) {
+        if (!children.isEmpty()) {
             for (ToDoItem toDoItem : children) {
                 toDoItem.recalculateDeadline();
             }
@@ -192,11 +197,15 @@ public class ToDoItem implements Serializable {
     }
 
     public LocalDate getStart() {
+        return start.get();
+    }
+
+    public ObjectProperty<LocalDate> startProperty() {
         return start;
     }
 
     public void setStart(LocalDate start) {
-        this.start = start;
+        this.start.set(start);
     }
 
     public List<ToDoItem> getChildren() {
@@ -209,6 +218,18 @@ public class ToDoItem implements Serializable {
 
     public List<String> getContexts() {
         return contexts;
+    }
+
+    public boolean isIsDependent() {
+        return isDependent.get();
+    }
+
+    public BooleanProperty isDependentProperty() {
+        return isDependent;
+    }
+
+    public void setIsDependent(boolean isDependent) {
+        this.isDependent.set(isDependent);
     }
 
     public boolean isRecurrent() {
@@ -240,12 +261,13 @@ public class ToDoItem implements Serializable {
         return "ToDoItem{" +
                 "\ntitle=" + title.get() +
                 "\n, description='" + description + '\'' +
-                "\n, deadline=" + (deadline == null ? null : deadline.get()) +
+                "\n, deadline=" + deadline.get() +
                 "\n, originalDeadline=" + originalDeadline +
-                "\n, start=" + start +
+                "\n, start=" + start.get() +
                 "\n, children=" + children.size() +
                 "\n, parents=" + parents.size() +
                 "\n, contexts=" + contexts +
+                "\n, isDependent=" + isDependent.get() +
                 "\n, isRecurrent=" + isRecurrent +
                 "\n, recurringPattern=" + recurringPattern +
                 "\n, hasFollowUp=" + hasFollowUp +
