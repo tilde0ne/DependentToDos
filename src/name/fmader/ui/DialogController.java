@@ -207,13 +207,16 @@ public class DialogController {
         if (type.equals("Appointment") || type.equals("External")) {
             if (toDoItem.isInherited()) {
                 neededLabel.setVisible(true);
+                inheritedLabel.setVisible(true);
                 if (type.equals("Appointment")) {
+                    neededLabel.setText("Needed date:");
                     Appointment appointment = (Appointment) toDoItem;
-                    inheritedLabel.setText(appointment.getInheritedDeadline().toString());
+                    inheritedLabel.setText(appointment.getInheritedDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
                 }
                 if (type.equals("External")) {
+                    neededLabel.setText("Req. deadline:");
                     External external = (External) toDoItem;
-                    inheritedLabel.setText(external.getInheritedDeadline().toString());
+                    inheritedLabel.setText(external.getInheritedDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
                 }
             } else {
                 neededLabel.setVisible(false);
@@ -290,6 +293,7 @@ public class DialogController {
             }
         } else {
             newToDoItem = selectedToDoItem;
+            newToDoItem.setTitle(title);
         }
 
         newToDoItem.setStart(startDatePicker.getValue());
