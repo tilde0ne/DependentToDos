@@ -359,7 +359,11 @@ public class Controller {
             toDoItem.removeChild(selectedToDoItem);
         }
         toDoItemsData.remove(selectedToDoItem);
-        toDoItemsBase.remove(selectedToDoItem);
+        if (selectedToDoItem.getClass().getSimpleName().equals("Appointment")) {
+            appointmentsBase.remove(selectedToDoItem);
+        } else {
+            toDoItemsBase.remove(selectedToDoItem);
+        }
         selectNull();
     }
 
