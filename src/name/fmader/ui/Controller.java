@@ -213,6 +213,7 @@ public class Controller {
         activeToDoTableView.setRowFactory(param -> new TitleRow());
         dependentToDoTableView.setRowFactory(param -> new TitleRow());
         externalTableView.setRowFactory(param -> new TitleRow());
+        appointmentTableView.setRowFactory(param -> new TitleRow());
 
         activeDeadlineColumn.setCellFactory(param -> new DateCell());
         dependentDeadlineColumn.setCellFactory(param -> new DateCell());
