@@ -200,6 +200,7 @@ public class Controller {
                         }
                     }
                     selectedToDoItem = tableView.getSelectionModel().getSelectedItem();
+                    System.out.println(selectedToDoItem.getTitle());
                     showDetails();
                 }
             });
@@ -350,19 +351,21 @@ public class Controller {
             alertNoSelection();
             return;
         }
-        List<ToDoItem> children = new ArrayList<>(selectedToDoItem.getChildren());
-        List<ToDoItem> parents = new ArrayList<>(selectedToDoItem.getParents());
+
+        ToDoItem itemToRemove = selectedToDoItem;
+        List<ToDoItem> children = new ArrayList<>(itemToRemove.getChildren());
+        List<ToDoItem> parents = new ArrayList<>(itemToRemove.getParents());
         for (ToDoItem toDoItem : children) {
-            selectedToDoItem.removeChild(toDoItem);
+            itemToRemove.removeChild(toDoItem);
         }
         for (ToDoItem toDoItem : parents) {
-            toDoItem.removeChild(selectedToDoItem);
+            toDoItem.removeChild(itemToRemove);
         }
-        toDoItemsData.remove(selectedToDoItem);
-        if (selectedToDoItem.getClass().getSimpleName().equals("Appointment")) {
-            appointmentsBase.remove(selectedToDoItem);
+        toDoItemsData.remove(itemToRemove);
+        if (itemToRemove.getClass().getSimpleName().equals("Appointment")) {
+            appointmentsBase.remove(itemToRemove);
         } else {
-            toDoItemsBase.remove(selectedToDoItem);
+            toDoItemsBase.remove(itemToRemove);
         }
         selectNull();
     }
@@ -475,9 +478,11 @@ public class Controller {
         if (temp == null) {
             selectedToDoItem = null;
             detailPane.setVisible(false);
+            System.out.println("selectNull(): " + selectedToDoItem);
         } else {
             selectedToDoItem = temp;
             showDetails();
+            System.out.println("selectNull(): " + selectedToDoItem.getTitle());
         }
     }
 }
