@@ -200,7 +200,6 @@ public class Controller {
                         }
                     }
                     selectedToDoItem = tableView.getSelectionModel().getSelectedItem();
-                    System.out.println(selectedToDoItem.getTitle());
                     showDetails();
                 }
             });
@@ -210,6 +209,10 @@ public class Controller {
         dependentTitleColumn.prefWidthProperty().bind(dependentToDoTableView.widthProperty().subtract(dependentDeadlineColumn.getWidth() + 2));
         externalTitleColumn.prefWidthProperty().bind(externalTableView.widthProperty().subtract(externalDeadlineColumn.getWidth() + 2));
         appointmentTitleColumn.prefWidthProperty().bind(appointmentTableView.widthProperty().subtract(appointmentDateTimeColumn.getWidth() + 2));
+
+        activeToDoTableView.setRowFactory(param -> new TitleRow());
+        dependentToDoTableView.setRowFactory(param -> new TitleRow());
+        externalTableView.setRowFactory(param -> new TitleRow());
 
         activeDeadlineColumn.setCellFactory(param -> new DateCell());
         dependentDeadlineColumn.setCellFactory(param -> new DateCell());
@@ -478,11 +481,9 @@ public class Controller {
         if (temp == null) {
             selectedToDoItem = null;
             detailPane.setVisible(false);
-            System.out.println("selectNull(): " + selectedToDoItem);
         } else {
             selectedToDoItem = temp;
             showDetails();
-            System.out.println("selectNull(): " + selectedToDoItem.getTitle());
         }
     }
 }
