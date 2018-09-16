@@ -27,18 +27,18 @@ public class Controller {
 
     private DataIO dataIO = DataIO.getInstance();
     private ObservableList<ToDoItem> toDoItemsData;
-    private ObservableList<ToDoItem> toDoItems;
+    private ObservableList<ToDoItem> toDoItemsBase;
+    private ObservableList<Appointment> appointmentsBase;
     private ObservableList<String> contexts;
 
     private FilteredList<ToDoItem> filteredActiveToDoItems;
     private FilteredList<ToDoItem> filteredDependentToDoItems;
     private FilteredList<ToDoItem> filteredExternals;
-    private FilteredList<ToDoItem> filteredAppointments;
+    private FilteredList<Appointment> filteredAppointments;
 
     private ToDoItem selectedToDoItem;
 
     private Predicate<ToDoItem> isExternal = toDoItem -> toDoItem.getClass().getSimpleName().equals("External");
-    private Predicate<ToDoItem> isAppointment = toDoItem -> toDoItem.getClass().getSimpleName().equals("Appointment");
     private Predicate<ToDoItem> isToDoItem = toDoItem -> toDoItem.getClass().getSimpleName().equals("ToDoItem");
     private Predicate<ToDoItem> isProject = toDoItem -> toDoItem.getClass().getSimpleName().equals("Project");
     private Predicate<ToDoItem> isToDoOrProject = isToDoItem.or(isProject);
@@ -156,17 +156,24 @@ public class Controller {
     public void initialize() {
         dataIO.load();
         toDoItemsData = FXCollections.observableList(dataIO.getToDoItems());
-        toDoItems = FXCollections.observableArrayList(item ->
+        toDoItemsBase = FXCollections.observableArrayList(item ->
                 new Observable[] {item.deadlineProperty(), item.startProperty(), item.isDependentProperty()});
-        toDoItems.addAll(toDoItemsData);
+        toDoItemsBase.addAll(toDoItemsData);
+        appointmentsBase = FXCollections.observableArrayList(item ->
+                new Observable[] {item.dateTimeProperty(), item.isDependentProperty()});
+        for (ToDoItem toDoItem : toDoItemsData) {
+            if (toDoItem.getClass().getSimpleName().equals("Appointment")) {
+                appointmentsBase.add((Appointment) toDoItem);
+            }
+        }
         contexts = FXCollections.observableArrayList(dataIO.getContexts());
 
-        filteredActiveToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(item ->
+        filteredActiveToDoItems = new FilteredList<>(toDoItemsBase, isToDoOrProject.and(item ->
                 (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && !item.isIsDependent()));
-        filteredDependentToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(item ->
+        filteredDependentToDoItems = new FilteredList<>(toDoItemsBase, isToDoOrProject.and(item ->
                 (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || item.isIsDependent()));
-        filteredExternals = new FilteredList<>(toDoItems, isExternal);
-        filteredAppointments = new FilteredList<>(toDoItems, isAppointment);
+        filteredExternals = new FilteredList<>(toDoItemsBase, isExternal);
+        filteredAppointments = new FilteredList<>(appointmentsBase, item -> true);
         FilteredList<ToDoItem> projects = new FilteredList<>(toDoItemsData, isProject);
 
         SortedList<ToDoItem> activeToDoItems = new SortedList<>(filteredActiveToDoItems, sortByDeadline);
@@ -266,17 +273,17 @@ public class Controller {
 
     @FXML
     public void filterItems() {
-        Predicate<ToDoItem> temp1 =
+        Predicate<ToDoItem> projectFilter =
                 toDoItem -> projectChoiceBox.getValue() == null || toDoItem.getParents().contains(projectChoiceBox.getValue());
-        Predicate<ToDoItem> temp2 =
+        Predicate<ToDoItem> contextFilter =
                 toDoItem -> contextChoiceBox.getValue() == null || toDoItem.getContexts().contains(contextChoiceBox.getValue());
 
-        filteredActiveToDoItems.setPredicate(temp1.and(temp2).and(isToDoOrProject.and(item ->
+        filteredActiveToDoItems.setPredicate(projectFilter.and(contextFilter).and(isToDoOrProject.and(item ->
                 (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && !item.isIsDependent())));
-        filteredDependentToDoItems.setPredicate(temp1.and(temp2).and(isToDoOrProject.and(item ->
+        filteredDependentToDoItems.setPredicate(projectFilter.and(contextFilter).and(isToDoOrProject.and(item ->
                 (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || item.isIsDependent())));
-        filteredExternals.setPredicate(temp1.and(temp2).and(isExternal));
-        filteredAppointments.setPredicate(temp1.and(temp2).and(isAppointment));
+        filteredExternals.setPredicate(projectFilter.and(contextFilter).and(isExternal));
+        filteredAppointments.setPredicate(projectFilter.and(contextFilter));
 
         selectNull();
     }
@@ -317,7 +324,11 @@ public class Controller {
             ToDoItem toDoItem = dialogController.getToDoItem();
 
             if (event.getSource().equals(addButton)) {
-                toDoItems.add(toDoItem);
+                if (toDoItem.getClass().getSimpleName().equals("Appointment")) {
+                    appointmentsBase.add((Appointment) toDoItem);
+                } else {
+                    toDoItemsBase.add(toDoItem);
+                }
                 toDoItemsData.add(toDoItem);
             }
 
@@ -348,7 +359,7 @@ public class Controller {
             toDoItem.removeChild(selectedToDoItem);
         }
         toDoItemsData.remove(selectedToDoItem);
-        toDoItems.remove(selectedToDoItem);
+        toDoItemsBase.remove(selectedToDoItem);
         selectNull();
     }
 
