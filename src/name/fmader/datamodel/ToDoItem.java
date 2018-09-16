@@ -78,10 +78,7 @@ public class ToDoItem implements Serializable {
     }
 
     public boolean isDoable() {
-        if (start.get() == null || !start.get().isAfter(LocalDate.now())) {
-            return children.isEmpty();
-        }
-        return false;
+        return !isDependent.get() && (start.get() == null || !start.get().isAfter(LocalDate.now()));
     }
 
     public void recalculateDeadline() {

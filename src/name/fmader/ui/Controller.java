@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 public class Controller {
 
     private DataIO dataIO = DataIO.getInstance();
-    private List<ToDoItem> toDoItemsData;
+    private ObservableList<ToDoItem> toDoItemsData;
     private ObservableList<ToDoItem> toDoItems;
     private ObservableList<String> contexts;
 
@@ -37,15 +37,11 @@ public class Controller {
 
     private ToDoItem selectedToDoItem;
 
-    private Predicate<ToDoItem> isDoable = ToDoItem::isDoable;
     private Predicate<ToDoItem> isExternal = toDoItem -> toDoItem.getClass().getSimpleName().equals("External");
     private Predicate<ToDoItem> isAppointment = toDoItem -> toDoItem.getClass().getSimpleName().equals("Appointment");
     private Predicate<ToDoItem> isToDoItem = toDoItem -> toDoItem.getClass().getSimpleName().equals("ToDoItem");
     private Predicate<ToDoItem> isProject = toDoItem -> toDoItem.getClass().getSimpleName().equals("Project");
     private Predicate<ToDoItem> isToDoOrProject = isToDoItem.or(isProject);
-
-    private Predicate<ToDoItem> activeToDoItemsPredicate = isToDoOrProject.and(isDoable);
-    private Predicate<ToDoItem> dependentToDoItemsPredicate = isToDoOrProject.and(isDoable.negate());
 
     private Comparator<ToDoItem> sortByDeadline = (o1, o2) -> {
         if (o1.getDeadline() == null) {
@@ -159,17 +155,19 @@ public class Controller {
 
     public void initialize() {
         dataIO.load();
-        toDoItemsData = dataIO.getToDoItems();
+        toDoItemsData = FXCollections.observableList(dataIO.getToDoItems());
         toDoItems = FXCollections.observableArrayList(item ->
                 new Observable[] {item.deadlineProperty(), item.startProperty(), item.isDependentProperty()});
         toDoItems.addAll(toDoItemsData);
-        contexts = FXCollections.observableList(dataIO.getContexts());
+        contexts = FXCollections.observableArrayList(dataIO.getContexts());
 
-        filteredActiveToDoItems = new FilteredList<>(toDoItems, activeToDoItemsPredicate);
-        filteredDependentToDoItems = new FilteredList<>(toDoItems, dependentToDoItemsPredicate);
+        filteredActiveToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(item ->
+                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && !item.isIsDependent()));
+        filteredDependentToDoItems = new FilteredList<>(toDoItems, isToDoOrProject.and(item ->
+                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || item.isIsDependent()));
         filteredExternals = new FilteredList<>(toDoItems, isExternal);
         filteredAppointments = new FilteredList<>(toDoItems, isAppointment);
-        FilteredList<ToDoItem> projects = new FilteredList<>(toDoItems, isProject);
+        FilteredList<ToDoItem> projects = new FilteredList<>(toDoItemsData, isProject);
 
         SortedList<ToDoItem> activeToDoItems = new SortedList<>(filteredActiveToDoItems, sortByDeadline);
         SortedList<ToDoItem> dependentToDoItems = new SortedList<>(filteredDependentToDoItems, sortByDeadline);
@@ -277,6 +275,8 @@ public class Controller {
         filteredDependentToDoItems.setPredicate(temp1.and(temp2).and(dependentToDoItemsPredicate));
         filteredExternals.setPredicate(temp1.and(temp2).and(isExternal));
         filteredAppointments.setPredicate(temp1.and(temp2).and(isAppointment));
+
+        selectNull();
     }
 
     @FXML
@@ -313,8 +313,6 @@ public class Controller {
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get().equals(ButtonType.OK)) {
             ToDoItem toDoItem = dialogController.getToDoItem();
-
-            System.out.println(toDoItem);
 
             if (event.getSource().equals(addButton)) {
                 toDoItems.add(toDoItem);

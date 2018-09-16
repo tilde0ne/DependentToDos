@@ -28,7 +28,7 @@ public class Appointment extends ToDoItem {
 
     @Override
     public boolean isDoable() {
-        return children.isEmpty();
+        return !isDependent.get();
     }
 
     @Override
