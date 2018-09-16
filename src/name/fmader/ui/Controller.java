@@ -17,7 +17,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class Controller {
@@ -160,7 +163,7 @@ public class Controller {
         toDoItems = FXCollections.observableArrayList(item ->
                 new Observable[] {item.deadlineProperty(), item.startProperty(), item.isDependentProperty()});
         toDoItems.addAll(toDoItemsData);
-        contexts = FXCollections.observableArrayList(dataIO.getContexts());
+        contexts = FXCollections.observableList(dataIO.getContexts());
 
         filteredActiveToDoItems = new FilteredList<>(toDoItems, activeToDoItemsPredicate);
         filteredDependentToDoItems = new FilteredList<>(toDoItems, dependentToDoItemsPredicate);
@@ -193,8 +196,6 @@ public class Controller {
                     }
                     selectedToDoItem = tableView.getSelectionModel().getSelectedItem();
                     showDetails();
-                } else {
-                    selectNull();
                 }
             });
         }
@@ -225,13 +226,14 @@ public class Controller {
                         .orElse(null);
             }
         });
+
         contextChoiceBox.setItems(contexts);
 
         detailsChildren.setCellFactory(lv -> new ListCell<ToDoItem>() {
             @Override
             protected void updateItem(ToDoItem item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
+                if (item == null || empty) {
                     setText(null);
                 } else {
                     setText(item.getTitle());
@@ -243,7 +245,7 @@ public class Controller {
             @Override
             protected void updateItem(ToDoItem item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
+                if (item == null || empty) {
                     setText(null);
                 } else {
                     setText(item.getTitle());
@@ -311,6 +313,8 @@ public class Controller {
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get().equals(ButtonType.OK)) {
             ToDoItem toDoItem = dialogController.getToDoItem();
+
+            System.out.println(toDoItem);
 
             if (event.getSource().equals(addButton)) {
                 toDoItems.add(toDoItem);

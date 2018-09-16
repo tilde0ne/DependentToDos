@@ -47,7 +47,7 @@ public class ToDoItem implements Serializable {
             toDoItem.addParent(this);
             toDoItem.recalculateDeadline();
         }
-        isDependent.set(!children.isEmpty());
+        isDependent.set(true);
     }
 
     public void removeChild(ToDoItem toDoItem) {

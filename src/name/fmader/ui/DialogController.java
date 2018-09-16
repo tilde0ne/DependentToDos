@@ -200,7 +200,7 @@ public class DialogController {
             startDatePicker.setValue(start);
         }
 
-        LocalDate deadline = toDoItem.getDeadline();
+        LocalDate deadline = toDoItem.getOriginalDeadline();
         if (deadline != null) {
             deadlineDatePicker.setValue(deadline);
         }
@@ -229,11 +229,13 @@ public class DialogController {
                 inheritedLabel.setVisible(false);
             }
         } else {
-            neededLabel.setVisible(false);
+            neededLabel.setVisible(true);
+            neededLabel.setText("Inh. deadline:");
             if (toDoItem.isInherited()) {
                 inheritedLabel.setVisible(true);
-                inheritedLabel.setText("Deadline is inherited!");
+                inheritedLabel.setText(toDoItem.getDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
             } else {
+                neededLabel.setVisible(false);
                 inheritedLabel.setVisible(false);
             }
         }
@@ -305,7 +307,7 @@ public class DialogController {
         newToDoItem.setStart(startDatePicker.getValue());
 
         if (!type.equals("Appointment") || selectedToDoItem != null) {
-            newToDoItem.setDeadline(deadlineDatePicker.getValue());
+            newToDoItem.setDeadline(deadline);
         }
 
         if (type.equals("Appointment") && selectedToDoItem != null) {
