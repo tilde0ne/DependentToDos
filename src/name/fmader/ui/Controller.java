@@ -271,8 +271,10 @@ public class Controller {
         Predicate<ToDoItem> temp2 =
                 toDoItem -> contextChoiceBox.getValue() == null || toDoItem.getContexts().contains(contextChoiceBox.getValue());
 
-        filteredActiveToDoItems.setPredicate(temp1.and(temp2).and(activeToDoItemsPredicate));
-        filteredDependentToDoItems.setPredicate(temp1.and(temp2).and(dependentToDoItemsPredicate));
+        filteredActiveToDoItems.setPredicate(temp1.and(temp2).and(isToDoOrProject.and(item ->
+                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && !item.isIsDependent())));
+        filteredDependentToDoItems.setPredicate(temp1.and(temp2).and(isToDoOrProject.and(item ->
+                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || item.isIsDependent())));
         filteredExternals.setPredicate(temp1.and(temp2).and(isExternal));
         filteredAppointments.setPredicate(temp1.and(temp2).and(isAppointment));
 
