@@ -14,7 +14,7 @@ public class DateCell extends TableCell<ToDoItem, LocalDate> {
         super.updateItem(item, empty);
         if (item == null || empty) {
             setText(null);
-            setStyle("");
+            setStyle("-fx-background-color: white");
         } else {
             setText(item.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
             if (item.isBefore(LocalDate.now().plusDays(1))) {

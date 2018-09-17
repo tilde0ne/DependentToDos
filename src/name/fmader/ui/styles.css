@@ -14,9 +14,21 @@
     -fx-background-color: white;
 }
 
+.table-view:focused {
+    -fx-focus-color: transparent;
+}
+
+.list-view:focused {
+    -fx-focus-color: transparent;
+}
+
+.text-area:focused {
+    -fx-focus-color: transparent;
+}
+
 .table-view {
-    -fx-selection-bar: gold;
-    -fx-selection-bar-non-focused: gold;
+    -fx-selection-bar: hotpink;
+    -fx-selection-bar-non-focused: hotpink;
 }
 
 .table-cell {
