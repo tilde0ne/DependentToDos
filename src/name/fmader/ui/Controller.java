@@ -87,6 +87,8 @@ public class Controller {
         return o1.getDoable() ? 1 : -1;
     };
 
+    private Comparator<ToDoItem> sortByTitle = Comparator.comparing(ToDoItem::getTitle);
+
     @FXML
     private GridPane mainGridPane;
     @FXML
@@ -178,10 +180,10 @@ public class Controller {
         filteredAppointments = new FilteredList<>(appointmentsBase, item -> true);
         FilteredList<ToDoItem> projects = new FilteredList<>(toDoItemsData, isProject);
 
-        SortedList<ToDoItem> activeToDoItems = new SortedList<>(filteredActiveToDoItems, sortByDeadline);
-        SortedList<ToDoItem> dependentToDoItems = new SortedList<>(filteredDependentToDoItems, sortByDeadline);
-        SortedList<ToDoItem> externals = new SortedList<>(filteredExternals, sortByDeadline.thenComparing(sortByIsDoable));
-        SortedList<ToDoItem> appointments = new SortedList<>(filteredAppointments, sortByDateTime.thenComparing(sortByIsDoable));
+        SortedList<ToDoItem> activeToDoItems = new SortedList<>(filteredActiveToDoItems, sortByDeadline.thenComparing(sortByTitle));
+        SortedList<ToDoItem> dependentToDoItems = new SortedList<>(filteredDependentToDoItems, sortByDeadline.thenComparing(sortByTitle));
+        SortedList<ToDoItem> externals = new SortedList<>(filteredExternals, sortByDeadline.thenComparing(sortByIsDoable).thenComparing(sortByTitle));
+        SortedList<ToDoItem> appointments = new SortedList<>(filteredAppointments, sortByDateTime.thenComparing(sortByIsDoable).thenComparing(sortByTitle));
 
         activeToDoTableView.setItems(activeToDoItems);
         dependentToDoTableView.setItems(dependentToDoItems);
