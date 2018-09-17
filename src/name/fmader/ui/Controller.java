@@ -161,10 +161,10 @@ public class Controller {
         dataIO.load();
         toDoItemsData = FXCollections.observableList(dataIO.getToDoItems());
         toDoItemsBase = FXCollections.observableArrayList(item ->
-                new Observable[] {item.deadlineProperty(), item.startProperty(), item.doableProperty()});
+                new Observable[] {item.titleProperty(), item.deadlineProperty(), item.startProperty(), item.doableProperty()});
         toDoItemsBase.addAll(toDoItemsData);
         appointmentsBase = FXCollections.observableArrayList(item ->
-                new Observable[] {item.dateTimeProperty(), item.doableProperty()});
+                new Observable[] {item.titleProperty(), item.dateTimeProperty(), item.doableProperty()});
         for (ToDoItem toDoItem : toDoItemsData) {
             if (toDoItem.getClass().getSimpleName().equals("Appointment")) {
                 appointmentsBase.add((Appointment) toDoItem);
