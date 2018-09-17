@@ -39,7 +39,7 @@ public class Project extends ToDoItem{
         } else {
             start = new SimpleObjectProperty<>();
         }
-        isDependent = new SimpleBooleanProperty(!children.isEmpty());
+        doable = new SimpleBooleanProperty((start.get() == null || !start.get().isAfter(LocalDate.now())) && children.isEmpty());
     }
 
     @Override
@@ -65,13 +65,13 @@ public class Project extends ToDoItem{
         return "Project{" +
                 "\ntitle=" + title.get() +
                 "\n, description='" + description + '\'' +
-                "\n, deadline=" + (deadline == null ? null : deadline.get()) +
+                "\n, deadline=" + deadline.get() +
                 "\n, originalDeadline=" + originalDeadline +
                 "\n, start=" + start.get() +
                 "\n, children=" + children.size() +
                 "\n, parents=" + parents.size() +
                 "\n, contexts=" + contexts +
-                "\n, isDependent=" + isDependent.get() +
+                "\n, doable=" + doable.get() +
                 "\n, isRecurrent=" + isRecurrent +
                 "\n, recurringPattern=" + recurringPattern +
                 "\n, hasFollowUp=" + hasFollowUp +

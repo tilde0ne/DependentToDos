@@ -27,11 +27,6 @@ public class Appointment extends ToDoItem {
     }
 
     @Override
-    public boolean isDoable() {
-        return !isDependent.get();
-    }
-
-    @Override
     public boolean isInherited() {
         if (inheritedDeadline == null) {
             return false;
@@ -84,7 +79,7 @@ public class Appointment extends ToDoItem {
         deadline = new SimpleObjectProperty<>((LocalDate) in.readObject());
         dateTime = new SimpleObjectProperty<>((LocalDateTime) in.readObject());
         start = new SimpleObjectProperty<>();
-        isDependent = new SimpleBooleanProperty(!children.isEmpty());
+        doable = new SimpleBooleanProperty((start.get() == null || !start.get().isAfter(LocalDate.now())) && children.isEmpty());
     }
 
     public LocalDateTime getDateTime() {
@@ -112,7 +107,7 @@ public class Appointment extends ToDoItem {
                 "\n, children=" + children.size() +
                 "\n, parents=" + parents.size() +
                 "\n, contexts=" + contexts +
-                "\n, isDependent=" + isDependent.get() +
+                "\n, doable=" + doable.get() +
                 "\n, isRecurrent=" + isRecurrent +
                 "\n, recurringPattern=" + recurringPattern +
                 "\n, hasFollowUp=" + hasFollowUp +

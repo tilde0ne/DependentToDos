@@ -20,184 +20,213 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="mainGridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="name.fmader.ui.Controller">
+<GridPane fx:id="mainGridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+          prefHeight="900.0" prefWidth="1200.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.121"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="name.fmader.ui.Controller">
     <columnConstraints>
-        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
-        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
-        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
-        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0"/>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0"/>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0"/>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" vgrow="NEVER" />
-        <RowConstraints minHeight="10.0" vgrow="NEVER" />
-        <RowConstraints minHeight="10.0" valignment="TOP" vgrow="NEVER" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-        <RowConstraints minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="10.0" valignment="TOP" vgrow="NEVER"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
+        <RowConstraints minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
         <MenuBar GridPane.columnSpan="4" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" text="Close"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
+                        <MenuItem mnemonicParsing="false" text="About"/>
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
         <Label text="Active ToDo's" GridPane.rowIndex="3">
             <font>
-                <Font size="14.0" />
+                <Font size="14.0"/>
             </font>
         </Label>
         <Label text="Inactive ToDo's" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <font>
-                <Font size="14.0" />
+                <Font size="14.0"/>
             </font>
         </Label>
         <Label text="Externals" GridPane.columnIndex="2" GridPane.rowIndex="3">
             <font>
-                <Font size="14.0" />
+                <Font size="14.0"/>
             </font>
         </Label>
         <Label text="Appointments" GridPane.columnIndex="3" GridPane.rowIndex="3">
             <font>
-                <Font size="14.0" />
+                <Font size="14.0"/>
             </font>
         </Label>
         <TableView fx:id="activeToDoTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
+            <placeholder>
+                <Label text=""/>
+            </placeholder>
             <columns>
                 <TableColumn fx:id="activeTitleColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
                     <cellValueFactory>
-                        <PropertyValueFactory property="title" />
+                        <PropertyValueFactory property="title"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="activeDeadlineColumn" editable="false" prefWidth="90.0" resizable="false" sortable="false" text="Deadline">
+                <TableColumn fx:id="activeDeadlineColumn" editable="false" prefWidth="90.0" resizable="false"
+                             sortable="false" text="Deadline">
                     <cellValueFactory>
-                        <PropertyValueFactory property="deadline" />
-                    </cellValueFactory>
-                </TableColumn>
-            </columns>
-        </TableView>
-        <TableView fx:id="dependentToDoTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-            <columns>
-                <TableColumn fx:id="dependentTitleColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="title" />
-                    </cellValueFactory>
-                </TableColumn>
-                <TableColumn fx:id="dependentDeadlineColumn" editable="false" prefWidth="90.0" resizable="false" sortable="false" text="Deadline">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="deadline" />
+                        <PropertyValueFactory property="deadline"/>
                     </cellValueFactory>
                 </TableColumn>
             </columns>
         </TableView>
-        <TableView fx:id="externalTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+        <TableView fx:id="dependentToDoTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1"
+                   GridPane.rowIndex="4">
+            <placeholder>
+                <Label text=""/>
+            </placeholder>
             <columns>
-                <TableColumn fx:id="externalTitleColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
+                <TableColumn fx:id="dependentTitleColumn" editable="false" prefWidth="150.0" sortable="false"
+                             text="Title">
                     <cellValueFactory>
-                        <PropertyValueFactory property="title" />
+                        <PropertyValueFactory property="title"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="dependentDeadlineColumn" editable="false" prefWidth="90.0" resizable="false"
+                             sortable="false" text="Deadline">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="deadline"/>
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+        </TableView>
+        <TableView fx:id="externalTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2"
+                   GridPane.rowIndex="4">
+            <placeholder>
+                <Label text=""/>
+            </placeholder>
+            <columns>
+                <TableColumn fx:id="externalTitleColumn" editable="false" prefWidth="150.0" sortable="false"
+                             text="Title">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="title"/>
                     </cellValueFactory>
                 </TableColumn>
                 <TableColumn fx:id="externalDeadlineColumn" prefWidth="90.0" resizable="false" text="Deadline">
                     <cellValueFactory>
-                        <PropertyValueFactory property="deadline" />
+                        <PropertyValueFactory property="deadline"/>
                     </cellValueFactory>
                 </TableColumn>
             </columns>
         </TableView>
-        <TableView fx:id="appointmentTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
+        <TableView fx:id="appointmentTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3"
+                   GridPane.rowIndex="4">
+            <placeholder>
+                <Label text=""/>
+            </placeholder>
             <columns>
-                <TableColumn fx:id="appointmentTitleColumn" editable="false" prefWidth="150.0" sortable="false" text="Title">
+                <TableColumn fx:id="appointmentTitleColumn" editable="false" prefWidth="150.0" sortable="false"
+                             text="Title">
                     <cellValueFactory>
-                        <PropertyValueFactory property="title" />
+                        <PropertyValueFactory property="title"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="appointmentDateTimeColumn" editable="false" prefWidth="125.0" resizable="false" sortable="false" text="Date/Time">
+                <TableColumn fx:id="appointmentDateTimeColumn" editable="false" prefWidth="125.0" resizable="false"
+                             sortable="false" text="Date/Time">
                     <cellValueFactory>
-                        <PropertyValueFactory property="dateTime" />
+                        <PropertyValueFactory property="dateTime"/>
                     </cellValueFactory>
                 </TableColumn>
             </columns>
         </TableView>
-        <GridPane fx:id="detailPane" hgap="5.0" vgap="5.0" GridPane.columnSpan="4" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="5" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
+        <GridPane fx:id="detailPane" hgap="5.0" vgap="5.0" GridPane.columnSpan="4" GridPane.halignment="LEFT"
+                  GridPane.hgrow="NEVER" GridPane.rowIndex="5" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
             <columnConstraints>
-                <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="7.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="13.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="7.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="13.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" vgrow="NEVER" />
-                <RowConstraints minHeight="10.0" vgrow="NEVER" />
-                <RowConstraints minHeight="10.0" vgrow="NEVER" />
-                <RowConstraints minHeight="10.0" vgrow="NEVER" />
-                <RowConstraints minHeight="10.0" vgrow="NEVER" />
-                <RowConstraints minHeight="10.0" vgrow="NEVER" />
-            <RowConstraints minHeight="10.0" vgrow="NEVER" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
             </rowConstraints>
             <children>
-                <Label text="Type:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                <Label fx:id="detailsDeadlineLabel" text="Deadline:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                <Label text="Title:" GridPane.halignment="RIGHT" />
-                <Label text="Start:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                <Label fx:id="detailsNeeded" text="Needed Date:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-                <Label fx:id="detailsInherited" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                <Label fx:id="detailsType" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="detailsTitle" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="5" />
-            <Label fx:id="detailsStart" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label fx:id="detailsDeadlineValue" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Is recurrent:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-            <Label fx:id="detailsRecurrent" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Label text="Pattern:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-            <Label fx:id="detailsPattern" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Label text="Dependencies (Children):" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Label text="Dependencies (Parents):" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <Label text="Description:" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-            <ListView fx:id="detailsChildren" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="6" />
-            <ListView fx:id="detailsParents" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.rowSpan="6" />
-            <TextArea fx:id="detailsDescription" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="6" />
+                <Label text="Type:" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+                <Label fx:id="detailsDeadlineLabel" text="Deadline:" GridPane.halignment="RIGHT" GridPane.rowIndex="3"/>
+                <Label text="Title:" GridPane.halignment="RIGHT"/>
+                <Label text="Start:" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
+                <Label fx:id="detailsNeeded" text="Needed Date:" GridPane.halignment="RIGHT" GridPane.rowIndex="4"/>
+                <Label fx:id="detailsInherited" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <Label fx:id="detailsType" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label fx:id="detailsTitle" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="5"/>
+                <Label fx:id="detailsStart" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label fx:id="detailsDeadlineValue" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <Label text="Is recurrent:" GridPane.halignment="RIGHT" GridPane.rowIndex="5"/>
+                <Label fx:id="detailsRecurrent" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                <Label text="Pattern:" GridPane.halignment="RIGHT" GridPane.rowIndex="6"/>
+                <Label fx:id="detailsPattern" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                <Label text="Dependencies (Children):" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <Label text="Dependencies (Parents):" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                <Label text="Description:" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+                <ListView fx:id="detailsChildren" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2"
+                          GridPane.rowIndex="2" GridPane.rowSpan="6"/>
+                <ListView fx:id="detailsParents" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3"
+                          GridPane.rowIndex="2" GridPane.rowSpan="6"/>
+                <TextArea fx:id="detailsDescription" editable="false" prefHeight="200.0" prefWidth="200.0"
+                          GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="6"/>
             </children>
         </GridPane>
-        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="15.0" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="15.0" GridPane.columnSpan="4" GridPane.rowIndex="1"
+              GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
             <children>
                 <ButtonBar prefHeight="40.0" prefWidth="200.0">
                     <buttons>
-                        <Button fx:id="addButton" mnemonicParsing="false" onAction="#addOrEditToDoItem" text="Add" />
-                        <Button fx:id="editButton" mnemonicParsing="false" onAction="#addOrEditToDoItem" text="Edit" />
-                        <Button mnemonicParsing="false" onAction="#done" text="Done" />
+                        <Button fx:id="addButton" mnemonicParsing="false" onAction="#addOrEditToDoItem" text="Add"/>
+                        <Button fx:id="editButton" mnemonicParsing="false" onAction="#addOrEditToDoItem" text="Edit"/>
+                        <Button mnemonicParsing="false" onAction="#done" text="Done"/>
                     </buttons>
                 </ButtonBar>
-                <Separator orientation="VERTICAL" />
+                <Separator orientation="VERTICAL"/>
                 <Label alignment="CENTER" text="Filter by project:">
                     <font>
-                        <Font size="14.0" />
+                        <Font size="14.0"/>
                     </font>
                 </Label>
-                <ChoiceBox fx:id="projectChoiceBox" onAction="#filterItems" prefWidth="150.0" />
-                <Button layoutX="895.0" layoutY="18.0" mnemonicParsing="false" onAction="#clearProjectFilter" text="Clear" />
-                <Separator layoutX="290.0" layoutY="10.0" orientation="VERTICAL" />
+                <ChoiceBox fx:id="projectChoiceBox" onAction="#filterItems" prefWidth="150.0"/>
+                <Button layoutX="895.0" layoutY="18.0" mnemonicParsing="false" onAction="#clearProjectFilter"
+                        text="Clear"/>
+                <Separator layoutX="290.0" layoutY="10.0" orientation="VERTICAL"/>
                 <Label alignment="CENTER" layoutX="311.0" layoutY="20.0" text="Filter by context:">
                     <font>
-                        <Font size="14.0" />
+                        <Font size="14.0"/>
                     </font>
                 </Label>
-                <ChoiceBox fx:id="contextChoiceBox" onAction="#filterItems" prefWidth="150.0" />
-                <Button mnemonicParsing="false" onAction="#clearContextFilter" text="Clear" />
+                <ChoiceBox fx:id="contextChoiceBox" onAction="#filterItems" prefWidth="150.0"/>
+                <Button mnemonicParsing="false" onAction="#clearContextFilter" text="Clear"/>
             </children>
             <GridPane.margin>
-                <Insets />
+                <Insets/>
             </GridPane.margin>
         </HBox>
-        <Separator prefWidth="200.0" valignment="TOP" GridPane.columnSpan="4" GridPane.rowIndex="2" />
+        <Separator prefWidth="200.0" valignment="TOP" GridPane.columnSpan="4" GridPane.rowIndex="2"/>
     </children>
 </GridPane>

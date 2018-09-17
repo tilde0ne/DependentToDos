@@ -1,0 +1,32 @@
+.root {
+    -fx-control-inner-background-alt: -fx-control-inner-background ;
+}
+
+.table-row-cell:empty {
+    -fx-background-color: white;
+}
+
+.table-row-cell:empty .table-cell {
+    -fx-border-width: 0px;
+}
+
+.list-cell:empty {
+    -fx-background-color: white;
+}
+
+.table-view {
+    -fx-selection-bar: gold;
+    -fx-selection-bar-non-focused: gold;
+}
+
+.table-cell {
+    -fx-background-insets: 2 0 2 0;
+}
+
+.table-row-cell:doable .title {
+    -fx-background-color: darkseagreen;
+}
+
+.table-row-cell:notdoable .title {
+    -fx-background-color: lightgray;
+}

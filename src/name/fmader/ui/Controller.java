@@ -1,10 +1,12 @@
 package name.fmader.ui;
 
 import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -79,10 +81,10 @@ public class Controller {
     };
 
     private Comparator<ToDoItem> sortByIsDoable = (o1, o2) -> {
-        if ((o1.isDoable() && o2.isDoable()) || (!o1.isDoable() && !o2.isDoable())) {
+        if ((o1.getDoable() && o2.getDoable()) || (!o1.getDoable() && !o2.getDoable())) {
             return 0;
         }
-        return o1.isDoable() ? 1 : -1;
+        return o1.getDoable() ? 1 : -1;
     };
 
     @FXML
@@ -157,10 +159,10 @@ public class Controller {
         dataIO.load();
         toDoItemsData = FXCollections.observableList(dataIO.getToDoItems());
         toDoItemsBase = FXCollections.observableArrayList(item ->
-                new Observable[] {item.deadlineProperty(), item.startProperty(), item.isDependentProperty()});
+                new Observable[] {item.deadlineProperty(), item.startProperty(), item.doableProperty()});
         toDoItemsBase.addAll(toDoItemsData);
         appointmentsBase = FXCollections.observableArrayList(item ->
-                new Observable[] {item.dateTimeProperty(), item.isDependentProperty()});
+                new Observable[] {item.dateTimeProperty(), item.doableProperty()});
         for (ToDoItem toDoItem : toDoItemsData) {
             if (toDoItem.getClass().getSimpleName().equals("Appointment")) {
                 appointmentsBase.add((Appointment) toDoItem);
@@ -169,9 +171,9 @@ public class Controller {
         contexts = FXCollections.observableArrayList(dataIO.getContexts());
 
         filteredActiveToDoItems = new FilteredList<>(toDoItemsBase, isToDoOrProject.and(item ->
-                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && !item.isIsDependent()));
+                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && item.getDoable()));
         filteredDependentToDoItems = new FilteredList<>(toDoItemsBase, isToDoOrProject.and(item ->
-                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || item.isIsDependent()));
+                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || !item.getDoable()));
         filteredExternals = new FilteredList<>(toDoItemsBase, isExternal);
         filteredAppointments = new FilteredList<>(appointmentsBase, item -> true);
         FilteredList<ToDoItem> projects = new FilteredList<>(toDoItemsData, isProject);
@@ -210,15 +212,44 @@ public class Controller {
         externalTitleColumn.prefWidthProperty().bind(externalTableView.widthProperty().subtract(externalDeadlineColumn.getWidth() + 2));
         appointmentTitleColumn.prefWidthProperty().bind(appointmentTableView.widthProperty().subtract(appointmentDateTimeColumn.getWidth() + 2));
 
-        activeToDoTableView.setRowFactory(param -> new TitleRow());
-        dependentToDoTableView.setRowFactory(param -> new TitleRow());
-        externalTableView.setRowFactory(param -> new TitleRow());
-        appointmentTableView.setRowFactory(param -> new TitleRow());
+        activeTitleColumn.setCellFactory(param -> new TitleCell());
+        dependentTitleColumn.setCellFactory(param -> new TitleCell());
+        externalTitleColumn.setCellFactory(param -> new TitleCell());
+        appointmentTitleColumn.setCellFactory(param -> new TitleCell());
 
         activeDeadlineColumn.setCellFactory(param -> new DateCell());
         dependentDeadlineColumn.setCellFactory(param -> new DateCell());
         externalDeadlineColumn.setCellFactory(param -> new DateCell());
         appointmentDateTimeColumn.setCellFactory(param -> new DateTimeCell());
+
+        PseudoClass doable = PseudoClass.getPseudoClass("doable");
+        PseudoClass notDoable = PseudoClass.getPseudoClass("notdoable");
+
+        for (TableView<ToDoItem> tableView : tableViews) {
+            tableView.setRowFactory(param -> {
+                TableRow<ToDoItem> row = new TableRow<>();
+
+                ChangeListener<Boolean> doableListener = (observable, oldValue, newValue) -> {
+                    row.pseudoClassStateChanged(doable, newValue);
+                    row.pseudoClassStateChanged(notDoable, !newValue);
+                };
+
+                row.itemProperty().addListener((observable, oldValue, newValue) -> {
+                    if (oldValue != null) {
+                        oldValue.doableProperty().removeListener(doableListener);
+                    }
+                    if (newValue == null) {
+                        row.pseudoClassStateChanged(doable, false);
+                        row.pseudoClassStateChanged(notDoable, false);
+                    } else {
+                        row.pseudoClassStateChanged(doable, newValue.getDoable());
+                        row.pseudoClassStateChanged(notDoable, !newValue.getDoable());
+                        newValue.doableProperty().addListener(doableListener);
+                    }
+                });
+                return row;
+            });
+        }
 
         projectChoiceBox.setItems(projects);
         projectChoiceBox.setConverter(new StringConverter<ToDoItem>() {
@@ -284,9 +315,9 @@ public class Controller {
                 toDoItem -> contextChoiceBox.getValue() == null || toDoItem.getContexts().contains(contextChoiceBox.getValue());
 
         filteredActiveToDoItems.setPredicate(projectFilter.and(contextFilter).and(isToDoOrProject.and(item ->
-                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && !item.isIsDependent())));
+                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && item.getDoable())));
         filteredDependentToDoItems.setPredicate(projectFilter.and(contextFilter).and(isToDoOrProject.and(item ->
-                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || item.isIsDependent())));
+                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || !item.getDoable())));
         filteredExternals.setPredicate(projectFilter.and(contextFilter).and(isExternal));
         filteredAppointments.setPredicate(projectFilter.and(contextFilter));
 
