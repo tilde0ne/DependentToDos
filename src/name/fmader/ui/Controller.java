@@ -406,7 +406,11 @@ public class Controller {
     }
 
     private void alertNoSelection() {
-
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(null);
+        alert.setHeaderText(null);
+        alert.setContentText("No item selected!");
+        alert.showAndWait();
     }
 
     private void showDetails() {

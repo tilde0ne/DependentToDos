@@ -15,6 +15,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class DialogController {
@@ -450,7 +451,15 @@ public class DialogController {
         if (keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
             String context = contextSourceListView.getSelectionModel().getSelectedItem();
             if (context != null) {
-                System.out.println("Alert: remove context");// Implement alert
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle(null);
+                alert.setHeaderText("Are you sure?");
+                alert.setContentText("When deleting a context from the context source pane, it will be removed from all items as well.");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+                    return;
+                }
+
                 availableContexts.remove(context);
                 for (ToDoItem toDoItem : toDoItems) {
                     toDoItem.getContexts().remove(context);
