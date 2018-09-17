@@ -199,6 +199,7 @@ public class ToDoItem implements Serializable {
 
     public void setStart(LocalDate start) {
         this.start.set(start);
+        doable.set((start == null || !start.isAfter(LocalDate.now())) && children.isEmpty());
     }
 
     public List<ToDoItem> getChildren() {
