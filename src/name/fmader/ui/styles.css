@@ -36,9 +36,9 @@
 }
 
 .table-row-cell:doable .title {
-    -fx-background-color: darkseagreen;
+    -fx-background-color: aquamarine;
 }
 
 .table-row-cell:notdoable .title {
-    -fx-background-color: lightgray;
+    -fx-background-color: pink;
 }
