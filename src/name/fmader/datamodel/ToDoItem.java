@@ -57,13 +57,13 @@ public class ToDoItem implements Serializable {
         doable.set((start.get() == null || !start.get().isAfter(LocalDate.now())) && children.isEmpty());
     }
 
-    public void addParent(ToDoItem toDoItem) {
+    private void addParent(ToDoItem toDoItem) {
         if (!parents.contains(toDoItem)) {
             parents.add(toDoItem);
         }
     }
 
-    public void removeParent(ToDoItem toDoItem) {
+    private void removeParent(ToDoItem toDoItem) {
         parents.remove(toDoItem);
     }
 
