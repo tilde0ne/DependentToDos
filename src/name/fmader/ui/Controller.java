@@ -18,6 +18,7 @@ import name.fmader.datamodel.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -161,10 +162,10 @@ public class Controller {
         dataIO.load();
         toDoItemsData = FXCollections.observableList(dataIO.getToDoItems());
         toDoItemsBase = FXCollections.observableArrayList(item ->
-                new Observable[] {item.titleProperty(), item.deadlineProperty(), item.startProperty(), item.doableProperty()});
+                new Observable[]{item.titleProperty(), item.deadlineProperty(), item.startProperty(), item.doableProperty()});
         toDoItemsBase.addAll(toDoItemsData);
         appointmentsBase = FXCollections.observableArrayList(item ->
-                new Observable[] {item.titleProperty(), item.dateTimeProperty(), item.doableProperty()});
+                new Observable[]{item.titleProperty(), item.dateTimeProperty(), item.doableProperty()});
         for (ToDoItem toDoItem : toDoItemsData) {
             if (toDoItem.getClass().getSimpleName().equals("Appointment")) {
                 appointmentsBase.add((Appointment) toDoItem);
@@ -390,6 +391,149 @@ public class Controller {
         }
 
         ToDoItem itemToRemove = selectedToDoItem;
+
+        if (itemToRemove.isRecurrent()) {
+            RecurringPattern recurringPattern = itemToRemove.getRecurringPattern();
+            String title = itemToRemove.getTitle();
+            String type = itemToRemove.getClass().getSimpleName();
+            LocalDate deadline = itemToRemove.getOriginalDeadline();
+            LocalDate start = itemToRemove.getStart();
+            String description = itemToRemove.getDescription();
+
+            LocalDate newDeadline = null;
+            LocalDate newStart = null;
+            int everyN = recurringPattern.getEveryN();
+            RecurringBase base = recurringPattern.getRecurringBase();
+            boolean fix = recurringPattern.isFix();
+
+            switch (base) {
+                case EVERYNDAYS:
+                    if (deadline != null) {
+                        if (fix) {
+                            newDeadline = deadline.plusDays(everyN);
+                            while (!newDeadline.isAfter(LocalDate.now())) {
+                                newDeadline = newDeadline.plusDays(everyN);
+                            }
+                        } else {
+                            newDeadline = LocalDate.now().plusDays(everyN);
+                        }
+                    } else if (start != null) {
+                        if (fix) {
+                            newStart = start.plusDays(everyN);
+                            while (!newStart.isAfter(LocalDate.now())) {
+                                newStart = newStart.plusDays(everyN);
+                            }
+                        } else {
+                            newStart = LocalDate.now().plusDays(everyN);
+                        }
+                    }
+                    break;
+
+                case EVERYNWEEKS:
+                    if (deadline != null) {
+                        if (fix) {
+                            newDeadline = deadline.plusWeeks(everyN);
+                            while (!newDeadline.isAfter(LocalDate.now())) {
+                                newDeadline = newDeadline.plusWeeks(everyN);
+                            }
+                        } else {
+                            newDeadline = LocalDate.now().plusWeeks(everyN);
+                        }
+                    } else if (start != null) {
+                        if (fix) {
+                            newStart = start.plusWeeks(everyN);
+                            while (!newStart.isAfter(LocalDate.now())) {
+                                newStart = newStart.plusWeeks(everyN);
+                            }
+                        } else {
+                            newStart = LocalDate.now().plusWeeks(everyN);
+                        }
+                    }
+                    break;
+
+                case EVERYNMONTHS:
+                    if (deadline != null) {
+                        if (fix) {
+                            newDeadline = deadline.plusMonths(everyN);
+                            while (!newDeadline.isAfter(LocalDate.now())) {
+                                newDeadline = newDeadline.plusMonths(everyN);
+                            }
+                        } else {
+                            newDeadline = LocalDate.now().plusMonths(everyN);
+                        }
+                    } else if (start != null) {
+                        if (fix) {
+                            newStart = start.plusMonths(everyN);
+                            while (!newStart.isAfter(LocalDate.now())) {
+                                newStart = newStart.plusMonths(everyN);
+                            }
+                        } else {
+                            newStart = LocalDate.now().plusMonths(everyN);
+                        }
+                    }
+                    break;
+
+                case EVERYNYEARS:
+                    if (deadline != null) {
+                        if (fix) {
+                            newDeadline = deadline.plusYears(everyN);
+                            while (!newDeadline.isAfter(LocalDate.now())) {
+                                newDeadline = newDeadline.plusYears(everyN);
+                            }
+                        } else {
+                            newDeadline = LocalDate.now().plusYears(everyN);
+                        }
+                    } else if (start != null) {
+                        if (fix) {
+                            newStart = start.plusYears(everyN);
+                            while (!newStart.isAfter(LocalDate.now())) {
+                                newStart = newStart.plusYears(everyN);
+                            }
+                        } else {
+                            newStart = LocalDate.now().plusYears(everyN);
+                        }
+                    }
+                    break;
+            }
+
+            ToDoItem newToDoItem = null;
+            switch (type) {
+                case "ToDoItem":
+                    newToDoItem = new ToDoItem(title);
+                    newToDoItem.setDeadline(newDeadline);
+                    newToDoItem.setStart(newStart);
+                    newToDoItem.setDescription(description);
+                    newToDoItem.setRecurrent(true);
+                    newToDoItem.setRecurringPattern(recurringPattern);
+
+                    toDoItemsBase.add(newToDoItem);
+                    break;
+
+                case "External":
+                    newToDoItem = new External(title);
+                    newToDoItem.setDeadline(newDeadline);
+                    newToDoItem.setStart(newStart);
+                    newToDoItem.setDescription(description);
+                    newToDoItem.setRecurrent(true);
+                    newToDoItem.setRecurringPattern(recurringPattern);
+
+                    toDoItemsBase.add(newToDoItem);
+                    break;
+
+                case "Appointment":
+                    LocalTime time = ((Appointment) itemToRemove).getDateTime().toLocalTime();
+                    newToDoItem = new Appointment(title, newDeadline, time);
+                    newToDoItem.setDescription(description);
+                    newToDoItem.setRecurrent(true);
+                    newToDoItem.setRecurringPattern(recurringPattern);
+
+                    appointmentsBase.add((Appointment) newToDoItem);
+                    break;
+            }
+
+            toDoItemsData.add(newToDoItem);
+        }
+
         List<ToDoItem> children = new ArrayList<>(itemToRemove.getChildren());
         List<ToDoItem> parents = new ArrayList<>(itemToRemove.getParents());
         for (ToDoItem toDoItem : children) {
@@ -492,7 +636,7 @@ public class Controller {
                     base = "days";
                     break;
             }
-            detailsPattern.setText("Every " + pattern.getEveryN() + " " + base + (pattern.isFix()? ", fix" : ""));
+            detailsPattern.setText("Every " + pattern.getEveryN() + " " + base + (pattern.isFix() ? ", fix" : ""));
         } else {
             detailsPattern.setVisible(false);
         }
