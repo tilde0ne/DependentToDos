@@ -470,7 +470,7 @@ public class Controller {
                     break;
             }
 
-            ToDoItem newToDoItem = null;
+            ToDoItem newToDoItem;
             switch (type) {
                 case "ToDoItem":
                     newToDoItem = new ToDoItem(title);
@@ -503,6 +503,11 @@ public class Controller {
 
                     appointmentsBase.add((Appointment) newToDoItem);
                     break;
+
+                    default:
+                        newToDoItem = new ToDoItem("Something went wrong!");
+                        newToDoItem.setDescription("Something went wrong, please mark this item done.");
+                        toDoItemsBase.add(newToDoItem);
             }
 
             toDoItemsData.add(newToDoItem);
