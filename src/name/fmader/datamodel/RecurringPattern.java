@@ -9,15 +9,13 @@ public class RecurringPattern implements Serializable {
 
     /*fix:
 
-    if false (only valid if NO deadline is specified), a new item will be created when done() is called,
-    start will be as values dictate;
+    removed the idea of fix for now.
 
-    if true AND NO deadline is specified, a new item will be created with the specified offset to when
-    current item is created (or if specified reaches start date);
+    a new item is created on done().
 
-    if true AND a deadline is specified, a new item will be created when current item is due,
-    deadline will be as values dictate, start will be added according to the current start-due range
-    if it lies in the future at creation date;*/
+    if deadline(original) is set, counting starts from deadline, start is set if in future.
+    else start will be set, counting from now().*/
+
     private boolean fix;
     private int everyN;
     private RecurringBase recurringBase;

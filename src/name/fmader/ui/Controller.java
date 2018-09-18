@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -406,92 +407,65 @@ public class Controller {
             RecurringBase base = recurringPattern.getRecurringBase();
             boolean fix = recurringPattern.isFix();
 
+            long offset = 0L;
+            if (deadline != null && start != null) {
+                offset = ChronoUnit.DAYS.between(start, deadline);
+            }
+
             switch (base) {
                 case EVERYNDAYS:
                     if (deadline != null) {
-                        if (fix) {
-                            newDeadline = deadline.plusDays(everyN);
-                            while (!newDeadline.isAfter(LocalDate.now())) {
-                                newDeadline = newDeadline.plusDays(everyN);
-                            }
-                        } else {
-                            newDeadline = LocalDate.now().plusDays(everyN);
+                        newDeadline = deadline.plusDays(everyN);
+                        while (!newDeadline.isAfter(LocalDate.now())) {
+                            newDeadline = newDeadline.plusDays(everyN);
                         }
-                    } else if (start != null) {
-                        if (fix) {
-                            newStart = start.plusDays(everyN);
-                            while (!newStart.isAfter(LocalDate.now())) {
-                                newStart = newStart.plusDays(everyN);
-                            }
-                        } else {
+                        if (start != null && newDeadline.minusDays(offset).isAfter(LocalDate.now())) {
+                            newStart = newDeadline.minusDays(offset);
+                        }
+                    } else {
                             newStart = LocalDate.now().plusDays(everyN);
-                        }
                     }
                     break;
 
                 case EVERYNWEEKS:
                     if (deadline != null) {
-                        if (fix) {
-                            newDeadline = deadline.plusWeeks(everyN);
-                            while (!newDeadline.isAfter(LocalDate.now())) {
-                                newDeadline = newDeadline.plusWeeks(everyN);
-                            }
-                        } else {
-                            newDeadline = LocalDate.now().plusWeeks(everyN);
+                        newDeadline = deadline.plusWeeks(everyN);
+                        while (!newDeadline.isAfter(LocalDate.now())) {
+                            newDeadline = newDeadline.plusWeeks(everyN);
                         }
-                    } else if (start != null) {
-                        if (fix) {
-                            newStart = start.plusWeeks(everyN);
-                            while (!newStart.isAfter(LocalDate.now())) {
-                                newStart = newStart.plusWeeks(everyN);
-                            }
-                        } else {
-                            newStart = LocalDate.now().plusWeeks(everyN);
+                        if (start != null && newDeadline.minusDays(offset).isAfter(LocalDate.now())) {
+                            newStart = newDeadline.minusDays(offset);
                         }
+                    } else {
+                        newStart = LocalDate.now().plusWeeks(everyN);
                     }
                     break;
 
                 case EVERYNMONTHS:
                     if (deadline != null) {
-                        if (fix) {
-                            newDeadline = deadline.plusMonths(everyN);
-                            while (!newDeadline.isAfter(LocalDate.now())) {
-                                newDeadline = newDeadline.plusMonths(everyN);
-                            }
-                        } else {
-                            newDeadline = LocalDate.now().plusMonths(everyN);
+                        newDeadline = deadline.plusMonths(everyN);
+                        while (!newDeadline.isAfter(LocalDate.now())) {
+                            newDeadline = newDeadline.plusMonths(everyN);
                         }
-                    } else if (start != null) {
-                        if (fix) {
-                            newStart = start.plusMonths(everyN);
-                            while (!newStart.isAfter(LocalDate.now())) {
-                                newStart = newStart.plusMonths(everyN);
-                            }
-                        } else {
-                            newStart = LocalDate.now().plusMonths(everyN);
+                        if (start != null && newDeadline.minusDays(offset).isAfter(LocalDate.now())) {
+                            newStart = newDeadline.minusDays(offset);
                         }
+                    } else {
+                        newStart = LocalDate.now().plusMonths(everyN);
                     }
                     break;
 
                 case EVERYNYEARS:
                     if (deadline != null) {
-                        if (fix) {
-                            newDeadline = deadline.plusYears(everyN);
-                            while (!newDeadline.isAfter(LocalDate.now())) {
-                                newDeadline = newDeadline.plusYears(everyN);
-                            }
-                        } else {
-                            newDeadline = LocalDate.now().plusYears(everyN);
+                        newDeadline = deadline.plusYears(everyN);
+                        while (!newDeadline.isAfter(LocalDate.now())) {
+                            newDeadline = newDeadline.plusYears(everyN);
                         }
-                    } else if (start != null) {
-                        if (fix) {
-                            newStart = start.plusYears(everyN);
-                            while (!newStart.isAfter(LocalDate.now())) {
-                                newStart = newStart.plusYears(everyN);
-                            }
-                        } else {
-                            newStart = LocalDate.now().plusYears(everyN);
+                        if (start != null && newDeadline.minusDays(offset).isAfter(LocalDate.now())) {
+                            newStart = newDeadline.minusDays(offset);
                         }
+                    } else {
+                        newStart = LocalDate.now().plusYears(everyN);
                     }
                     break;
             }
