@@ -492,7 +492,7 @@ public class Controller {
                         newToDoItem.addContext(context);
                     }
                     for (ToDoItem parent : newParents) {
-                        newToDoItem.addParent(parent);
+                        parent.addChild(newToDoItem);
                     }
 
                     toDoItemsBase.add(newToDoItem);
@@ -510,7 +510,7 @@ public class Controller {
                         newToDoItem.addContext(context);
                     }
                     for (ToDoItem parent : newParents) {
-                        newToDoItem.addParent(parent);
+                        parent.addChild(newToDoItem);
                     }
 
                     toDoItemsBase.add(newToDoItem);
@@ -527,7 +527,7 @@ public class Controller {
                         newToDoItem.addContext(context);
                     }
                     for (ToDoItem parent : newParents) {
-                        newToDoItem.addParent(parent);
+                        parent.addChild(newToDoItem);
                     }
 
                     appointmentsBase.add((Appointment) newToDoItem);
