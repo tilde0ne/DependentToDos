@@ -400,6 +400,14 @@ public class Controller {
             LocalDate deadline = itemToRemove.getOriginalDeadline();
             LocalDate start = itemToRemove.getStart();
             String description = itemToRemove.getDescription();
+            List<String> newContexts = itemToRemove.getContexts();
+            List<ToDoItem> newParents = new ArrayList<>();
+
+            for (ToDoItem parent : itemToRemove.getParents()) {
+                if (parent.getClass().getSimpleName().equals("Project")) {
+                    newParents.add(parent);
+                }
+            }
 
             LocalDate newDeadline = null;
             LocalDate newStart = null;
@@ -480,6 +488,13 @@ public class Controller {
                     newToDoItem.setRecurrent(true);
                     newToDoItem.setRecurringPattern(recurringPattern);
 
+                    for (String context : newContexts) {
+                        newToDoItem.addContext(context);
+                    }
+                    for (ToDoItem parent : newParents) {
+                        newToDoItem.addParent(parent);
+                    }
+
                     toDoItemsBase.add(newToDoItem);
                     break;
 
@@ -491,6 +506,13 @@ public class Controller {
                     newToDoItem.setRecurrent(true);
                     newToDoItem.setRecurringPattern(recurringPattern);
 
+                    for (String context : newContexts) {
+                        newToDoItem.addContext(context);
+                    }
+                    for (ToDoItem parent : newParents) {
+                        newToDoItem.addParent(parent);
+                    }
+
                     toDoItemsBase.add(newToDoItem);
                     break;
 
@@ -500,6 +522,13 @@ public class Controller {
                     newToDoItem.setDescription(description);
                     newToDoItem.setRecurrent(true);
                     newToDoItem.setRecurringPattern(recurringPattern);
+
+                    for (String context : newContexts) {
+                        newToDoItem.addContext(context);
+                    }
+                    for (ToDoItem parent : newParents) {
+                        newToDoItem.addParent(parent);
+                    }
 
                     appointmentsBase.add((Appointment) newToDoItem);
                     break;
