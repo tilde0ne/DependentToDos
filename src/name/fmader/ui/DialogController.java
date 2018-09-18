@@ -97,6 +97,7 @@ public class DialogController {
         timeTextField.setVisible(false);
         neededLabel.setVisible(false);
         inheritedLabel.setVisible(false);
+        fixCheckBox.setVisible(false);
 
         typeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("Appointment")) {
@@ -116,12 +117,12 @@ public class DialogController {
                 recurrentCheckBox.setVisible(false);
                 everyTextField.setVisible(false);
                 recurringBaseChoiceBox.setVisible(false);
-                fixCheckBox.setVisible(false);
+//                fixCheckBox.setVisible(false);
             } else {
                 recurrentCheckBox.setVisible(true);
                 everyTextField.setVisible(true);
                 recurringBaseChoiceBox.setVisible(true);
-                fixCheckBox.setVisible(true);
+//                fixCheckBox.setVisible(true);
             }
         });
 
