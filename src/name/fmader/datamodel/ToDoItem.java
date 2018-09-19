@@ -214,6 +214,10 @@ public class ToDoItem implements Serializable {
         return contexts;
     }
 
+    public void setContexts(List<String> contexts) {
+        this.contexts = contexts;
+    }
+
     public boolean getDoable() {
         return doable.get();
     }

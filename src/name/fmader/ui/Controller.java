@@ -488,9 +488,7 @@ public class Controller {
                     newToDoItem.setRecurrent(true);
                     newToDoItem.setRecurringPattern(recurringPattern);
 
-                    for (String context : newContexts) {
-                        newToDoItem.addContext(context);
-                    }
+                    newToDoItem.setContexts(newContexts);
                     for (ToDoItem parent : newParents) {
                         parent.addChild(newToDoItem);
                     }
@@ -506,9 +504,7 @@ public class Controller {
                     newToDoItem.setRecurrent(true);
                     newToDoItem.setRecurringPattern(recurringPattern);
 
-                    for (String context : newContexts) {
-                        newToDoItem.addContext(context);
-                    }
+                    newToDoItem.setContexts(newContexts);
                     for (ToDoItem parent : newParents) {
                         parent.addChild(newToDoItem);
                     }
@@ -523,9 +519,7 @@ public class Controller {
                     newToDoItem.setRecurrent(true);
                     newToDoItem.setRecurringPattern(recurringPattern);
 
-                    for (String context : newContexts) {
-                        newToDoItem.addContext(context);
-                    }
+                    newToDoItem.setContexts(newContexts);
                     for (ToDoItem parent : newParents) {
                         parent.addChild(newToDoItem);
                     }
