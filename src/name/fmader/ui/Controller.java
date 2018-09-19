@@ -553,6 +553,11 @@ public class Controller {
         selectNull();
     }
 
+    @FXML
+    public void backup() {
+        dataIO.backup();
+    }
+
     private void alertNoSelection() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(null);

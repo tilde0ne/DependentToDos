@@ -43,6 +43,18 @@ public class DataIO {
         }
     }
 
+    public boolean backup() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("backup.dtd"))) {
+            out.writeObject(toDoItems);
+            out.writeObject(contexts);
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // Getters
     //////////
 

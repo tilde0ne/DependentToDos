@@ -40,6 +40,7 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
+                  <MenuItem mnemonicParsing="false" onAction="#backup" text="Backup" />
                         <MenuItem mnemonicParsing="false" text="Close" />
                     </items>
                 </Menu>
