@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import name.fmader.datamodel.*;
 
 import java.time.LocalDate;
@@ -423,6 +424,13 @@ public class DialogController {
         String context = contextSourceListView.getSelectionModel().getSelectedItem();
         if (context != null) {
             itemContexts.add(context);
+        }
+    }
+
+    @FXML
+    private void handleContextSourceMouseEvent(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+            addItemContext();
         }
     }
 
