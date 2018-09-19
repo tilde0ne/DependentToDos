@@ -435,9 +435,19 @@ public class DialogController {
     }
 
     @FXML
+    private void handleItemContextsMouseEvent(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+            removeItemContext(null);
+        }
+    }
+
+    @FXML
     private void removeItemContext(KeyEvent event) {
-        KeyCode keyCode = event.getCode();
-        if (keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
+        KeyCode keyCode = null;
+        if (event != null) {
+            keyCode = event.getCode();
+        }
+        if (event == null || keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
             String context = contextsListView.getSelectionModel().getSelectedItem();
             if (context != null) {
                 itemContexts.remove(context);

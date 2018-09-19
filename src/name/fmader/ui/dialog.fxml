@@ -79,7 +79,7 @@
                     </children>
                 </GridPane>
                 <Label text="Contexts:" GridPane.rowIndex="10" />
-                <ListView fx:id="contextsListView" editable="true" onKeyReleased="#removeItemContext" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                <ListView fx:id="contextsListView" editable="true" onKeyReleased="#removeItemContext" onMousePressed="#handleItemContextsMouseEvent" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                 <ListView fx:id="contextSourceListView" onKeyReleased="#removeContext" onMousePressed="#handleContextSourceMouseEvent" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="10" />
                 <Label text="Description:" GridPane.rowIndex="12" />
                 <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="13" />
