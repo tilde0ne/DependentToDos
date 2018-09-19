@@ -391,12 +391,22 @@ public class DialogController {
 
     @FXML
     private void removeChild(KeyEvent event) {
-        KeyCode keyCode = event.getCode();
-        if (keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
+        KeyCode keyCode = null;
+        if (event != null) {
+            keyCode = event.getCode();
+        }
+        if (event == null || keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
             ToDoItem toDoItem = childrenListView.getSelectionModel().getSelectedItem();
             if (toDoItem != null) {
                 children.remove(toDoItem);
             }
+        }
+    }
+
+    @FXML
+    private void handleChildrenMouseEvent(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+            removeChild(null);
         }
     }
 
@@ -410,12 +420,22 @@ public class DialogController {
 
     @FXML
     private void removeParent(KeyEvent event) {
-        KeyCode keyCode = event.getCode();
-        if (keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
+        KeyCode keyCode = null;
+        if (event != null) {
+            keyCode = event.getCode();
+        }
+        if (event == null || keyCode.equals(KeyCode.DELETE) || keyCode.equals(KeyCode.BACK_SPACE)) {
             ToDoItem toDoItem = parentsListView.getSelectionModel().getSelectedItem();
             if (toDoItem != null) {
                 parents.remove(toDoItem);
             }
+        }
+    }
+
+    @FXML
+    private void handleParentsMouseEvent(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+            removeParent(null);
         }
     }
 
@@ -435,13 +455,6 @@ public class DialogController {
     }
 
     @FXML
-    private void handleItemContextsMouseEvent(MouseEvent event) {
-        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-            removeItemContext(null);
-        }
-    }
-
-    @FXML
     private void removeItemContext(KeyEvent event) {
         KeyCode keyCode = null;
         if (event != null) {
@@ -452,6 +465,13 @@ public class DialogController {
             if (context != null) {
                 itemContexts.remove(context);
             }
+        }
+    }
+
+    @FXML
+    private void handleItemContextsMouseEvent(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+            removeItemContext(null);
         }
     }
 
