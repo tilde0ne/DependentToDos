@@ -71,7 +71,7 @@
                 <Font size="14.0" />
             </font>
         </Label>
-        <TableView fx:id="activeToDoTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
+        <TableView fx:id="activeToDoTableView" onMousePressed="#handleTableViewMouseEvent" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
             <placeholder>
                 <Label text="" />
             </placeholder>
@@ -88,7 +88,7 @@
                 </TableColumn>
             </columns>
         </TableView>
-        <TableView fx:id="dependentToDoTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <TableView fx:id="dependentToDoTableView" onMousePressed="#handleTableViewMouseEvent" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
             <placeholder>
                 <Label text="" />
             </placeholder>
@@ -105,7 +105,7 @@
                 </TableColumn>
             </columns>
         </TableView>
-        <TableView fx:id="externalTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+        <TableView fx:id="externalTableView" onMousePressed="#handleTableViewMouseEvent" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
             <placeholder>
                 <Label text="" />
             </placeholder>
@@ -122,7 +122,7 @@
                 </TableColumn>
             </columns>
         </TableView>
-        <TableView fx:id="appointmentTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
+        <TableView fx:id="appointmentTableView" onMousePressed="#handleTableViewMouseEvent" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
             <placeholder>
                 <Label text="" />
             </placeholder>

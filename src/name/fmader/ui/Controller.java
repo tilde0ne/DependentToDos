@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import name.fmader.datamodel.*;
@@ -556,6 +557,13 @@ public class Controller {
     @FXML
     public void backup() {
         dataIO.backup();
+    }
+
+    @FXML
+    public void handleTableViewMouseEvent(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+            addOrEditToDoItem(new ActionEvent(editButton, null));
+        }
     }
 
     private void alertNoSelection() {
