@@ -14,27 +14,27 @@ public class ToDoItem implements Serializable {
 
     private static final long serialVersionUID = -5027435631969990301L;
 
-    protected LocalDate created;
-    protected transient StringProperty title;
-    protected String description;
+    private LocalDate created;
+    private transient StringProperty title = new SimpleStringProperty();
+    private String description;
 
-    protected transient ObjectProperty<LocalDate> deadline = new SimpleObjectProperty<>();
-    protected LocalDate originalDeadline;
-    protected transient ObjectProperty<LocalDate> start = new SimpleObjectProperty<>();
+    private transient ObjectProperty<LocalDate> deadline = new SimpleObjectProperty<>();
+    private LocalDate originalDeadline;
+    private transient ObjectProperty<LocalDate> start = new SimpleObjectProperty<>();
 
-    protected transient BooleanProperty doable = new SimpleBooleanProperty();
+    private transient BooleanProperty doable = new SimpleBooleanProperty();
 
-    protected List<ToDoItem> children;
-    protected List<ToDoItem> parents;
-    protected List<String> contexts;
+    private List<ToDoItem> children;
+    private List<ToDoItem> parents;
+    private List<String> contexts;
 
-    protected boolean isRecurrent;
-    protected RecurringPattern recurringPattern;
-    protected boolean hasFollowUp;
+    private boolean isRecurrent;
+    private RecurringPattern recurringPattern;
+    private boolean hasFollowUp;
 
     public ToDoItem(String title) {
         this.created = LocalDate.now();
-        this.title = new SimpleStringProperty(title);
+        this.title.set(title);
         this.children = new ArrayList<>();
         this.parents = new ArrayList<>();
         this.contexts = new ArrayList<>();
@@ -77,10 +77,6 @@ public class ToDoItem implements Serializable {
         contexts.remove(context);
     }
 
-    public void recalculateDeadline() {
-        setDeadline(originalDeadline);
-    }
-
     public boolean isInherited() {
         if (deadline.get() == null) {
             return false;
@@ -91,7 +87,11 @@ public class ToDoItem implements Serializable {
         return !deadline.get().equals(originalDeadline);
     }
 
-    protected LocalDate checkAgainstParentDeadlines(LocalDate deadline) {
+    void recalculateDeadline() {
+        setDeadline(originalDeadline);
+    }
+
+    LocalDate checkAgainstParentDeadlines(LocalDate deadline) {
         for (ToDoItem toDoItem : parents) {
             if (toDoItem.deadline.get() == null) {
                 continue;
@@ -218,7 +218,7 @@ public class ToDoItem implements Serializable {
         this.contexts = contexts;
     }
 
-    public boolean getDoable() {
+    public boolean isDoable() {
         return doable.get();
     }
 

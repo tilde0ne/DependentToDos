@@ -1,9 +1,7 @@
 package name.fmader.datamodel;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,14 +14,14 @@ public class Appointment extends ToDoItem {
 
     private static final long serialVersionUID = -226146364586406102L;
 
-    private transient ObjectProperty<LocalDateTime> dateTime;
+    private transient ObjectProperty<LocalDateTime> dateTime = new SimpleObjectProperty<>();
     private LocalDate inheritedDeadline;
 
     public Appointment(String title, LocalDate date, LocalTime time) {
         super(title);
-        this.deadline = new SimpleObjectProperty<>(date);
-        this.originalDeadline = date;
-        this.dateTime = new SimpleObjectProperty<>(date.atTime(time));
+        setDeadline(date);
+        setOriginalDeadline(date);
+        dateTime.set(date.atTime(time));
     }
 
     @Override
@@ -31,19 +29,19 @@ public class Appointment extends ToDoItem {
         if (inheritedDeadline == null) {
             return false;
         }
-        if (originalDeadline == null) {
+        if (getOriginalDeadline() == null) {
             return true;
         }
-        return !inheritedDeadline.equals(originalDeadline);
+        return !inheritedDeadline.equals(getOriginalDeadline());
     }
 
     @Override
     public void setDeadline(LocalDate deadline) {
-        originalDeadline = deadline;
-        this.deadline.set(deadline);
+        setOriginalDeadline(deadline);
+        deadlineProperty().set(deadline);
 
         LocalTime temp = dateTime.get().toLocalTime();
-        dateTime.set(this.deadline.get().atTime(temp));
+        dateTime.set(deadlineProperty().get().atTime(temp));
 
         deadline = checkAgainstParentDeadlines(deadline);
         inheritedDeadline = deadline;
@@ -51,8 +49,8 @@ public class Appointment extends ToDoItem {
             inheritedDeadline = null;
         }
 
-        if (!children.isEmpty()) {
-            for (ToDoItem toDoItem : children) {
+        if (!getChildren().isEmpty()) {
+            for (ToDoItem toDoItem : getChildren()) {
                 toDoItem.recalculateDeadline();
             }
         }
@@ -68,18 +66,18 @@ public class Appointment extends ToDoItem {
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        out.writeUTF(title.get());
-        out.writeObject(deadline.get());
-        out.writeObject(dateTime.get());
+        out.writeUTF(getTitle());
+        out.writeObject(getDeadline());
+        out.writeObject(getDateTime());
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        title = new SimpleStringProperty(in.readUTF());
-        deadline = new SimpleObjectProperty<>((LocalDate) in.readObject());
-        dateTime = new SimpleObjectProperty<>((LocalDateTime) in.readObject());
-        start = new SimpleObjectProperty<>();
-        doable = new SimpleBooleanProperty((start.get() == null || !start.get().isAfter(LocalDate.now())) && children.isEmpty());
+        setTitle(in.readUTF());
+        setDeadline((LocalDate) in.readObject());
+        setDateTime((LocalDateTime) in.readObject());
+        setStart(null);
+        setDoable(getChildren().isEmpty());
     }
 
     public LocalDateTime getDateTime() {
@@ -97,20 +95,20 @@ public class Appointment extends ToDoItem {
     @Override
     public String toString() {
         return "Appointment{" +
-                "\ntitle=" + title.get() +
+                "\ntitle=" + getTitle() +
                 "\n, dateTime=" + dateTime.get() +
-                "\n, description='" + description + '\'' +
-                "\n, deadline=" + deadline.get() +
-                "\n, originalDeadline=" + originalDeadline +
+                "\n, description='" + getDescription() + '\'' +
+                "\n, deadline=" + getDeadline() +
+                "\n, originalDeadline=" + getOriginalDeadline() +
                 "\n, inheritedDeadline=" + inheritedDeadline +
-                "\n, start=" + start.get() +
-                "\n, children=" + children.size() +
-                "\n, parents=" + parents.size() +
-                "\n, contexts=" + contexts +
-                "\n, doable=" + doable.get() +
-                "\n, isRecurrent=" + isRecurrent +
-                "\n, recurringPattern=" + recurringPattern +
-                "\n, hasFollowUp=" + hasFollowUp +
+                "\n, start=" + getStart() +
+                "\n, children=" + getChildren().size() +
+                "\n, parents=" + getParents().size() +
+                "\n, contexts=" + getContexts() +
+                "\n, doable=" + isDoable() +
+                "\n, isRecurrent=" + isRecurrent() +
+                "\n, recurringPattern=" + getRecurringPattern() +
+                "\n, hasFollowUp=" + hasFollowUp() +
                 "\n}";
     }
 }

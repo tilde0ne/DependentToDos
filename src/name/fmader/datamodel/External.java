@@ -1,9 +1,5 @@
 package name.fmader.datamodel;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -24,16 +20,16 @@ public class External extends ToDoItem {
         if (inheritedDeadline == null) {
             return false;
         }
-        if (originalDeadline == null) {
+        if (getOriginalDeadline() == null) {
             return true;
         }
-        return !inheritedDeadline.equals(originalDeadline);
+        return !inheritedDeadline.equals(getOriginalDeadline());
     }
 
     @Override
     public void setDeadline(LocalDate deadline) {
-        originalDeadline = deadline;
-        this.deadline.set(deadline);
+        setOriginalDeadline(deadline);
+        deadlineProperty().set(deadline);
 
         deadline = checkAgainstParentDeadlines(deadline);
         inheritedDeadline = deadline;
@@ -41,8 +37,8 @@ public class External extends ToDoItem {
             inheritedDeadline = null;
         }
 
-        if (!children.isEmpty()) {
-            for (ToDoItem toDoItem : children) {
+        if (!getChildren().isEmpty()) {
+            for (ToDoItem toDoItem : getChildren()) {
                 toDoItem.recalculateDeadline();
             }
         }
@@ -54,45 +50,41 @@ public class External extends ToDoItem {
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        out.writeUTF(title.get());
-        out.writeObject(deadline.get() == null ? LocalDate.of(1, 1, 1) : deadline.get());
-        out.writeObject(start.get() == null ? LocalDate.of(1, 1, 1) : start.get());
+        out.writeUTF(getTitle());
+        out.writeObject(getDeadline() == null ? LocalDate.of(1, 1, 1) : getDeadline());
+        out.writeObject(getStart() == null ? LocalDate.of(1, 1, 1) : getStart());
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        title = new SimpleStringProperty(in.readUTF());
+        setTitle(in.readUTF());
         LocalDate date = (LocalDate) in.readObject();
         if (!date.equals(LocalDate.of(1, 1, 1))) {
-            deadline = new SimpleObjectProperty<>(date);
-        } else {
-            deadline = new SimpleObjectProperty<>();
+            setDeadline(date);
         }
         date = (LocalDate) in.readObject();
         if (!date.equals(LocalDate.of(1, 1, 1))) {
-            start = new SimpleObjectProperty<>(date);
-        } else {
-            start = new SimpleObjectProperty<>();
+            setStart(date);
         }
-        doable = new SimpleBooleanProperty((start.get() == null || !start.get().isAfter(LocalDate.now())) && children.isEmpty());
+        setDoable((getStart() == null || !getStart().isAfter(LocalDate.now())) && getChildren().isEmpty());
     }
 
     @Override
     public String toString() {
         return "External{" +
-                "\ntitle=" + title.get() +
-                "\n, description='" + description + '\'' +
-                "\n, deadline=" + (deadline.get()) +
-                "\n, originalDeadline=" + originalDeadline +
+                "\ntitle=" + getTitle() +
+                "\n, description='" + getDescription() + '\'' +
+                "\n, deadline=" + getDeadline() +
+                "\n, originalDeadline=" + getOriginalDeadline() +
                 "\n, inheritedDeadline=" + inheritedDeadline +
-                "\n, start=" + start.get() +
-                "\n, children=" + children.size() +
-                "\n, parents=" + parents.size() +
-                "\n, contexts=" + contexts +
-                "\n, doable=" + doable.get() +
-                "\n, isRecurrent=" + isRecurrent +
-                "\n, recurringPattern=" + recurringPattern +
-                "\n, hasFollowUp=" + hasFollowUp +
+                "\n, start=" + getStart() +
+                "\n, children=" + getChildren().size() +
+                "\n, parents=" + getParents().size() +
+                "\n, contexts=" + getContexts() +
+                "\n, doable=" + isDoable() +
+                "\n, isRecurrent=" + isRecurrent() +
+                "\n, recurringPattern=" + getRecurringPattern() +
+                "\n, hasFollowUp=" + hasFollowUp() +
                 "\n}";
     }
 }

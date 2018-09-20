@@ -84,10 +84,10 @@ public class Controller {
     };
 
     private Comparator<ToDoItem> sortByIsDoable = (o1, o2) -> {
-        if ((o1.getDoable() && o2.getDoable()) || (!o1.getDoable() && !o2.getDoable())) {
+        if ((o1.isDoable() && o2.isDoable()) || (!o1.isDoable() && !o2.isDoable())) {
             return 0;
         }
-        return o1.getDoable() ? 1 : -1;
+        return o1.isDoable() ? 1 : -1;
     };
 
     private Comparator<ToDoItem> sortByTitle = Comparator.comparing(ToDoItem::getTitle);
@@ -176,9 +176,9 @@ public class Controller {
         contexts = FXCollections.observableArrayList(dataIO.getContexts());
 
         filteredActiveToDoItems = new FilteredList<>(toDoItemsBase, isToDoOrProject.and(item ->
-                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && item.getDoable()));
+                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && item.isDoable()));
         filteredDependentToDoItems = new FilteredList<>(toDoItemsBase, isToDoOrProject.and(item ->
-                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || !item.getDoable()));
+                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || !item.isDoable()));
         filteredExternals = new FilteredList<>(toDoItemsBase, isExternal);
         filteredAppointments = new FilteredList<>(appointmentsBase, item -> true);
         FilteredList<ToDoItem> projects = new FilteredList<>(toDoItemsData, isProject);
@@ -247,8 +247,8 @@ public class Controller {
                         row.pseudoClassStateChanged(doable, false);
                         row.pseudoClassStateChanged(notDoable, false);
                     } else {
-                        row.pseudoClassStateChanged(doable, newValue.getDoable());
-                        row.pseudoClassStateChanged(notDoable, !newValue.getDoable());
+                        row.pseudoClassStateChanged(doable, newValue.isDoable());
+                        row.pseudoClassStateChanged(notDoable, !newValue.isDoable());
                         newValue.doableProperty().addListener(doableListener);
                     }
                 });
@@ -320,9 +320,9 @@ public class Controller {
                 toDoItem -> contextChoiceBox.getValue() == null || toDoItem.getContexts().contains(contextChoiceBox.getValue());
 
         filteredActiveToDoItems.setPredicate(projectFilter.and(contextFilter).and(isToDoOrProject.and(item ->
-                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && item.getDoable())));
+                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && item.isDoable())));
         filteredDependentToDoItems.setPredicate(projectFilter.and(contextFilter).and(isToDoOrProject.and(item ->
-                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || !item.getDoable())));
+                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || !item.isDoable())));
         filteredExternals.setPredicate(projectFilter.and(contextFilter).and(isExternal));
         filteredAppointments.setPredicate(projectFilter.and(contextFilter));
 
