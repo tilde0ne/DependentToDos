@@ -22,16 +22,16 @@ public class Project extends ToDoItem{
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        setTitle(in.readUTF());
+        titleProperty().set(in.readUTF());
         LocalDate date = (LocalDate) in.readObject();
         if (!date.equals(LocalDate.of(1, 1, 1))) {
-            setDeadline(date);
+            deadlineProperty().set(date);
         }
         date = (LocalDate) in.readObject();
         if (!date.equals(LocalDate.of(1, 1, 1))) {
-            setStart(date);
+            startProperty().set(date);
         }
-        setDoable((getStart() == null || !getStart().isAfter(LocalDate.now())) && getChildren().isEmpty());
+        doableProperty().set((getStart() == null || !getStart().isAfter(LocalDate.now())) && getChildren().isEmpty());
     }
 
     @Override

@@ -309,13 +309,13 @@ public class DialogController {
 
         newToDoItem.setStart(startDatePicker.getValue());
 
-        if (!type.equals("Appointment") || selectedToDoItem != null) {
+        if (selectedToDoItem != null) {
             newToDoItem.setDeadline(deadline);
+            if (type.equals("Appointment")) {
+                ((Appointment) newToDoItem).setDateTime(deadline.atTime(LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"))));
+            }
         }
 
-        if (type.equals("Appointment") && selectedToDoItem != null) {
-            ((Appointment) newToDoItem).setDateTime(deadline.atTime(LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"))));
-        }
 
         newToDoItem.setRecurrent(recurrentCheckBox.isSelected());
         if (recurrentCheckBox.isSelected()) {

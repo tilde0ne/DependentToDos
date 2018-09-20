@@ -40,9 +40,6 @@ public class Appointment extends ToDoItem {
         setOriginalDeadline(deadline);
         deadlineProperty().set(deadline);
 
-        LocalTime temp = dateTime.get().toLocalTime();
-        dateTime.set(deadlineProperty().get().atTime(temp));
-
         deadline = checkAgainstParentDeadlines(deadline);
         inheritedDeadline = deadline;
         if (!isInherited()) {
@@ -73,11 +70,10 @@ public class Appointment extends ToDoItem {
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        setTitle(in.readUTF());
-        setDeadline((LocalDate) in.readObject());
-        setDateTime((LocalDateTime) in.readObject());
-        setStart(null);
-        setDoable(getChildren().isEmpty());
+        titleProperty().set(in.readUTF());
+        deadlineProperty().set((LocalDate) in.readObject());
+        dateTime = new SimpleObjectProperty<>((LocalDateTime) in.readObject());
+        doableProperty().set(getChildren().isEmpty());
     }
 
     public LocalDateTime getDateTime() {

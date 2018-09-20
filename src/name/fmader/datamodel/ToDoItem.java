@@ -24,9 +24,9 @@ public class ToDoItem implements Serializable {
 
     private transient BooleanProperty doable = new SimpleBooleanProperty();
 
-    private List<ToDoItem> children;
-    private List<ToDoItem> parents;
-    private List<String> contexts;
+    private List<ToDoItem> children = new ArrayList<>();
+    private List<ToDoItem> parents = new ArrayList<>();
+    private List<String> contexts = new ArrayList<>();
 
     private boolean isRecurrent;
     private RecurringPattern recurringPattern;
@@ -35,9 +35,6 @@ public class ToDoItem implements Serializable {
     public ToDoItem(String title) {
         this.created = LocalDate.now();
         this.title.set(title);
-        this.children = new ArrayList<>();
-        this.parents = new ArrayList<>();
-        this.contexts = new ArrayList<>();
         this.doable.set(true);
     }
 
