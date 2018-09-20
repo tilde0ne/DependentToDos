@@ -113,6 +113,7 @@ public class ToDoItem implements Serializable {
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
+        initProperties();
         title = new SimpleStringProperty(in.readUTF());
         LocalDate date = (LocalDate) in.readObject();
         if (!date.equals(LocalDate.of(1, 1, 1))) {

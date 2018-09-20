@@ -31,19 +31,18 @@ import java.util.function.Predicate;
 public class Controller {
 
     private DataIO dataIO = DataIO.getInstance();
-    private ObservableList<ToDoItem> toDoItemsData;
     private ObservableList<ToDoItem> toDoItemsBase;
-    private ObservableList<Appointment> appointmentsBase;
     private ObservableList<String> contexts;
 
     private FilteredList<ToDoItem> filteredActiveToDoItems;
     private FilteredList<ToDoItem> filteredDependentToDoItems;
     private FilteredList<ToDoItem> filteredExternals;
-    private FilteredList<Appointment> filteredAppointments;
+    private FilteredList<ToDoItem> filteredAppointments;
 
     private ToDoItem selectedToDoItem;
 
     private Predicate<ToDoItem> isExternal = toDoItem -> toDoItem.getClass().getSimpleName().equals("External");
+    private Predicate<ToDoItem> isAppointment = toDoItem -> toDoItem.getClass().getSimpleName().equals("Appointment");
     private Predicate<ToDoItem> isToDoItem = toDoItem -> toDoItem.getClass().getSimpleName().equals("ToDoItem");
     private Predicate<ToDoItem> isProject = toDoItem -> toDoItem.getClass().getSimpleName().equals("Project");
     private Predicate<ToDoItem> isToDoOrProject = isToDoItem.or(isProject);
@@ -65,22 +64,19 @@ public class Controller {
     };
 
     private Comparator<ToDoItem> sortByDateTime = (o1, o2) -> {
-        Appointment appointment1 = (Appointment) o1;
-        Appointment appointment2 = (Appointment) o2;
-
-        if (appointment1.getDateTime() == null) {
-            if (appointment2.getDateTime() == null) {
+        if (o1.getDateTime() == null) {
+            if (o2.getDateTime() == null) {
                 return 0;
             }
             return 1;
         }
-        if (appointment2.getDateTime() == null) {
+        if (o2.getDateTime() == null) {
             return -1;
         }
-        if (appointment1.getDateTime().equals(appointment2.getDateTime())) {
+        if (o1.getDateTime().equals(o2.getDateTime())) {
             return 0;
         }
-        return appointment1.getDateTime().isAfter(appointment2.getDateTime()) ? 1 : -1;
+        return o1.getDateTime().isAfter(o2.getDateTime()) ? 1 : -1;
     };
 
     private Comparator<ToDoItem> sortByIsDoable = (o1, o2) -> {
@@ -162,17 +158,9 @@ public class Controller {
 
     public void initialize() {
         dataIO.load();
-        toDoItemsData = FXCollections.observableList(dataIO.getToDoItems());
-        toDoItemsBase = FXCollections.observableArrayList(item ->
-                new Observable[]{item.titleProperty(), item.deadlineProperty(), item.startProperty(), item.doableProperty()});
-        toDoItemsBase.addAll(toDoItemsData);
-        appointmentsBase = FXCollections.observableArrayList(item ->
-                new Observable[]{item.titleProperty(), item.dateTimeProperty(), item.doableProperty()});
-        for (ToDoItem toDoItem : toDoItemsData) {
-            if (toDoItem.getClass().getSimpleName().equals("Appointment")) {
-                appointmentsBase.add((Appointment) toDoItem);
-            }
-        }
+        toDoItemsBase = FXCollections.observableList(dataIO.getToDoItems(), item ->
+                new Observable[]{item.titleProperty(), item.deadlineProperty(), item.dateTimeProperty(),
+                        item.startProperty(), item.doableProperty()});
         contexts = FXCollections.observableArrayList(dataIO.getContexts());
 
         filteredActiveToDoItems = new FilteredList<>(toDoItemsBase, isToDoOrProject.and(item ->
@@ -180,8 +168,8 @@ public class Controller {
         filteredDependentToDoItems = new FilteredList<>(toDoItemsBase, isToDoOrProject.and(item ->
                 (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || !item.isDoable()));
         filteredExternals = new FilteredList<>(toDoItemsBase, isExternal);
-        filteredAppointments = new FilteredList<>(appointmentsBase, item -> true);
-        FilteredList<ToDoItem> projects = new FilteredList<>(toDoItemsData, isProject);
+        filteredAppointments = new FilteredList<>(toDoItemsBase, isAppointment);
+        FilteredList<ToDoItem> projects = new FilteredList<>(toDoItemsBase, isProject);
 
         SortedList<ToDoItem> activeToDoItems = new SortedList<>(filteredActiveToDoItems, sortByDeadline.thenComparing(sortByTitle));
         SortedList<ToDoItem> dependentToDoItems = new SortedList<>(filteredDependentToDoItems, sortByDeadline.thenComparing(sortByTitle));
@@ -324,7 +312,7 @@ public class Controller {
         filteredDependentToDoItems.setPredicate(projectFilter.and(contextFilter).and(isToDoOrProject.and(item ->
                 (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || !item.isDoable())));
         filteredExternals.setPredicate(projectFilter.and(contextFilter).and(isExternal));
-        filteredAppointments.setPredicate(projectFilter.and(contextFilter));
+        filteredAppointments.setPredicate(projectFilter.and(contextFilter).and(isAppointment));
 
         selectNull();
     }
@@ -365,12 +353,7 @@ public class Controller {
             ToDoItem toDoItem = dialogController.getToDoItem();
 
             if (event.getSource().equals(addButton)) {
-                if (toDoItem.getClass().getSimpleName().equals("Appointment")) {
-                    appointmentsBase.add((Appointment) toDoItem);
-                } else {
-                    toDoItemsBase.add(toDoItem);
-                }
-                toDoItemsData.add(toDoItem);
+                toDoItemsBase.add(toDoItem);
             }
 
             for (TableView<ToDoItem> tableView : tableViews) {
@@ -432,7 +415,7 @@ public class Controller {
                             newStart = newDeadline.minusDays(offset);
                         }
                     } else {
-                            newStart = LocalDate.now().plusDays(everyN);
+                        newStart = LocalDate.now().plusDays(everyN);
                     }
                     break;
 
@@ -494,7 +477,6 @@ public class Controller {
                         parent.addChild(newToDoItem);
                     }
 
-                    toDoItemsBase.add(newToDoItem);
                     break;
 
                 case "External":
@@ -510,11 +492,10 @@ public class Controller {
                         parent.addChild(newToDoItem);
                     }
 
-                    toDoItemsBase.add(newToDoItem);
                     break;
 
                 case "Appointment":
-                    LocalTime time = ((Appointment) itemToRemove).getDateTime().toLocalTime();
+                    LocalTime time = itemToRemove.getDateTime().toLocalTime();
                     newToDoItem = new Appointment(title, newDeadline, time);
                     newToDoItem.setDescription(description);
                     newToDoItem.setRecurrent(true);
@@ -525,16 +506,14 @@ public class Controller {
                         parent.addChild(newToDoItem);
                     }
 
-                    appointmentsBase.add((Appointment) newToDoItem);
                     break;
 
-                    default:
-                        newToDoItem = new ToDoItem("Something went wrong!");
-                        newToDoItem.setDescription("Something went wrong, please mark this item done.");
-                        toDoItemsBase.add(newToDoItem);
+                default:
+                    newToDoItem = new ToDoItem("Something went wrong!");
+                    newToDoItem.setDescription("Something went wrong, please mark this item done.");
             }
 
-            toDoItemsData.add(newToDoItem);
+            toDoItemsBase.add(newToDoItem);
         }
 
         List<ToDoItem> children = new ArrayList<>(itemToRemove.getChildren());
@@ -545,12 +524,7 @@ public class Controller {
         for (ToDoItem toDoItem : parents) {
             toDoItem.removeChild(itemToRemove);
         }
-        toDoItemsData.remove(itemToRemove);
-        if (itemToRemove.getClass().getSimpleName().equals("Appointment")) {
-            appointmentsBase.remove(itemToRemove);
-        } else {
-            toDoItemsBase.remove(itemToRemove);
-        }
+        toDoItemsBase.remove(itemToRemove);
         selectNull();
     }
 
@@ -598,7 +572,7 @@ public class Controller {
 
         if (type.equals("Appointment")) {
             detailsDeadlineLabel.setText("Date/Time:");
-            detailsDeadlineValue.setText(((Appointment) selectedToDoItem).getDateTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+            detailsDeadlineValue.setText(selectedToDoItem.getDateTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
         } else {
             detailsDeadlineLabel.setText("Deadline:");
             if (selectedToDoItem.getDeadline() != null) {
@@ -613,12 +587,10 @@ public class Controller {
             detailsInherited.setVisible(true);
             if (type.equals("Appointment")) {
                 detailsNeeded.setText("Needed Date:");
-                detailsInherited.setText(((Appointment) selectedToDoItem).getInheritedDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-            }
-            if (type.equals("External")) {
+            } else {
                 detailsNeeded.setText("Req. Deadline:");
-                detailsInherited.setText(((External) selectedToDoItem).getInheritedDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
             }
+            detailsInherited.setText(selectedToDoItem.getInheritedDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         } else {
             detailsNeeded.setVisible(false);
             if (selectedToDoItem.isInherited()) {
