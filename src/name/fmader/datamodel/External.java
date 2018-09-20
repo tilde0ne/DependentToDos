@@ -13,8 +13,6 @@ public class External extends ToDoItem {
 
     private static final long serialVersionUID = -3022816578558344618L;
 
-    private LocalDate inheritedDeadline;
-
     public External(String title) {
         super(title);
     }
