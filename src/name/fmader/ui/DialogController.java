@@ -157,13 +157,13 @@ public class DialogController {
         dependencySourceListView.setItems(filteredDependencySource);
         contextSourceListView.setItems(filteredContextSource);
 
-        filterDependencySourceTextField.textProperty().addListener(((observable, oldValue, newValue) ->
+        filterDependencySourceTextField.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredDependencySource.setPredicate(excludeDependencies.and(toDoItem -> {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
                     return toDoItem.getTitle().toLowerCase().contains(newValue.toLowerCase());
-                }))));
+                })));
 
         ListChangeListener<ToDoItem> setSourcePredicate = c ->
                 filteredDependencySource.setPredicate(excludeDependencies.and(toDoItem -> {
@@ -209,8 +209,7 @@ public class DialogController {
         }
 
         if (type.equals("Appointment")) {
-            Appointment appointment = (Appointment) toDoItem;
-            timeTextField.setText(appointment.getDateTime().toLocalTime().toString());
+            timeTextField.setText(toDoItem.getDateTime().toLocalTime().toString());
         }
 
         if (type.equals("Appointment") || type.equals("External")) {
@@ -219,14 +218,10 @@ public class DialogController {
                 inheritedLabel.setVisible(true);
                 if (type.equals("Appointment")) {
                     neededLabel.setText("Needed date:");
-                    Appointment appointment = (Appointment) toDoItem;
-                    inheritedLabel.setText(appointment.getInheritedDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-                }
-                if (type.equals("External")) {
+                } else {
                     neededLabel.setText("Req. deadline:");
-                    External external = (External) toDoItem;
-                    inheritedLabel.setText(external.getInheritedDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
                 }
+                inheritedLabel.setText(toDoItem.getInheritedDeadline().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
             } else {
                 neededLabel.setVisible(false);
                 inheritedLabel.setVisible(false);
