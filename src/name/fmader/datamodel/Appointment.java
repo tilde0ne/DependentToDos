@@ -1,8 +1,5 @@
 package name.fmader.datamodel;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -14,25 +11,22 @@ public class Appointment extends ToDoItem {
 
     private static final long serialVersionUID = -226146364586406102L;
 
-    private transient ObjectProperty<LocalDateTime> dateTime = new SimpleObjectProperty<>();
-    private LocalDate inheritedDeadline;
-
     public Appointment(String title, LocalDate date, LocalTime time) {
         super(title);
         setDeadline(date);
         setOriginalDeadline(date);
-        dateTime.set(date.atTime(time));
+        setDateTime(date.atTime(time));
     }
 
     @Override
     public boolean isInherited() {
-        if (inheritedDeadline == null) {
+        if (getInheritedDeadline() == null) {
             return false;
         }
         if (getOriginalDeadline() == null) {
             return true;
         }
-        return !inheritedDeadline.equals(getOriginalDeadline());
+        return !getInheritedDeadline().equals(getOriginalDeadline());
     }
 
     @Override
@@ -41,9 +35,9 @@ public class Appointment extends ToDoItem {
         deadlineProperty().set(deadline);
 
         deadline = checkAgainstParentDeadlines(deadline);
-        inheritedDeadline = deadline;
+        setInheritedDeadline(deadline);
         if (!isInherited()) {
-            inheritedDeadline = null;
+            setInheritedDeadline(null);
         }
 
         if (!getChildren().isEmpty()) {
@@ -57,10 +51,6 @@ public class Appointment extends ToDoItem {
     public void setStart(LocalDate start) {
     }
 
-    public LocalDate getInheritedDeadline() {
-        return inheritedDeadline;
-    }
-
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         out.writeUTF(getTitle());
@@ -70,33 +60,22 @@ public class Appointment extends ToDoItem {
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
+        initProperties();
         titleProperty().set(in.readUTF());
         deadlineProperty().set((LocalDate) in.readObject());
-        dateTime = new SimpleObjectProperty<>((LocalDateTime) in.readObject());
+        dateTimeProperty().set((LocalDateTime) in.readObject());
         doableProperty().set(getChildren().isEmpty());
-    }
-
-    public LocalDateTime getDateTime() {
-        return dateTime.get();
-    }
-
-    public ObjectProperty<LocalDateTime> dateTimeProperty() {
-        return dateTime;
-    }
-
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime.set(dateTime);
     }
 
     @Override
     public String toString() {
         return "Appointment{" +
                 "\ntitle=" + getTitle() +
-                "\n, dateTime=" + dateTime.get() +
+                "\n, dateTime=" + getDateTime() +
                 "\n, description='" + getDescription() + '\'' +
                 "\n, deadline=" + getDeadline() +
                 "\n, originalDeadline=" + getOriginalDeadline() +
-                "\n, inheritedDeadline=" + inheritedDeadline +
+                "\n, inheritedDeadline=" + getInheritedDeadline() +
                 "\n, start=" + getStart() +
                 "\n, children=" + getChildren().size() +
                 "\n, parents=" + getParents().size() +

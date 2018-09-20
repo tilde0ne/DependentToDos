@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,9 @@ public class ToDoItem implements Serializable {
     private String description;
 
     private transient ObjectProperty<LocalDate> deadline = new SimpleObjectProperty<>();
+    private transient ObjectProperty<LocalDateTime> dateTime = new SimpleObjectProperty<>();
     private LocalDate originalDeadline;
+    private LocalDate inheritedDeadline;
     private transient ObjectProperty<LocalDate> start = new SimpleObjectProperty<>();
 
     private transient BooleanProperty doable = new SimpleBooleanProperty();
@@ -126,6 +129,14 @@ public class ToDoItem implements Serializable {
         doable = new SimpleBooleanProperty((start.get() == null || !start.get().isAfter(LocalDate.now())) && children.isEmpty());
     }
 
+    void initProperties() {
+        title = new SimpleStringProperty();
+        deadline = new SimpleObjectProperty<>();
+        dateTime = new SimpleObjectProperty<>();
+        start = new SimpleObjectProperty<>();
+        doable = new SimpleBooleanProperty();
+    }
+
     // Getters and Setters
     //////////////////////
 
@@ -178,12 +189,32 @@ public class ToDoItem implements Serializable {
         }
     }
 
+    public LocalDateTime getDateTime() {
+        return dateTime.get();
+    }
+
+    public ObjectProperty<LocalDateTime> dateTimeProperty() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime.set(dateTime);
+    }
+
     public LocalDate getOriginalDeadline() {
         return originalDeadline;
     }
 
     public void setOriginalDeadline(LocalDate originalDeadline) {
         this.originalDeadline = originalDeadline;
+    }
+
+    public LocalDate getInheritedDeadline() {
+        return inheritedDeadline;
+    }
+
+    public void setInheritedDeadline(LocalDate inheritedDeadline) {
+        this.inheritedDeadline = inheritedDeadline;
     }
 
     public LocalDate getStart() {

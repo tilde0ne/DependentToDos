@@ -22,6 +22,7 @@ public class Project extends ToDoItem{
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
+        initProperties();
         titleProperty().set(in.readUTF());
         LocalDate date = (LocalDate) in.readObject();
         if (!date.equals(LocalDate.of(1, 1, 1))) {

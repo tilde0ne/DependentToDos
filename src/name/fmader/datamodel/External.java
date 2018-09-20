@@ -9,21 +9,19 @@ public class External extends ToDoItem {
 
     private static final long serialVersionUID = -3022816578558344618L;
 
-    private LocalDate inheritedDeadline;
-
     public External(String title) {
         super(title);
     }
 
     @Override
     public boolean isInherited() {
-        if (inheritedDeadline == null) {
+        if (getInheritedDeadline() == null) {
             return false;
         }
         if (getOriginalDeadline() == null) {
             return true;
         }
-        return !inheritedDeadline.equals(getOriginalDeadline());
+        return !getInheritedDeadline().equals(getOriginalDeadline());
     }
 
     @Override
@@ -32,9 +30,9 @@ public class External extends ToDoItem {
         deadlineProperty().set(deadline);
 
         deadline = checkAgainstParentDeadlines(deadline);
-        inheritedDeadline = deadline;
+        setInheritedDeadline(deadline);
         if (!isInherited()) {
-            inheritedDeadline = null;
+            setInheritedDeadline(null);
         }
 
         if (!getChildren().isEmpty()) {
@@ -42,10 +40,6 @@ public class External extends ToDoItem {
                 toDoItem.recalculateDeadline();
             }
         }
-    }
-
-    public LocalDate getInheritedDeadline() {
-        return inheritedDeadline;
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
@@ -57,6 +51,7 @@ public class External extends ToDoItem {
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
+        initProperties();
         titleProperty().set(in.readUTF());
         LocalDate date = (LocalDate) in.readObject();
         if (!date.equals(LocalDate.of(1, 1, 1))) {
@@ -76,7 +71,7 @@ public class External extends ToDoItem {
                 "\n, description='" + getDescription() + '\'' +
                 "\n, deadline=" + getDeadline() +
                 "\n, originalDeadline=" + getOriginalDeadline() +
-                "\n, inheritedDeadline=" + inheritedDeadline +
+                "\n, inheritedDeadline=" + getInheritedDeadline() +
                 "\n, start=" + getStart() +
                 "\n, children=" + getChildren().size() +
                 "\n, parents=" + getParents().size() +
