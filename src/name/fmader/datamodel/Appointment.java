@@ -16,6 +16,9 @@ public class Appointment extends ToDoItem {
 
     private static final long serialVersionUID = -226146364586406102L;
 
+    private transient ObjectProperty<LocalDateTime> dateTime;
+    private LocalDate inheritedDeadline;
+
     public Appointment(String title, LocalDate date, LocalTime time) {
         super(title);
         this.deadline = new SimpleObjectProperty<>(date);

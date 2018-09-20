@@ -7,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +20,6 @@ public class ToDoItem implements Serializable {
 
     protected transient ObjectProperty<LocalDate> deadline = new SimpleObjectProperty<>();
     protected LocalDate originalDeadline;
-    protected LocalDate inheritedDeadline;
-    protected transient ObjectProperty<LocalDateTime> dateTime = new SimpleObjectProperty<>();
     protected transient ObjectProperty<LocalDate> start = new SimpleObjectProperty<>();
 
     protected transient BooleanProperty doable = new SimpleBooleanProperty();
@@ -190,24 +187,6 @@ public class ToDoItem implements Serializable {
 
     public void setOriginalDeadline(LocalDate originalDeadline) {
         this.originalDeadline = originalDeadline;
-    }
-
-    public LocalDate getInheritedDeadline() {
-        return null;
-    }
-
-    public void setInheritedDeadline(LocalDate inheritedDeadline) {
-    }
-
-    public LocalDateTime getDateTime() {
-        return null;
-    }
-
-    public ObjectProperty<LocalDateTime> dateTimeProperty() {
-        return dateTime;
-    }
-
-    public void setDateTime(LocalDateTime dateTime) {
     }
 
     public LocalDate getStart() {
