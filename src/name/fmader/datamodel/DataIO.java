@@ -6,7 +6,7 @@ import java.util.List;
 
 public class DataIO {
 
-    public static final DataIO instance = new DataIO();
+    private static final DataIO instance = new DataIO();
 
     private List<ToDoItem> toDoItems;
     private List<String> contexts;
