@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -601,6 +602,18 @@ public class Controller {
             dataIO.save(file);
             dataIO.saveSettings();
             stage.setTitle("Dependent ToDo's - " + dataIO.getDataFile().getPath());
+        }
+    }
+
+    @FXML
+    public void setDefaultDirectory() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Set default directory");
+        directoryChooser.setInitialDirectory(new File(dataIO.getSettings().getCustomPath()));
+        File file = directoryChooser.showDialog(mainGridPane.getScene().getWindow());
+        if (file != null) {
+            dataIO.getSettings().setCustomPath(file.getPath());
+            dataIO.saveSettings();
         }
     }
 
