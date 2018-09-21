@@ -35,10 +35,14 @@
     -fx-background-insets: 2 0 2 0;
 }
 
-.table-row-cell:doable .title {
+.table-row-cell:independent .title {
     -fx-background-color: aquamarine;
 }
 
-.table-row-cell:notdoable .title {
+.table-row-cell:dependent .title {
     -fx-background-color: pink;
+}
+
+.table-row-cell:future .title {
+    -fx-background-color: lightgrey;
 }
