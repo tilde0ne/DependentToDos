@@ -601,8 +601,8 @@ public class Controller {
             }
         }
 
-        detailsRecurrent.setText(String.valueOf(selectedToDoItem.isRecurrent()));
         if (selectedToDoItem.isRecurrent()) {
+            detailsRecurrent.setVisible(true);
             detailsPattern.setVisible(true);
             RecurringPattern pattern = selectedToDoItem.getRecurringPattern();
             String base;
@@ -625,6 +625,7 @@ public class Controller {
             }
             detailsPattern.setText("Every " + pattern.getEveryN() + " " + base + (pattern.isFix() ? ", fix" : ""));
         } else {
+            detailsRecurrent.setVisible(false);
             detailsPattern.setVisible(false);
         }
 

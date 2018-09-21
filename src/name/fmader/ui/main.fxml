@@ -169,10 +169,8 @@
                 <Label fx:id="detailsTitle" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="5" />
                 <Label fx:id="detailsStart" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <Label fx:id="detailsDeadlineValue" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                <Label text="Is recurrent:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-                <Label fx:id="detailsRecurrent" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                <Label text="Pattern:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-                <Label fx:id="detailsPattern" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <Label fx:id="detailsRecurrent" text="Recurrent:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                <Label fx:id="detailsPattern" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                 <Label text="Dependencies (Children):" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                 <Label text="Dependencies (Parents):" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                 <Label text="Description:" GridPane.columnIndex="4" GridPane.rowIndex="1" />
