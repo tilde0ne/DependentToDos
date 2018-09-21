@@ -131,6 +131,7 @@ public class DataIO {
 
     public void setDataFile(File dataFile) {
         this.dataFile = dataFile;
+        settings.setLastFile(dataFile);
     }
 
     public Settings getSettings() {

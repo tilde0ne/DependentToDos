@@ -13,9 +13,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import name.fmader.datamodel.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -552,6 +554,47 @@ public class Controller {
         }
         toDoItemsBase.remove(itemToRemove);
         selectNull();
+    }
+
+    @FXML
+    public void open() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open");
+        fileChooser.setInitialDirectory(new File(dataIO.getSettings().getCustomPath()));
+        FileChooser.ExtensionFilter dtdExtension = new FileChooser.ExtensionFilter("Dependent ToDo's Files", "*.dtd");
+        fileChooser.getExtensionFilters().addAll(
+                dtdExtension,
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        fileChooser.setSelectedExtensionFilter(dtdExtension);
+        File file = fileChooser.showOpenDialog(mainGridPane.getScene().getWindow());
+        if (file != null) {
+            dataIO.getSettings().setLastFile(file);
+            dataIO.saveSettings();
+            initialize();
+        }
+    }
+
+    @FXML
+    public void save() {
+        dataIO.save();
+    }
+
+    @FXML
+    public void saveAs() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save file as...");
+        fileChooser.setInitialDirectory(new File(dataIO.getSettings().getCustomPath()));
+        FileChooser.ExtensionFilter dtdExtension = new FileChooser.ExtensionFilter("Dependent ToDo's Files", "*.dtd");
+        fileChooser.getExtensionFilters().addAll(
+                dtdExtension,
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        fileChooser.setSelectedExtensionFilter(dtdExtension);
+        File file = fileChooser.showSaveDialog(mainGridPane.getScene().getWindow());
+        if (file != null) {
+            dataIO.save(file);
+        }
     }
 
     @FXML
