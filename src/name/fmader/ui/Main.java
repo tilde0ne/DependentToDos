@@ -21,8 +21,8 @@ public class Main extends Application {
     public void stop() throws Exception {
         super.stop();
         DataIO dataIO = DataIO.getInstance();
-        dataIO.saveSettings();
         dataIO.save();
+        dataIO.saveSettings();
     }
 
     public static void main(String[] args) {

@@ -46,6 +46,9 @@ public class DataIO {
                 toDoItems = (ArrayList<ToDoItem>) in.readObject();
                 contexts = (ArrayList<String>) in.readObject();
 
+                dataFile = file;
+                settings.setLastFile(file);
+
                 return true;
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -76,6 +79,9 @@ public class DataIO {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
             out.writeObject(toDoItems);
             out.writeObject(contexts);
+
+            dataFile = file;
+            settings.setLastFile(file);
 
             return true;
         } catch (IOException e) {
