@@ -1,5 +1,7 @@
 package name.fmader.datamodel;
 
+import name.fmader.common.Settings;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,31 +10,70 @@ public class DataIO {
 
     private static final DataIO instance = new DataIO();
 
-    private List<ToDoItem> toDoItems;
-    private List<String> contexts;
+    private List<ToDoItem> toDoItems = new ArrayList<>();
+    private List<String> contexts = new ArrayList<>();
+    private Settings settings = new Settings();
 
-    private String path = System.getProperty("user.home") + File.separator + "data.dtd";
-    private File data = new File(path);
+    private String path = Settings.DEFAULT_PATH;
+    private File dataFile = Settings.DEFAULT_FILE;
+    private File settingsFile = Settings.SETTINGS_FILE;
 
-    private DataIO() {
-        this.contexts = new ArrayList<>();
-        this.toDoItems = new ArrayList<>();
+    public boolean loadSettings() {
+        if (settingsFile.exists()) {
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(settingsFile))) {
+                settings = (Settings) in.readObject();
+                path = settings.getCustomPath();
+                dataFile = settings.getLastFile();
+
+                return true;
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            saveSettings();
+            return false;
+        }
     }
 
     public boolean load() {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(data))) {
-            toDoItems = (ArrayList<ToDoItem>) in.readObject();
-            contexts = (ArrayList<String>) in.readObject();
+        return load(dataFile);
+    }
+
+    public boolean load(File file) {
+        if (file.exists()) {
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+                toDoItems = (ArrayList<ToDoItem>) in.readObject();
+                contexts = (ArrayList<String>) in.readObject();
+
+                return true;
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            save();
+            return false;
+        }
+    }
+
+    public boolean saveSettings() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(settingsFile))) {
+            out.writeObject(settings);
 
             return true;
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }
 
     public boolean save() {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(data))) {
+        return save(dataFile);
+    }
+
+    public boolean save(File file) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
             out.writeObject(toDoItems);
             out.writeObject(contexts);
 
@@ -76,6 +117,17 @@ public class DataIO {
 
     public void setPath(String path) {
         this.path = path;
-        data = new File(path);
+    }
+
+    public File getDataFile() {
+        return dataFile;
+    }
+
+    public void setDataFile(File dataFile) {
+        this.dataFile = dataFile;
+    }
+
+    public Settings getSettings() {
+        return settings;
     }
 }

@@ -20,7 +20,9 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-        DataIO.getInstance().save();
+        DataIO dataIO = DataIO.getInstance();
+        dataIO.saveSettings();
+        dataIO.save();
     }
 
     public static void main(String[] args) {

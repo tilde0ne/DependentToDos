@@ -169,6 +169,7 @@ public class Controller {
     private TextArea detailsDescription;
 
     public void initialize() {
+        dataIO.loadSettings();
         dataIO.load();
         toDoItemsBase = FXCollections.observableList(dataIO.getToDoItems(), item ->
                 new Observable[]{item.titleProperty(), item.deadlineProperty(), item.dateTimeProperty(),
