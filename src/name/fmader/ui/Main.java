@@ -11,8 +11,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        primaryStage.setTitle("Dependent ToDo's");
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main.fxml"));
+        Parent root = fxmlLoader.load(); //FXMLLoader.load(getClass().getResource("main.fxml"));
+        Controller controller = fxmlLoader.getController();
+        controller.setStage(primaryStage);
+        primaryStage.setTitle("Dependent ToDo's - " + DataIO.getInstance().getDataFile().getPath());
         primaryStage.setScene(new Scene(root, 1200, 900));
         primaryStage.show();
     }

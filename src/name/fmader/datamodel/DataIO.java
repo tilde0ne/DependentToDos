@@ -121,17 +121,8 @@ public class DataIO {
         return path;
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     public File getDataFile() {
         return dataFile;
-    }
-
-    public void setDataFile(File dataFile) {
-        this.dataFile = dataFile;
-        settings.setLastFile(dataFile);
     }
 
     public Settings getSettings() {

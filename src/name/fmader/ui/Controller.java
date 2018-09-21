@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import name.fmader.datamodel.*;
 
@@ -31,6 +32,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class Controller {
+
+    private Stage stage = null;
 
     private DataIO dataIO = DataIO.getInstance();
     private ObservableList<ToDoItem> toDoItemsBase;
@@ -572,12 +575,14 @@ public class Controller {
             dataIO.getSettings().setLastFile(file);
             dataIO.saveSettings();
             initialize();
+            stage.setTitle("Dependent ToDo's - " + dataIO.getDataFile().getPath());
         }
     }
 
     @FXML
     public void save() {
         dataIO.save();
+        dataIO.saveSettings();
     }
 
     @FXML
@@ -594,6 +599,8 @@ public class Controller {
         File file = fileChooser.showSaveDialog(mainGridPane.getScene().getWindow());
         if (file != null) {
             dataIO.save(file);
+            dataIO.saveSettings();
+            stage.setTitle("Dependent ToDo's - " + dataIO.getDataFile().getPath());
         }
     }
 
@@ -607,6 +614,10 @@ public class Controller {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
             addOrEditToDoItem(new ActionEvent(editButton, null));
         }
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     private void alertNoSelection() {
