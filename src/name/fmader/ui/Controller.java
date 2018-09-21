@@ -190,7 +190,7 @@ public class Controller {
         SortedList<ToDoItem> externals = new SortedList<>(
                 filteredExternals, sortByFuture.thenComparing(sortByDeadline).thenComparing(sortByDependent).thenComparing(sortByTitle));
         SortedList<ToDoItem> appointments = new SortedList<>(
-                filteredAppointments, sortByFuture.thenComparing(sortByDateTime).thenComparing(sortByDependent).thenComparing(sortByTitle));
+                filteredAppointments, sortByDateTime.thenComparing(sortByDependent).thenComparing(sortByTitle));
 
         activeToDoTableView.setItems(activeToDoItems);
         dependentToDoTableView.setItems(dependentToDoItems);
