@@ -43,15 +43,14 @@
                   <MenuItem mnemonicParsing="false" onAction="#open" text="Open" />
                   <MenuItem mnemonicParsing="false" onAction="#save" text="Save" />
                   <MenuItem mnemonicParsing="false" onAction="#saveAs" text="Save as" />
-                  <MenuItem mnemonicParsing="false" onAction="#setDefaultDirectory" text="Set default path" />
                   <MenuItem mnemonicParsing="false" onAction="#backup" text="Backup" />
                         <MenuItem mnemonicParsing="false" text="Close" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                    </items>
+                <Menu mnemonicParsing="false" text="Settings">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#setDefaultDirectory" text="Set default path" />
+               </items>
                 </Menu>
             </menus>
         </MenuBar>
