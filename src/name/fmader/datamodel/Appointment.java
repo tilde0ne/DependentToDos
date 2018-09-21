@@ -64,7 +64,7 @@ public class Appointment extends ToDoItem {
         titleProperty().set(in.readUTF());
         deadlineProperty().set((LocalDate) in.readObject());
         dateTimeProperty().set((LocalDateTime) in.readObject());
-        doableProperty().set(getChildren().isEmpty());
+        dependentProperty().set(!getChildren().isEmpty());
     }
 
     @Override
@@ -80,7 +80,7 @@ public class Appointment extends ToDoItem {
                 "\n, children=" + getChildren().size() +
                 "\n, parents=" + getParents().size() +
                 "\n, contexts=" + getContexts() +
-                "\n, doable=" + isDoable() +
+                "\n, doable=" + getDependent() +
                 "\n, isRecurrent=" + isRecurrent() +
                 "\n, recurringPattern=" + getRecurringPattern() +
                 "\n, hasFollowUp=" + hasFollowUp() +

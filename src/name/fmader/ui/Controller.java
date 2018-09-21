@@ -80,10 +80,10 @@ public class Controller {
     };
 
     private Comparator<ToDoItem> sortByIsDoable = (o1, o2) -> {
-        if ((o1.isDoable() && o2.isDoable()) || (!o1.isDoable() && !o2.isDoable())) {
+        if ((o1.getDependent() && o2.getDependent()) || (!o1.getDependent() && !o2.getDependent())) {
             return 0;
         }
-        return o1.isDoable() ? 1 : -1;
+        return o1.getDependent() ? 1 : -1;
     };
 
     private Comparator<ToDoItem> sortByTitle = Comparator.comparing(ToDoItem::getTitle);
@@ -160,13 +160,13 @@ public class Controller {
         dataIO.load();
         toDoItemsBase = FXCollections.observableList(dataIO.getToDoItems(), item ->
                 new Observable[]{item.titleProperty(), item.deadlineProperty(), item.dateTimeProperty(),
-                        item.startProperty(), item.doableProperty()});
+                        item.startProperty(), item.dependentProperty()});
         contexts = FXCollections.observableArrayList(dataIO.getContexts());
 
         filteredActiveToDoItems = new FilteredList<>(toDoItemsBase, isToDoOrProject.and(item ->
-                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && item.isDoable()));
+                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && item.getDependent()));
         filteredDependentToDoItems = new FilteredList<>(toDoItemsBase, isToDoOrProject.and(item ->
-                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || !item.isDoable()));
+                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || !item.getDependent()));
         filteredExternals = new FilteredList<>(toDoItemsBase, isExternal);
         filteredAppointments = new FilteredList<>(toDoItemsBase, isAppointment);
         FilteredList<ToDoItem> projects = new FilteredList<>(toDoItemsBase, isProject);
@@ -229,15 +229,15 @@ public class Controller {
 
                 row.itemProperty().addListener((observable, oldValue, newValue) -> {
                     if (oldValue != null) {
-                        oldValue.doableProperty().removeListener(doableListener);
+                        oldValue.dependentProperty().removeListener(doableListener);
                     }
                     if (newValue == null) {
                         row.pseudoClassStateChanged(doable, false);
                         row.pseudoClassStateChanged(notDoable, false);
                     } else {
-                        row.pseudoClassStateChanged(doable, newValue.isDoable());
-                        row.pseudoClassStateChanged(notDoable, !newValue.isDoable());
-                        newValue.doableProperty().addListener(doableListener);
+                        row.pseudoClassStateChanged(doable, newValue.getDependent());
+                        row.pseudoClassStateChanged(notDoable, !newValue.getDependent());
+                        newValue.dependentProperty().addListener(doableListener);
                     }
                 });
                 return row;
@@ -308,9 +308,9 @@ public class Controller {
                 toDoItem -> contextChoiceBox.getValue() == null || toDoItem.getContexts().contains(contextChoiceBox.getValue());
 
         filteredActiveToDoItems.setPredicate(projectFilter.and(contextFilter).and(isToDoOrProject.and(item ->
-                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && item.isDoable())));
+                (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && item.getDependent())));
         filteredDependentToDoItems.setPredicate(projectFilter.and(contextFilter).and(isToDoOrProject.and(item ->
-                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || !item.isDoable())));
+                (item.getStart() != null && item.getStart().isAfter(LocalDate.now())) || !item.getDependent())));
         filteredExternals.setPredicate(projectFilter.and(contextFilter).and(isExternal));
         filteredAppointments.setPredicate(projectFilter.and(contextFilter).and(isAppointment));
 

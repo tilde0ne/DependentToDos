@@ -32,7 +32,7 @@ public class Project extends ToDoItem{
         if (!date.equals(LocalDate.of(1, 1, 1))) {
             startProperty().set(date);
         }
-        doableProperty().set((getStart() == null || !getStart().isAfter(LocalDate.now())) && getChildren().isEmpty());
+        dependentProperty().set(!getChildren().isEmpty());
     }
 
     @Override
@@ -64,7 +64,7 @@ public class Project extends ToDoItem{
                 "\n, children=" + getChildren().size() +
                 "\n, parents=" + getParents().size() +
                 "\n, contexts=" + getContexts() +
-                "\n, doable=" + isDoable() +
+                "\n, doable=" + getDependent() +
                 "\n, isRecurrent=" + isRecurrent() +
                 "\n, recurringPattern=" + getRecurringPattern() +
                 "\n, hasFollowUp=" + hasFollowUp() +

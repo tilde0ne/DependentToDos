@@ -25,7 +25,7 @@ public class ToDoItem implements Serializable {
     private LocalDate inheritedDeadline;
     private transient ObjectProperty<LocalDate> start = new SimpleObjectProperty<>();
 
-    private transient BooleanProperty doable = new SimpleBooleanProperty();
+    private transient BooleanProperty dependent = new SimpleBooleanProperty();
 
     private List<ToDoItem> children = new ArrayList<>();
     private List<ToDoItem> parents = new ArrayList<>();
@@ -38,7 +38,7 @@ public class ToDoItem implements Serializable {
     public ToDoItem(String title) {
         this.created = LocalDate.now();
         this.title.set(title);
-        this.doable.set(true);
+        this.dependent.set(false);
     }
 
     public void addChild(ToDoItem toDoItem) {
@@ -47,14 +47,14 @@ public class ToDoItem implements Serializable {
             toDoItem.addParent(this);
             toDoItem.recalculateDeadline();
         }
-        doable.set(false);
+        dependent.set(true);
     }
 
     public void removeChild(ToDoItem toDoItem) {
         children.remove(toDoItem);
         toDoItem.removeParent(this);
         toDoItem.recalculateDeadline();
-        doable.set((start.get() == null || !start.get().isAfter(LocalDate.now())) && children.isEmpty());
+        dependent.set(!children.isEmpty());
     }
 
     private void addParent(ToDoItem toDoItem) {
@@ -127,7 +127,7 @@ public class ToDoItem implements Serializable {
         } else {
             start = new SimpleObjectProperty<>();
         }
-        doable = new SimpleBooleanProperty((start.get() == null || !start.get().isAfter(LocalDate.now())) && children.isEmpty());
+        dependent = new SimpleBooleanProperty(!children.isEmpty());
     }
 
     void initProperties() {
@@ -135,7 +135,7 @@ public class ToDoItem implements Serializable {
         deadline = new SimpleObjectProperty<>();
         dateTime = new SimpleObjectProperty<>();
         start = new SimpleObjectProperty<>();
-        doable = new SimpleBooleanProperty();
+        dependent = new SimpleBooleanProperty();
     }
 
     // Getters and Setters
@@ -228,7 +228,6 @@ public class ToDoItem implements Serializable {
 
     public void setStart(LocalDate start) {
         this.start.set(start);
-        doable.set((start == null || !start.isAfter(LocalDate.now())) && children.isEmpty());
     }
 
     public List<ToDoItem> getChildren() {
@@ -247,16 +246,16 @@ public class ToDoItem implements Serializable {
         this.contexts = contexts;
     }
 
-    public boolean isDoable() {
-        return doable.get();
+    public boolean getDependent() {
+        return dependent.get();
     }
 
-    public BooleanProperty doableProperty() {
-        return doable;
+    public BooleanProperty dependentProperty() {
+        return dependent;
     }
 
-    public void setDoable(boolean doable) {
-        this.doable.set(doable);
+    public void setDependent(boolean dependent) {
+        this.dependent.set(dependent);
     }
 
     public boolean isRecurrent() {
@@ -294,7 +293,7 @@ public class ToDoItem implements Serializable {
                 "\n, children=" + children.size() +
                 "\n, parents=" + parents.size() +
                 "\n, contexts=" + contexts +
-                "\n, doable=" + doable.get() +
+                "\n, dependent=" + dependent.get() +
                 "\n, isRecurrent=" + isRecurrent +
                 "\n, recurringPattern=" + recurringPattern +
                 "\n, hasFollowUp=" + hasFollowUp +
