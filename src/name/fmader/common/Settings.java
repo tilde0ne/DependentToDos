@@ -10,7 +10,7 @@ public class Settings implements Serializable {
     public static final String DEFAULT_FILENAME = "data.dtd";
     public static final String DEFAULT_PATH = System.getProperty("user.home");
     public static final File DEFAULT_FILE = new File(DEFAULT_PATH + File.separator + DEFAULT_FILENAME);
-    public static final File SETTINGS_FILE = new File(DEFAULT_PATH + File.separator + "dtd_settings.bin");
+    public static final File SETTINGS_FILE = new File("settings.bin");
 
     private String customPath = DEFAULT_PATH;
     private File lastFile = DEFAULT_FILE;
