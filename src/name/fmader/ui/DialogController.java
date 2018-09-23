@@ -191,6 +191,8 @@ public class DialogController {
                 okDisable.set(!validInput()));
         titleTextField.textProperty().addListener((observable, oldValue, newValue) ->
                 okDisable.set(!validInput()));
+        deadlineDatePicker.valueProperty().addListener((observable, oldValue, newValue) ->
+                okDisable.set(!validInput()));
         timeTextField.textProperty().addListener((observable, oldValue, newValue) ->
                 okDisable.set(!validInput()));
     }
@@ -521,9 +523,13 @@ public class DialogController {
         if (titleTextField.getText().isEmpty()) {
             error = "Title can't be empty.\n";
         }
-        if (typeChoiceBox.getValue().equals("Appointment") &&
-                (timeTextField == null || !timeTextField.getText().matches("^([0-1][0-9]|2[0-3]):[0-5][0-9]$"))) {
-            error += "Time (format hh:mm) is required for appointments\n";
+        if (typeChoiceBox.getValue().equals("Appointment")) {
+            if (deadlineDatePicker.getValue() == null) {
+                error += "Date is required for appointments\n";
+            }
+            if (timeTextField == null || !timeTextField.getText().matches("^([0-1][0-9]|2[0-3]):[0-5][0-9]$")) {
+                error += "Time (format hh:mm) is required for appointments\n";
+            }
         }
         return error.isEmpty();
     }
