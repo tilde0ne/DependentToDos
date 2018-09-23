@@ -376,6 +376,7 @@ public class Controller {
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 
         DialogController dialogController = fxmlLoader.getController();
+        dialogController.setOkDisable(dialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty());
         if (event.getSource().equals(editButton)) {
             dialogController.initForm(selectedToDoItem);
         }

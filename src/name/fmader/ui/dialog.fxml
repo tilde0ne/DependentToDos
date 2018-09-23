@@ -42,7 +42,7 @@
             </rowConstraints>
             <children>
                 <Label text="Title:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                <TextField fx:id="titleTextField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+                <TextField fx:id="titleTextField" promptText="Title required" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
                 <Label fx:id="typeLabel" text="Type:" GridPane.halignment="RIGHT" />
                 <Label fx:id="startLabel" text="Start:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                 <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">

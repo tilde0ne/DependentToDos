@@ -1,5 +1,6 @@
 package name.fmader.ui;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -22,6 +23,9 @@ import java.util.function.Predicate;
 public class DialogController {
 
     private ToDoItem selectedToDoItem = null;
+
+    private BooleanProperty okDisable;
+    private String error = "";
 
     private DataIO dataIO = DataIO.getInstance();
 
@@ -93,7 +97,6 @@ public class DialogController {
         typeChoiceBox.getItems().add("Project");
 
         typeChoiceBox.setValue("ToDo");
-        titleTextField.setText("Untitled Item");
         timeLabel.setVisible(false);
         timeTextField.setVisible(false);
         neededLabel.setVisible(false);
@@ -179,6 +182,17 @@ public class DialogController {
 
         itemContexts.addListener((ListChangeListener<String>) c ->
                 filteredContextSource.setPredicate(string -> !itemContexts.contains(string)));
+    }
+
+    public void setOkDisable (BooleanProperty okDisable) {
+        this.okDisable = okDisable;
+        okDisable.set(!validInput());
+        typeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+                okDisable.set(!validInput()));
+        titleTextField.textProperty().addListener((observable, oldValue, newValue) ->
+                okDisable.set(!validInput()));
+        timeTextField.textProperty().addListener((observable, oldValue, newValue) ->
+                okDisable.set(!validInput()));
     }
 
     public void initForm(ToDoItem toDoItem) {
@@ -500,5 +514,17 @@ public class DialogController {
                 }
             }
         }
+    }
+
+    private boolean validInput () {
+        error = "";
+        if (titleTextField.getText().isEmpty()) {
+            error = "Title can't be empty.\n";
+        }
+        if (typeChoiceBox.getValue().equals("Appointment") &&
+                (timeTextField == null || !timeTextField.getText().matches("^([0-1][0-9]|2[0-3]):[0-5][0-9]$"))) {
+            error += "Time (format hh:mm) is required for appointments\n";
+        }
+        return error.isEmpty();
     }
 }
