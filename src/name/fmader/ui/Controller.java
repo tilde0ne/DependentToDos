@@ -574,15 +574,12 @@ public class Controller {
         fileChooser.setSelectedExtensionFilter(dtdExtension);
         File file = fileChooser.showSaveDialog(mainGridPane.getScene().getWindow());
         if (file != null) {
-            if (file.exists()) {
-                //TODO alert fileExists
-                return;
-            }
             dataIO.save();
             dataIO.getSettings().setLastFile(file);
             dataIO.saveSettings();
             toDoItemsBase.clear();
             dataIO.getContexts().clear();
+            dataIO.save(file);
             initialize();
             stage.setTitle("Dependent ToDo's - " + dataIO.getDataFile().getPath());
         }
