@@ -323,17 +323,17 @@ public class Controller {
     }
 
     @FXML
-    public void clearProjectFilter() {
+    private void clearProjectFilter() {
         projectChoiceBox.getSelectionModel().clearSelection();
     }
 
     @FXML
-    public void clearContextFilter() {
+    private void clearContextFilter() {
         contextChoiceBox.getSelectionModel().clearSelection();
     }
 
     @FXML
-    public void filterItems() {
+    private void filterItems() {
         Predicate<ToDoItem> projectFilter =
                 toDoItem -> projectChoiceBox.getValue() == null || toDoItem.getParents().contains(projectChoiceBox.getValue());
         Predicate<ToDoItem> contextFilter =
@@ -350,7 +350,7 @@ public class Controller {
     }
 
     @FXML
-    public void addOrEditToDoItem(ActionEvent event) {
+    private void addOrEditToDoItem(ActionEvent event) {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainGridPane.getScene().getWindow());
         dialog.setResizable(true);
@@ -402,7 +402,7 @@ public class Controller {
     }
 
     @FXML
-    public void done() {
+    private void done() {
         if (selectedToDoItem == null) {
             alertNoSelection();
             return;
@@ -562,7 +562,34 @@ public class Controller {
     }
 
     @FXML
-    public void open() {
+    private void newFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("New");
+        fileChooser.setInitialDirectory(new File(dataIO.getSettings().getCustomPath()));
+        FileChooser.ExtensionFilter dtdExtension = new FileChooser.ExtensionFilter("Dependent ToDo's Files", "*.dtd");
+        fileChooser.getExtensionFilters().addAll(
+                dtdExtension,
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        fileChooser.setSelectedExtensionFilter(dtdExtension);
+        File file = fileChooser.showSaveDialog(mainGridPane.getScene().getWindow());
+        if (file != null) {
+            if (file.exists()) {
+                //TODO alert fileExists
+                return;
+            }
+            dataIO.save();
+            dataIO.getSettings().setLastFile(file);
+            dataIO.saveSettings();
+            toDoItemsBase.clear();
+            dataIO.getContexts().clear();
+            initialize();
+            stage.setTitle("Dependent ToDo's - " + dataIO.getDataFile().getPath());
+        }
+    }
+
+    @FXML
+    private void open() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open");
         fileChooser.setInitialDirectory(new File(dataIO.getSettings().getCustomPath()));
@@ -574,6 +601,7 @@ public class Controller {
         fileChooser.setSelectedExtensionFilter(dtdExtension);
         File file = fileChooser.showOpenDialog(mainGridPane.getScene().getWindow());
         if (file != null) {
+            dataIO.save();
             dataIO.getSettings().setLastFile(file);
             dataIO.saveSettings();
             initialize();
@@ -582,13 +610,13 @@ public class Controller {
     }
 
     @FXML
-    public void save() {
+    private void save() {
         dataIO.save();
         dataIO.saveSettings();
     }
 
     @FXML
-    public void saveAs() {
+    private void saveAs() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save file as...");
         fileChooser.setInitialDirectory(new File(dataIO.getSettings().getCustomPath()));
@@ -607,7 +635,7 @@ public class Controller {
     }
 
     @FXML
-    public void setDefaultDirectory() {
+    private void setDefaultDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Set default directory");
         directoryChooser.setInitialDirectory(new File(dataIO.getSettings().getCustomPath()));
@@ -619,12 +647,12 @@ public class Controller {
     }
 
     @FXML
-    public void backup() {
+    private void backup() {
         dataIO.backup();
     }
 
     @FXML
-    public void handleTableViewMouseEvent(MouseEvent event) {
+    private void handleTableViewMouseEvent(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
             addOrEditToDoItem(new ActionEvent(editButton, null));
         }
