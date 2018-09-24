@@ -395,6 +395,8 @@ public class Controller {
                     showDetails();
                 }
             }
+
+            stage.setTitle("Dependent ToDo's - " + dataIO.getDataFile().getPath() + "*");
         }
 
         contexts.clear();
@@ -559,6 +561,7 @@ public class Controller {
         }
         toDoItemsBase.remove(itemToRemove);
         selectNull();
+        stage.setTitle("Dependent ToDo's - " + dataIO.getDataFile().getPath() + "*");
     }
 
     @FXML
@@ -610,6 +613,7 @@ public class Controller {
     private void save() {
         dataIO.save();
         dataIO.saveSettings();
+        stage.setTitle("Dependent ToDo's - " + dataIO.getDataFile().getPath());
     }
 
     @FXML
