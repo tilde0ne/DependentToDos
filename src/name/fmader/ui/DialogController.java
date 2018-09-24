@@ -391,10 +391,14 @@ public class DialogController {
     }
 
     @FXML
-    private void addToChildren() {
+    private void addChild() {
         ToDoItem toDoItem = dependencySourceListView.getSelectionModel().getSelectedItem();
         if (toDoItem != null) {
-            children.add(toDoItem);
+            if (!createsCyclicDependency(toDoItem, true)) {
+                children.add(toDoItem);
+            } else {
+                alertCyclicDependency();
+            }
         }
     }
 
@@ -420,10 +424,14 @@ public class DialogController {
     }
 
     @FXML
-    private void addToParents() {
+    private void addParent() {
         ToDoItem toDoItem = dependencySourceListView.getSelectionModel().getSelectedItem();
         if (toDoItem != null) {
-            parents.add(toDoItem);
+            if (!createsCyclicDependency(toDoItem,false)) {
+                parents.add(toDoItem);
+            } else {
+                alertCyclicDependency();
+            }
         }
     }
 
@@ -530,5 +538,31 @@ public class DialogController {
             }
         }
         return errorMessage.isEmpty();
+    }
+
+    private boolean createsCyclicDependency(ToDoItem toDoItem, boolean checkForChildren) {
+        if (selectedToDoItem == null) {
+            return false;
+        }
+
+        List<ToDoItem> nodes = checkForChildren ? toDoItem.getChildren() : toDoItem.getParents();
+        for (ToDoItem node : nodes) {
+            if (node.equals(selectedToDoItem)) {
+                return true;
+            }
+            if (createsCyclicDependency(node, checkForChildren)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void alertCyclicDependency() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(null);
+        alert.setHeaderText("Cyclic Dependency!");
+        alert.setContentText("This would create a cyclic dependency, which is not allowed.");
+        alert.showAndWait();
     }
 }

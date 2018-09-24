@@ -73,9 +73,9 @@
                     </rowConstraints>
                     <children>
                         <TextField fx:id="filterDependencySourceTextField" promptText="Filter" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-                        <Button mnemonicParsing="false" onAction="#addToParents" text="Add to parents" GridPane.columnIndex="3" GridPane.halignment="RIGHT" />
+                        <Button mnemonicParsing="false" onAction="#addParent" text="Add to parents" GridPane.columnIndex="3" GridPane.halignment="RIGHT" />
                         <ListView fx:id="dependencySourceListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                        <Button mnemonicParsing="false" onAction="#addToChildren" text="Add to children" />
+                        <Button mnemonicParsing="false" onAction="#addChild" text="Add to children" />
                     </children>
                 </GridPane>
                 <Label text="Contexts:" GridPane.rowIndex="10" />
