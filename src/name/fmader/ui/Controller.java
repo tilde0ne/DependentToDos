@@ -399,6 +399,9 @@ public class Controller {
             stage.setTitle("Dependent ToDo's - " + dataIO.getDataFile().getPath() + "*");
         }
 
+        if (!contexts.equals(dataIO.getContexts())) {
+            stage.setTitle("Dependent ToDo's - " + dataIO.getDataFile().getPath() + "*");
+        }
         contexts.clear();
         contexts.addAll(dataIO.getContexts());
     }
