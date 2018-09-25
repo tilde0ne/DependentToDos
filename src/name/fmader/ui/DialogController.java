@@ -574,7 +574,9 @@ public class DialogController {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(null);
         alert.setHeaderText("Cyclic Dependency!");
-        alert.setContentText("This would create a cyclic dependency, which is not allowed.");
+        alert.setContentText("This would create a cyclic dependency, which is not allowed.\n\n" +
+                "If you are trying to add a child that you just removed from parents or vice versa, " +
+                "click OK in the edit dialog and reopen it, adding will then work.");
         alert.showAndWait();
     }
 }
