@@ -55,8 +55,13 @@ public class DataIO {
                 return false;
             }
         } else {
-            save();
-            return false;
+            if (file.equals(Settings.DEFAULT_FILE)) {
+                save();
+                return false;
+            } else {
+                load(Settings.DEFAULT_FILE);
+                return false;
+            }
         }
     }
 
