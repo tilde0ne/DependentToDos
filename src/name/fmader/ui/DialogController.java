@@ -129,6 +129,18 @@ public class DialogController {
             }
         });
 
+        startDatePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+                startDatePicker.setValue(null);
+            }
+        });
+
+        deadlineDatePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+                deadlineDatePicker.setValue(null);
+            }
+        });
+
         recurringBaseChoiceBox.getItems().add("days");
         recurringBaseChoiceBox.getItems().add("weeks");
         recurringBaseChoiceBox.getItems().add("months");
