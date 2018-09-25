@@ -44,23 +44,17 @@ public class External extends ToDoItem {
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        out.writeUTF(getTitle());
-        out.writeObject(getDeadline() == null ? LocalDate.of(1, 1, 1) : getDeadline());
-        out.writeObject(getStart() == null ? LocalDate.of(1, 1, 1) : getStart());
+        out.writeUTF(titleProperty().get());
+        out.writeObject(deadlineProperty().get());
+        out.writeObject(startProperty().get());
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         initProperties();
         titleProperty().set(in.readUTF());
-        LocalDate date = (LocalDate) in.readObject();
-        if (!date.equals(LocalDate.of(1, 1, 1))) {
-            deadlineProperty().set(date);
-        }
-        date = (LocalDate) in.readObject();
-        if (!date.equals(LocalDate.of(1, 1, 1))) {
-            startProperty().set(date);
-        }
+        deadlineProperty().set((LocalDate) in.readObject());
+        startProperty().set((LocalDate) in.readObject());
         dependentProperty().set(!getChildren().isEmpty());
     }
 

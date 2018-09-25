@@ -107,27 +107,17 @@ public class ToDoItem implements Serializable {
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         out.writeUTF(title.get());
-        out.writeObject(deadline.get() == null ? LocalDate.of(1, 1, 1) : deadline.get());
-        out.writeObject(start.get() == null ? LocalDate.of(1, 1, 1) : start.get());
+        out.writeObject(deadline.get());
+        out.writeObject(start.get());
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         initProperties();
-        title = new SimpleStringProperty(in.readUTF());
-        LocalDate date = (LocalDate) in.readObject();
-        if (!date.equals(LocalDate.of(1, 1, 1))) {
-            deadline = new SimpleObjectProperty<>(date);
-        } else {
-            deadline = new SimpleObjectProperty<>();
-        }
-        date = (LocalDate) in.readObject();
-        if (!date.equals(LocalDate.of(1, 1, 1))) {
-            start = new SimpleObjectProperty<>(date);
-        } else {
-            start = new SimpleObjectProperty<>();
-        }
-        dependent = new SimpleBooleanProperty(!children.isEmpty());
+        title.set(in.readUTF());
+        deadline.set((LocalDate) in.readObject());
+        start.set((LocalDate) in.readObject());
+        dependent.set(!children.isEmpty());
     }
 
     void initProperties() {

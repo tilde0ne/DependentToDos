@@ -53,9 +53,9 @@ public class Appointment extends ToDoItem {
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        out.writeUTF(getTitle());
-        out.writeObject(getDeadline());
-        out.writeObject(getDateTime());
+        out.writeUTF(titleProperty().get());
+        out.writeObject(deadlineProperty().get());
+        out.writeObject(dateTimeProperty().get());
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
