@@ -370,9 +370,6 @@ public class DialogController {
                 newToDoItem.removeChild(toDoItem);
             }
         }
-        for (ToDoItem toDoItem : children) {
-            newToDoItem.addChild(toDoItem);
-        }
 
         List<ToDoItem> oldParents = new ArrayList<>(newToDoItem.getParents());
         for (ToDoItem toDoItem : oldParents) {
@@ -380,6 +377,11 @@ public class DialogController {
                 toDoItem.removeChild(newToDoItem);
             }
         }
+
+        for (ToDoItem toDoItem : children) {
+            newToDoItem.addChild(toDoItem);
+        }
+
         for (ToDoItem toDoItem : parents) {
             toDoItem.addChild(newToDoItem);
         }
@@ -553,13 +555,9 @@ public class DialogController {
     }
 
     private boolean createsCyclicDependency(ToDoItem toDoItem, boolean checkForChildren) {
-        if (selectedToDoItem == null) {
-            return false;
-        }
-
         List<ToDoItem> nodes = checkForChildren ? toDoItem.getChildren() : toDoItem.getParents();
         for (ToDoItem node : nodes) {
-            if (node.equals(selectedToDoItem)) {
+            if ((checkForChildren && parents.contains(node)) || (!checkForChildren && children.contains(node))) {
                 return true;
             }
             if (createsCyclicDependency(node, checkForChildren)) {
@@ -574,9 +572,7 @@ public class DialogController {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(null);
         alert.setHeaderText("Cyclic Dependency!");
-        alert.setContentText("This would create a cyclic dependency, which is not allowed.\n\n" +
-                "If you are trying to add a child that you just removed from parents or vice versa, " +
-                "click OK in the edit dialog and reopen it, adding will then work.");
+        alert.setContentText("This would create a cyclic dependency, which is not allowed.");
         alert.showAndWait();
     }
 }
