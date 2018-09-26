@@ -757,9 +757,12 @@ public class Controller {
             detailsPattern.setVisible(false);
         }
 
-        detailsChildren.setItems(FXCollections.observableArrayList(selectedToDoItem.getChildren()));
-        detailsParents.setItems(FXCollections.observableArrayList(selectedToDoItem.getParents()));
-        detailsContexts.setItems(FXCollections.observableArrayList(selectedToDoItem.getContexts()));
+        detailsChildren.setItems(new SortedList<>(
+                FXCollections.observableArrayList(selectedToDoItem.getChildren()), sortByTitle));
+        detailsParents.setItems(new SortedList<>(
+                FXCollections.observableArrayList(selectedToDoItem.getParents()), sortByTitle));
+        detailsContexts.setItems(new SortedList<>(
+                FXCollections.observableArrayList(selectedToDoItem.getContexts()), Comparator.naturalOrder()));
 
         String description = selectedToDoItem.getDescription();
         if (description != null) {
