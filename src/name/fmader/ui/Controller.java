@@ -172,6 +172,8 @@ public class Controller {
     @FXML
     private ListView<ToDoItem> detailsParents;
     @FXML
+    private ListView<String> detailsContexts;
+    @FXML
     private TextArea detailsDescription;
 
     public void initialize() {
@@ -757,6 +759,7 @@ public class Controller {
 
         detailsChildren.setItems(FXCollections.observableArrayList(selectedToDoItem.getChildren()));
         detailsParents.setItems(FXCollections.observableArrayList(selectedToDoItem.getParents()));
+        detailsContexts.setItems(FXCollections.observableArrayList(selectedToDoItem.getContexts()));
 
         String description = selectedToDoItem.getDescription();
         if (description != null) {
