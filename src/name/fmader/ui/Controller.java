@@ -253,9 +253,8 @@ public class Controller {
                     row.pseudoClassStateChanged(independent, !newValue);
                 };
 
-                ChangeListener<LocalDate> startListener = (observable, oldValue, newValue) -> {
-                    row.pseudoClassStateChanged(future, newValue != null && newValue.isAfter(LocalDate.now()));
-                };
+                ChangeListener<LocalDate> startListener = (observable, oldValue, newValue) ->
+                        row.pseudoClassStateChanged(future, newValue != null && newValue.isAfter(LocalDate.now()));
 
                 row.itemProperty().addListener((observable, oldValue, newValue) -> {
                     if (oldValue != null) {
