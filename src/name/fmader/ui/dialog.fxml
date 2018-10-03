@@ -85,10 +85,10 @@
                 <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="13" />
                 <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                     <children>
-                        <CheckBox fx:id="recurrentCheckBox" mnemonicParsing="false" text="Recurrent item? Every" />
+                        <CheckBox fx:id="recurrentCheckBox" mnemonicParsing="false" text="Recurrent item?" />
+                  <Label fx:id="everyLabel" text="Every" />
                         <TextField fx:id="everyTextField" prefWidth="60.0" />
                         <ChoiceBox fx:id="recurringBaseChoiceBox" prefWidth="100.0" />
-                        <CheckBox fx:id="fixCheckBox" mnemonicParsing="false" text="Fix?" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />

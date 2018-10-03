@@ -436,7 +436,6 @@ public class Controller {
             LocalDate newStart = null;
             int everyN = recurringPattern.getEveryN();
             RecurringBase base = recurringPattern.getRecurringBase();
-            boolean fix = recurringPattern.isFix();
 
             long offset = 0L;
             if (deadline != null && start != null) {
@@ -732,25 +731,22 @@ public class Controller {
             detailsRecurrent.setVisible(true);
             detailsPattern.setVisible(true);
             RecurringPattern pattern = selectedToDoItem.getRecurringPattern();
-            String base;
+            String base = null;
             switch (pattern.getRecurringBase()) {
                 case EVERYNDAYS:
-                    base = "days";
+                    base = "day(s)";
                     break;
                 case EVERYNWEEKS:
-                    base = "weeks";
+                    base = "week(s)";
                     break;
                 case EVERYNMONTHS:
-                    base = "months";
+                    base = "month(s)";
                     break;
                 case EVERYNYEARS:
-                    base = "years";
-                    break;
-                default:
-                    base = "days";
+                    base = "year(s)";
                     break;
             }
-            detailsPattern.setText("Every " + pattern.getEveryN() + " " + base + (pattern.isFix() ? ", fix" : ""));
+            detailsPattern.setText("Every " + pattern.getEveryN() + " " + base);
         } else {
             detailsRecurrent.setVisible(false);
             detailsPattern.setVisible(false);

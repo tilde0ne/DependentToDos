@@ -67,11 +67,11 @@ public class DialogController {
     @FXML
     private CheckBox recurrentCheckBox;
     @FXML
+    private Label everyLabel;
+    @FXML
     private TextField everyTextField;
     @FXML
     private ChoiceBox<String> recurringBaseChoiceBox;
-    @FXML
-    private CheckBox fixCheckBox;
     @FXML
     private ListView<ToDoItem> childrenListView;
     @FXML
@@ -100,7 +100,9 @@ public class DialogController {
         timeTextField.setVisible(false);
         neededLabel.setVisible(false);
         inheritedLabel.setVisible(false);
-        fixCheckBox.setVisible(false);
+        everyLabel.setVisible(false);
+        everyTextField.setVisible(false);
+        recurringBaseChoiceBox.setVisible(false);
 
         typeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("Appointment")) {
@@ -120,12 +122,10 @@ public class DialogController {
                 recurrentCheckBox.setVisible(false);
                 everyTextField.setVisible(false);
                 recurringBaseChoiceBox.setVisible(false);
-//                fixCheckBox.setVisible(false);
             } else {
                 recurrentCheckBox.setVisible(true);
                 everyTextField.setVisible(true);
                 recurringBaseChoiceBox.setVisible(true);
-//                fixCheckBox.setVisible(true);
             }
         });
 
@@ -141,10 +141,22 @@ public class DialogController {
             }
         });
 
-        recurringBaseChoiceBox.getItems().add("days");
-        recurringBaseChoiceBox.getItems().add("weeks");
-        recurringBaseChoiceBox.getItems().add("months");
-        recurringBaseChoiceBox.getItems().add("years");
+        recurrentCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                everyLabel.setVisible(true);
+                everyTextField.setVisible(true);
+                recurringBaseChoiceBox.setVisible(true);
+            } else {
+                everyLabel.setVisible(false);
+                everyTextField.setVisible(false);
+                recurringBaseChoiceBox.setVisible(false);
+            }
+        });
+
+        recurringBaseChoiceBox.getItems().add("day(s)");
+        recurringBaseChoiceBox.getItems().add("week(s)");
+        recurringBaseChoiceBox.getItems().add("month(s)");
+        recurringBaseChoiceBox.getItems().add("year(s)");
 
         listViews.add(childrenListView);
         listViews.add(dependencySourceListView);
@@ -204,6 +216,12 @@ public class DialogController {
         deadlineDatePicker.valueProperty().addListener((observable, oldValue, newValue) ->
                 okDisable.set(!validInput()));
         timeTextField.textProperty().addListener((observable, oldValue, newValue) ->
+                okDisable.set(!validInput()));
+        recurrentCheckBox.selectedProperty().addListener((observable, oldValue, newValue) ->
+                okDisable.set(!validInput()));
+        everyTextField.textProperty().addListener((observable, oldValue, newValue) ->
+                okDisable.set(!validInput()));
+        recurringBaseChoiceBox.valueProperty().addListener((observable, oldValue, newValue) ->
                 okDisable.set(!validInput()));
     }
 
@@ -270,22 +288,17 @@ public class DialogController {
             everyTextField.setText(((Integer) recurringPattern.getEveryN()).toString());
             switch (recurringPattern.getRecurringBase()) {
                 case EVERYNDAYS:
-                    recurringBaseChoiceBox.setValue("days");
+                    recurringBaseChoiceBox.setValue("day(s)");
                     break;
                 case EVERYNWEEKS:
-                    recurringBaseChoiceBox.setValue("weeks");
+                    recurringBaseChoiceBox.setValue("week(s)");
                     break;
                 case EVERYNMONTHS:
-                    recurringBaseChoiceBox.setValue("months");
+                    recurringBaseChoiceBox.setValue("month(s)");
                     break;
                 case EVERYNYEARS:
-                    recurringBaseChoiceBox.setValue("years");
+                    recurringBaseChoiceBox.setValue("year(s)");
                     break;
-                default:
-                    recurringBaseChoiceBox.setValue("days");
-            }
-            if (recurringPattern.isFix()) {
-                fixCheckBox.setSelected(true);
             }
         }
 
@@ -341,24 +354,22 @@ public class DialogController {
         newToDoItem.setRecurrent(recurrentCheckBox.isSelected());
         if (recurrentCheckBox.isSelected()) {
             String base = recurringBaseChoiceBox.getValue();
-            RecurringBase recurringBase;
+            RecurringBase recurringBase = null;
             switch (base) {
-                case "days":
+                case "day(s)":
                     recurringBase = RecurringBase.EVERYNDAYS;
                     break;
-                case "weeks":
+                case "week(s)":
                     recurringBase = RecurringBase.EVERYNWEEKS;
                     break;
-                case "months":
+                case "month(s)":
                     recurringBase = RecurringBase.EVERYNMONTHS;
                     break;
-                case "years":
+                case "year(s)":
                     recurringBase = RecurringBase.EVERYNYEARS;
                     break;
-                default:
-                    recurringBase = RecurringBase.EVERYNDAYS;
             }
-            newToDoItem.setRecurringPattern(new RecurringPattern(fixCheckBox.isSelected(), recurringBase,
+            newToDoItem.setRecurringPattern(new RecurringPattern(recurringBase,
                     Integer.parseInt(everyTextField.getText())));
         } else {
             newToDoItem.setRecurringPattern(null);
@@ -549,6 +560,14 @@ public class DialogController {
             }
             if (timeTextField == null || !timeTextField.getText().matches("^([0-1][0-9]|2[0-3]):[0-5][0-9]$")) {
                 errorMessage += "Time (format hh:mm) is required for appointments\n";
+            }
+        }
+        if (!typeChoiceBox.getValue().equals("Project") && recurrentCheckBox.isSelected()) {
+            if (everyTextField.getText() == null || !everyTextField.getText().matches("\\d+")) {
+                errorMessage += "Recurrent items require an integer value in 'Every' ...\n";
+            }
+            if (recurringBaseChoiceBox.getValue() == null) {
+                errorMessage += "Recurrent items require a selection of day(s)/week(s)/month(s)/year(s)\n";
             }
         }
         return errorMessage.isEmpty();
