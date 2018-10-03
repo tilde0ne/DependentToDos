@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -176,11 +178,24 @@ public class DialogController {
             });
         }
 
-        childrenListView.setItems(children);
-        parentsListView.setItems(parents);
+        Comparator<ToDoItem> sortByProject = (o1, o2) -> {
+            String class1 = o1.getClass().getSimpleName();
+            String class2 = o2.getClass().getSimpleName();
+            if (class1.equals("Project") && !class2.equals("Project")) {
+                return -1;
+            }
+            if (class2.equals("Project") && !class1.equals("Project")) {
+                return 1;
+            }
+            return 0;
+        };
+
+        childrenListView.setItems(new SortedList<>(children, sortByProject.thenComparing(ToDoItem::getTitle)));
+        parentsListView.setItems(new SortedList<>(parents, sortByProject.thenComparing(ToDoItem::getTitle)));
         contextsListView.setItems(itemContexts);
 
-        dependencySourceListView.setItems(filteredDependencySource);
+        dependencySourceListView.setItems(
+                new SortedList<>(filteredDependencySource, sortByProject.thenComparing(ToDoItem::getTitle)));
         contextSourceListView.setItems(filteredContextSource);
 
         filterDependencySourceTextField.textProperty().addListener((observable, oldValue, newValue) ->
