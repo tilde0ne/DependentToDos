@@ -33,8 +33,8 @@ public class DialogController {
     private ObservableList<ToDoItem> children = FXCollections.observableArrayList();
     private ObservableList<ToDoItem> parents = FXCollections.observableArrayList();
     private ObservableList<String> itemContexts = FXCollections.observableArrayList();
-    private ObservableList<ToDoItem> toDoItems = FXCollections.observableList(dataIO.getToDoItems());
-    private ObservableList<String> availableContexts = FXCollections.observableList(dataIO.getContexts());
+    private ObservableList<ToDoItem> toDoItems = FXCollections.observableArrayList(dataIO.getToDoItems());
+    private ObservableList<String> availableContexts = FXCollections.observableArrayList(dataIO.getContexts());
 
     private FilteredList<ToDoItem> filteredDependencySource = new FilteredList<>(toDoItems);
     private FilteredList<String> filteredContextSource = new FilteredList<>(availableContexts);
@@ -428,6 +428,10 @@ public class DialogController {
         }
 
         return newToDoItem;
+    }
+
+    public List<String> getAvailableContexts() {
+        return availableContexts;
     }
 
     @FXML

@@ -26,10 +26,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class Controller {
@@ -182,7 +179,7 @@ public class Controller {
         toDoItemsBase = FXCollections.observableList(dataIO.getToDoItems(), item ->
                 new Observable[]{item.titleProperty(), item.deadlineProperty(), item.dateTimeProperty(),
                         item.startProperty(), item.dependentProperty()});
-        contexts = FXCollections.observableArrayList(dataIO.getContexts());
+        contexts = FXCollections.observableList(dataIO.getContexts());
 
         filteredActiveToDoItems = new FilteredList<>(toDoItemsBase, isToDoOrProject.and(item ->
                 (item.getStart() == null || !item.getStart().isAfter(LocalDate.now())) && !item.getDependent()));
@@ -388,6 +385,8 @@ public class Controller {
 
             if (event.getSource().equals(addButton)) {
                 toDoItemsBase.add(toDoItem);
+            } else {
+                filterItems();
             }
 
             for (TableView<ToDoItem> tableView : tableViews) {
@@ -400,11 +399,28 @@ public class Controller {
             stage.setTitle("Dependent ToDo's - " + dataIO.getDataFile().getPath() + "*");
         }
 
-        if (!contexts.equals(dataIO.getContexts())) {
+        List<String> newContexts = dialogController.getAvailableContexts();
+        List<String> oldContexts = new ArrayList<>(contexts);
+        Collections.sort(newContexts);
+        Collections.sort(oldContexts);
+        if (!oldContexts.equals(newContexts)) {
+            for (String context : newContexts) {
+                if (!contexts.contains(context)) {
+                    contexts.add(context);
+                }
+            }
+
+            for (String context : oldContexts) {
+                if (!newContexts.contains(context)) {
+                    if (contextChoiceBox.getValue().equals(context)) {
+                        clearContextFilter();
+                    }
+                    contexts.remove(context);
+                }
+            }
+
             stage.setTitle("Dependent ToDo's - " + dataIO.getDataFile().getPath() + "*");
         }
-        contexts.clear();
-        contexts.addAll(dataIO.getContexts());
     }
 
     @FXML
