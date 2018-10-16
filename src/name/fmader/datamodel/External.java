@@ -31,6 +31,7 @@ public class External extends ToDoItem {
 
         deadline = checkAgainstParentDeadlines(deadline);
         setInheritedDeadline(deadline);
+        inheritedProperty().set(isInherited());
         if (!isInherited()) {
             setInheritedDeadline(null);
         }
@@ -56,6 +57,7 @@ public class External extends ToDoItem {
         deadlineProperty().set((LocalDate) in.readObject());
         startProperty().set((LocalDate) in.readObject());
         dependentProperty().set(!getChildren().isEmpty());
+        inheritedProperty().set(isInherited());
     }
 
     @Override

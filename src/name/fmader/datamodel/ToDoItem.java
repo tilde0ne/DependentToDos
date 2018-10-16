@@ -26,6 +26,7 @@ public class ToDoItem implements Serializable {
     private transient ObjectProperty<LocalDate> start = new SimpleObjectProperty<>();
 
     private transient BooleanProperty dependent = new SimpleBooleanProperty();
+    private transient BooleanProperty inherited = new SimpleBooleanProperty();
 
     private List<ToDoItem> children = new ArrayList<>();
     private List<ToDoItem> parents = new ArrayList<>();
@@ -39,6 +40,7 @@ public class ToDoItem implements Serializable {
         this.created = LocalDate.now();
         this.title.set(title);
         this.dependent.set(false);
+        this.inherited.set(false);
     }
 
     public void addChild(ToDoItem toDoItem) {
@@ -118,6 +120,7 @@ public class ToDoItem implements Serializable {
         deadline.set((LocalDate) in.readObject());
         start.set((LocalDate) in.readObject());
         dependent.set(!children.isEmpty());
+        inherited.set(isInherited());
     }
 
     void initProperties() {
@@ -126,6 +129,7 @@ public class ToDoItem implements Serializable {
         dateTime = new SimpleObjectProperty<>();
         start = new SimpleObjectProperty<>();
         dependent = new SimpleBooleanProperty();
+        inherited = new SimpleBooleanProperty();
     }
 
     // Getters and Setters
@@ -172,6 +176,8 @@ public class ToDoItem implements Serializable {
 
         deadline = checkAgainstParentDeadlines(deadline);
         this.deadline.set(deadline);
+
+        inherited.set(isInherited());
 
         if (!children.isEmpty()) {
             for (ToDoItem toDoItem : children) {
@@ -246,6 +252,18 @@ public class ToDoItem implements Serializable {
 
     public void setDependent(boolean dependent) {
         this.dependent.set(dependent);
+    }
+
+    public boolean getInherited() {
+        return inherited.get();
+    }
+
+    public BooleanProperty inheritedProperty() {
+        return inherited;
+    }
+
+    public void setInherited(boolean inherited) {
+        this.inherited.set(inherited);
     }
 
     public boolean isRecurrent() {

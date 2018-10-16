@@ -27,6 +27,7 @@ public class Project extends ToDoItem{
         deadlineProperty().set((LocalDate) in.readObject());
         startProperty().set((LocalDate) in.readObject());
         dependentProperty().set(!getChildren().isEmpty());
+        inheritedProperty().set(isInherited());
     }
 
     @Override

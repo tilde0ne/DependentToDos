@@ -36,6 +36,7 @@ public class Appointment extends ToDoItem {
 
         deadline = checkAgainstParentDeadlines(deadline);
         setInheritedDeadline(deadline);
+        inheritedProperty().set(isInherited());
         if (!isInherited()) {
             setInheritedDeadline(null);
         }
@@ -65,6 +66,7 @@ public class Appointment extends ToDoItem {
         deadlineProperty().set((LocalDate) in.readObject());
         dateTimeProperty().set((LocalDateTime) in.readObject());
         dependentProperty().set(!getChildren().isEmpty());
+        inheritedProperty().set(isInherited());
     }
 
     @Override
