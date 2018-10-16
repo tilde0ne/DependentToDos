@@ -11,6 +11,11 @@ public class TitleCell extends TableCell<ToDoItem, String> {
         if (item == null || empty) {
             setText(null);
         } else {
+            int row = getIndex();
+            ToDoItem toDoItem = getTableView().getItems().get(row);
+            if (toDoItem.getInherited()) {
+                item = "[!] " + item;
+            }
             setText(item);
         }
         getStyleClass().add("title");

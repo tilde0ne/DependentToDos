@@ -178,7 +178,7 @@ public class Controller {
         dataIO.load();
         toDoItemsBase = FXCollections.observableList(dataIO.getToDoItems(), item ->
                 new Observable[]{item.titleProperty(), item.deadlineProperty(), item.dateTimeProperty(),
-                        item.startProperty(), item.dependentProperty()});
+                        item.startProperty(), item.dependentProperty(), item.inheritedProperty()});
         contexts = FXCollections.observableList(dataIO.getContexts());
 
         filteredActiveToDoItems = new FilteredList<>(toDoItemsBase, isToDoOrProject.and(item ->
@@ -240,6 +240,7 @@ public class Controller {
         PseudoClass dependent = PseudoClass.getPseudoClass("dependent");
         PseudoClass independent = PseudoClass.getPseudoClass("independent");
         PseudoClass future = PseudoClass.getPseudoClass("future");
+        PseudoClass inherited = PseudoClass.getPseudoClass("inherited");
 
         for (TableView<ToDoItem> tableView : tableViews) {
             tableView.setRowFactory(param -> {
@@ -253,21 +254,28 @@ public class Controller {
                 ChangeListener<LocalDate> startListener = (observable, oldValue, newValue) ->
                         row.pseudoClassStateChanged(future, newValue != null && newValue.isAfter(LocalDate.now()));
 
+                ChangeListener<Boolean> inheritedListener = (observable, oldValue, newValue) ->
+                        row.pseudoClassStateChanged(inherited, newValue);
+
                 row.itemProperty().addListener((observable, oldValue, newValue) -> {
                     if (oldValue != null) {
                         oldValue.dependentProperty().removeListener(dependentListener);
                         oldValue.startProperty().removeListener(startListener);
+                        oldValue.inheritedProperty().removeListener(inheritedListener);
                     }
                     if (newValue == null) {
                         row.pseudoClassStateChanged(dependent, false);
                         row.pseudoClassStateChanged(independent, false);
                         row.pseudoClassStateChanged(future, false);
+                        row.pseudoClassStateChanged(inherited, false);
                     } else {
                         row.pseudoClassStateChanged(dependent, newValue.getDependent());
                         row.pseudoClassStateChanged(independent, !newValue.getDependent());
                         row.pseudoClassStateChanged(future, newValue.getStart() != null && newValue.getStart().isAfter(LocalDate.now()));
+                        row.pseudoClassStateChanged(inherited, newValue.getInherited());
                         newValue.dependentProperty().addListener(dependentListener);
                         newValue.startProperty().addListener(startListener);
+                        newValue.inheritedProperty().addListener(inheritedListener);
                     }
                 });
                 return row;

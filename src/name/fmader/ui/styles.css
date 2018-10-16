@@ -46,3 +46,8 @@
 .table-row-cell:future .title {
     -fx-background-color: lightgrey;
 }
+
+.table-row-cell:inherited .title {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
