@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="mainGridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="name.fmader.ui.Controller">
+<GridPane fx:id="mainGridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="name.fmader.ui.Controller">
     <columnConstraints>
         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
@@ -65,12 +65,12 @@
                 </Menu>
             </menus>
         </MenuBar>
-        <Label text="Active ToDo's" GridPane.rowIndex="3">
+        <Label text="Active ToDo's / Projects" GridPane.rowIndex="3">
             <font>
                 <Font size="14.0" />
             </font>
         </Label>
-        <Label text="Inactive ToDo's" GridPane.columnIndex="1" GridPane.rowIndex="3">
+        <Label text="Inactive ToDo's / Projects" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <font>
                 <Font size="14.0" />
             </font>
