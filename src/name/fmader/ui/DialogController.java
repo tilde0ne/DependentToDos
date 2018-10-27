@@ -122,12 +122,16 @@ public class DialogController {
             }
             if (newValue.equals("Project")) {
                 recurrentCheckBox.setVisible(false);
+                everyLabel.setVisible(false);
                 everyTextField.setVisible(false);
                 recurringBaseChoiceBox.setVisible(false);
             } else {
                 recurrentCheckBox.setVisible(true);
-                everyTextField.setVisible(true);
-                recurringBaseChoiceBox.setVisible(true);
+                if (recurrentCheckBox.isSelected()) {
+                    everyLabel.setVisible(true);
+                    everyTextField.setVisible(true);
+                    recurringBaseChoiceBox.setVisible(true);
+                }
             }
         });
 
